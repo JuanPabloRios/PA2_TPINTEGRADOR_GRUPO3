@@ -6,6 +6,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dispositivos_vinculados);
+        setContentView(R.layout.registrar_subordinado);
     }
 }
