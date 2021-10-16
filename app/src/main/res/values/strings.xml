@@ -1,3 +1,40 @@
 <resources>
-    <string name="app_name">PA2_TPINTEGRADOR_GRUPO3</string>
+    <string name="app_name">Parental Watcher</string>
+    <string name="textTitulo">Bienvenido a Parental Watcher</string>
+    <string name="textSubTitulo">Inicie sesión para empezar como usuario maestro o registrese.</string>
+    <string name="btnLogin">Iniciar sesión</string>
+    <string name="btnRegistrar">Registrarse</string>
+    <string name="nUser">Nombre de Usuario</string>
+    <string name="nPass">Contraseña</string>
+    <string name="nEmail">Correo electronico</string>
+    <string name="nRepetir">Repetir contraseña</string>
+    <string name="Aceptar">Aceptar</string>
+    <string name="mensajePrimerInicio">Esta es la primera vez que inicia la aplicacion en este dispositivo.</string>
+    <string name="mensajePrimerInicio2">Por favor, seleccione una de las siguientes opciones.</string>
+    <string name="maestro">Maestro</string>
+    <string name="subordinado">Subordinado</string>
+
+    <string name="title_activity_inicio_usuario">InicioUsuarioActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_cerarsesion">Cerrar Sesion</string>
+
+    <string name="menu_home">Mi cuenta</string>
+    <string name="micuenta">Mi cuenta</string>
+    <string name="parqueos">Parqueos</string>
+    <string name="menu_gallery">Parqueos</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="email">Email</string>
+    <string name="usuario">Usuario</string>
+    <string name="registrarParqueo">Registrar parqueo</string>
+    <string name="nroMatricula">Nro de matricula</string>
+    <string name="tiempo">Tiempo</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="registrar">Registrar</string>
+    <string name="confirmacioneliminar">Eliminar parqueo?</string>
+    <string name="eliminar">Eliminar</string>
 </resources>
