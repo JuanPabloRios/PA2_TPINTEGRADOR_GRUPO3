@@ -3,7 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/PA2_TPINTEGRADOR_GRUPO3/app/src/main/res/layout/activity_detalles_dispositivo.xml" value="0.20625" />
         <entry key="..\:/PA2_TPINTEGRADOR_GRUPO3/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/PA2_TPINTEGRADOR_GRUPO3/app/src/main/res/layout/dispositivos_vinculados.xml" value="0.2921875" />
+        <entry key="..\:/PA2_TPINTEGRADOR_GRUPO3/app/src/main/res/layout/fragment_detalles_dispositivo.xml" value="0.20625" />
+        <entry key="..\:/PA2_TPINTEGRADOR_GRUPO3/app/src/main/res/layout/registrar_subordinado.xml" value="0.2921875" />
+        <entry key="..\:/PA2_TPINTEGRADOR_GRUPO3/app/src/main/res/layout/registrar_usuario.xml" value="0.2921875" />
       </map>
     </option>
   </component>
