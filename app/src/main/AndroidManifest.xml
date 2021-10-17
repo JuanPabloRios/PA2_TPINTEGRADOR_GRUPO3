@@ -10,12 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PA2_TPINTEGRADOR_GRUPO3">
         <activity
-            android:name=".detalles_dispositivo"
-            android:exported="true"
-            android:label="@string/title_activity_detalles_dispositivo"
-            android:theme="@style/Theme.PA2_TPINTEGRADOR_GRUPO3.NoActionBar">
-        </activity>
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
