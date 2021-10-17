@@ -3,8 +3,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-
 import com.example.pa2_tpintegrador_grupo3.fragments.Detalles_dispositivo_aplicaciones;
+import com.example.pa2_tpintegrador_grupo3.fragments.Detalles_dispositivo_detalles;
 import com.example.pa2_tpintegrador_grupo3.fragments.Detalles_dispositivo_dispositivo;
 
 public class PagerAdapter extends FragmentPagerAdapter {
@@ -20,8 +20,10 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return new Detalles_dispositivo_dispositivo();
+                return new Detalles_dispositivo_detalles();
             case 1:
+                return new Detalles_dispositivo_dispositivo();
+            case 2:
                 return new Detalles_dispositivo_aplicaciones();
             default:
                 return null;

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PA2_TPINTEGRADOR_GRUPO3">
         <activity
-            android:name=".DetallesDispositivo"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

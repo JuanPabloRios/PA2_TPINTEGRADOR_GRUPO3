@@ -3,7 +3,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.viewpager.widget.ViewPager;
 import com.example.pa2_tpintegrador_grupo3.adapters.PagerAdapter;
-import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
 public class DetallesDispositivo extends AppCompatActivity {
@@ -22,7 +21,7 @@ public class DetallesDispositivo extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                if(tab.getPosition() == 0 || tab.getPosition() == 1){
+                if(tab.getPosition() == 0 || tab.getPosition() == 1 || tab.getPosition() == 2){
                     pagerAdapter.notifyDataSetChanged();
                 }
             }

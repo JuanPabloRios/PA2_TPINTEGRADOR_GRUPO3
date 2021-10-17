@@ -4,13 +4,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.example.pa2_tpintegrador_grupo3.R;
 
 public class Detalles_dispositivo_dispositivo extends Fragment {
 
     public Detalles_dispositivo_dispositivo() { }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

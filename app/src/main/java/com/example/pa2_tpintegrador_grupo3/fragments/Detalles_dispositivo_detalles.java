@@ -6,11 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.pa2_tpintegrador_grupo3.R;
 
-public class Detalles_dispositivo_aplicaciones extends Fragment {
-    public Detalles_dispositivo_aplicaciones() { }
+public class Detalles_dispositivo_detalles extends Fragment {
+
+    public Detalles_dispositivo_detalles() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_detalles_dispositivo_aplicaciones, container, false);
+        return inflater.inflate(R.layout.fragment_detalles_dispositivo_detalles, container, false);
     }
 }
