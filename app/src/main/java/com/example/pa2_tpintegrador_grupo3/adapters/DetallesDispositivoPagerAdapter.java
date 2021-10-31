@@ -7,10 +7,10 @@ import com.example.pa2_tpintegrador_grupo3.fragments.Detalles_dispositivo_aplica
 import com.example.pa2_tpintegrador_grupo3.fragments.Detalles_dispositivo_detalles;
 import com.example.pa2_tpintegrador_grupo3.fragments.Detalles_dispositivo_dispositivo;
 
-public class PagerAdapter extends FragmentPagerAdapter {
+public class DetallesDispositivoPagerAdapter extends FragmentPagerAdapter {
     int numOfTabs;
 
-    public PagerAdapter(@NonNull FragmentManager fm, int behavior) {
+    public DetallesDispositivoPagerAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
         this.numOfTabs = behavior;
     }

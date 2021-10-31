@@ -2,20 +2,20 @@ package com.example.pa2_tpintegrador_grupo3;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.viewpager.widget.ViewPager;
-import com.example.pa2_tpintegrador_grupo3.adapters.PagerAdapter;
+import com.example.pa2_tpintegrador_grupo3.adapters.DetallesDispositivoPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 public class DetallesDispositivo extends AppCompatActivity {
 
     private ViewPager viewPager;
-    public PagerAdapter pagerAdapter;
+    public DetallesDispositivoPagerAdapter pagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detalles_dispositivo);
         TabLayout tabLayout = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.viewPager);
-        pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        pagerAdapter = new DetallesDispositivoPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override

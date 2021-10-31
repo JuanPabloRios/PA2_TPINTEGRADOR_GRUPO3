@@ -1,5 +1,19 @@
 <resources>
-    <string name="app_name">NOMBRE DISP 1</string>
+    <string-array name="aplicaciones">
+        <item>Chrome</item>
+        <item>Skype</item>
+        <item>Instagram</item>
+    </string-array>
+
+    <string-array name="tiempos">
+        <item>10 minutos</item>
+        <item>20 minutos</item>
+        <item>30 minutos</item>
+        <item>40 minutos</item>
+        <item>50 minutos</item>
+        <item>60 minutos</item>
+    </string-array>
+    <string name="app_name">Parental Watcher</string>
     <string name="textTitulo">Bienvenido a Parental Watcher</string>
     <string name="textSubTitulo">Inicie sesión para empezar como usuario maestro o registrese.</string>
     <string name="btnLogin">Iniciar sesión</string>
