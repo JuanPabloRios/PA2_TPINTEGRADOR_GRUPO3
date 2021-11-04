@@ -1,48 +1,6 @@
 <resources>
-    <string-array name="aplicaciones">
-        <item>Chrome</item>
-        <item>Skype</item>
-        <item>Instagram</item>
-    </string-array>
-
-    <string-array name="tiempos">
-        <item>10 minutos</item>
-        <item>20 minutos</item>
-        <item>30 minutos</item>
-        <item>40 minutos</item>
-        <item>50 minutos</item>
-        <item>60 minutos</item>
-    </string-array>
-    <string name="app_name">Parental Watcher</string>
-    <string name="textTitulo">Bienvenido a Parental Watcher</string>
-    <string name="textSubTitulo">Inicie sesión para empezar como usuario maestro o registrese.</string>
-    <string name="btnLogin">Iniciar sesión</string>
-    <string name="btnRegistrar">Registrar usuario maestro</string>
-    <string name="btnRegistrarSubordinado">Registrar dispositivo subordinado</string>
-    <string name="nSubordinado">Nombre de dispositivo</string>
-    <string name="nUser">Nombre de Usuario</string>
-    <string name="nPass">Contraseña</string>
-    <string name="nEmail">Correo electronico</string>
-    <string name="nEmailSubordinado">Correo electronico subordinado</string>
-    <string name="nRepetir">Repetir contraseña</string>
-    <string name="Aceptar">Aceptar</string>
-    <string name="mensajePrimerInicio">Esta es la primera vez que inicia la aplicacion en este dispositivo.</string>
-    <string name="mensajePrimerInicio2">Por favor, seleccione una de las siguientes opciones.</string>
-    <string name="maestro">Maestro</string>
-    <string name="subordinado">Subordinado</string>
-
-    <string name="title_activity_inicio_usuario">InicioUsuarioActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_cerarsesion">Cerrar Sesion</string>
-
-    <string name="title_activity_detalles_dispositivo">detalles_dispositivo</string>
-    <string name="PermisosDispositivo">Dispositivo</string>
-    <string name="PermisosAplicaciones">Aplicaciones</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">PA2_TP2_GRUPO3</string>
+    <string name="tel_spinner_casa">Casa</string>
+    <string name="tel_spinner_trabajo">Trabajo</string>
+    <string name="tel_spinner_movil">Movil</string>
 </resources>
