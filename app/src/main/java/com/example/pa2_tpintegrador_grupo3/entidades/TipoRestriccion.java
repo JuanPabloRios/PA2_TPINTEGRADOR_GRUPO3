@@ -10,4 +10,24 @@ public class TipoRestriccion
 		Id = id;
 		Descripcion = descripcion;
 	}
+
+	public Integer getId()
+	{
+		return Id;
+	}
+
+	public void setId(Integer id)
+	{
+		Id = id;
+	}
+
+	public String getDescripcion()
+	{
+		return Descripcion;
+	}
+
+	public void setDescripcion(String descripcion)
+	{
+		Descripcion = descripcion;
+	}
 }
