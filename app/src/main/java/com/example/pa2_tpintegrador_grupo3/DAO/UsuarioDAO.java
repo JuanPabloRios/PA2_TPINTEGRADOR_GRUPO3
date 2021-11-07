@@ -16,6 +16,8 @@ public class UsuarioDAO {
         this.com = ic;
     }
 
+
+
     public void crearUsuario(){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("CREARUSUARIO");
