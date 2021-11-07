@@ -1,5 +1,4 @@
-package com.example.pa2_tp2_grupo3;
-
+package com.example.pa2_tpintegrador_grupo3;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -9,9 +8,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.regex.Pattern;
-
-public class Validador {
-
+public class Utilidad {
 
     public static boolean validateString(String cadena){
 
@@ -20,7 +17,7 @@ public class Validador {
             char caracter = cadena.toUpperCase().charAt(i);
             int valorASCII = (int)caracter;
             if (valorASCII != 165 && valorASCII != 32  && ( valorASCII < 65 || valorASCII > 90)) {
-                return true; //Se ha encontrado un caracter que no es letra
+                return true; //Se encontro un caracter distinto a Letra
             }
         }
         return false;
@@ -47,8 +44,7 @@ public class Validador {
         }
         return true;
     }
-
-    //metodo para validar si es un email
+    //validar si es un email
     public static boolean emailInvalido(String cadena){
         if (!Patterns.EMAIL_ADDRESS.matcher(cadena).matches()) {
             return true;
@@ -61,5 +57,4 @@ public class Validador {
         }
         return false;
     }
-
 }
