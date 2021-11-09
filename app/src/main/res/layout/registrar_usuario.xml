@@ -88,8 +88,8 @@
                     android:id="@+id/button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="aceptar"
-                    android:text="@string/Aceptar"  />
+                    android:onClick="guardarUsuarioMaestro"
+                    android:text="@string/Aceptar" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

@@ -3,6 +3,7 @@
     package="com.example.pa2_tpintegrador_grupo3">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,6 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PA2_TPINTEGRADOR_GRUPO3">
+        <activity
+            android:name=".Controladores.DispositivosVinculadosControlador"
+            android:exported="true" />
+        <activity
+            android:name=".Controladores.RegistrarUsuarioControlador"
+            android:exported="true" />
+        <activity
+            android:name=".Controladores.DetallesDispositivoControlador"
+            android:exported="true" />
+        <activity
+            android:name=".Controladores.PrincipalSubordinadoControlador"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
