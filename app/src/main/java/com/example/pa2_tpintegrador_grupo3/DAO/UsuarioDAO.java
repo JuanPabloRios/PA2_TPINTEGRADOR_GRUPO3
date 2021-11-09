@@ -32,6 +32,7 @@ public class UsuarioDAO {
     //---------------------------------------------------------------------------------------------
 
     //CADA METODO DEBERA TENER SU HANDLER PARA SER USADO EN EL METODO QUE RECIBE LAS RESPUESTAS DE LA BASE DE DATOS
+    //el Identificador nos sirve para luego en el handler poder saber que metodo esta siendo recibido
     //---------------------------------------------------------------------------------------------
     public void obtenerTodosLosUsuarios(){
         SelectManager manager = new SelectManager();
