@@ -12,6 +12,8 @@ public class DatabaseManager {
             conexion = DriverManager.getConnection(DataDB.urlMySQL, DataDB.user, DataDB.pass);
             return conexion;
         } catch (Exception e){
+
+            System.out.println("@@ obtenerConexion " + e.getStackTrace());
             return null;
         }
     }
@@ -20,6 +22,8 @@ public class DatabaseManager {
         try {
             return conexion.createStatement();
         } catch (Exception e){
+
+            System.out.println("@@ obtenerStatement " + e.getStackTrace());
             return null;
         }
     }
@@ -30,8 +34,10 @@ public class DatabaseManager {
             Statement st = obtenerStatement();
             return st.executeUpdate( query, Statement.RETURN_GENERATED_KEYS);
         } catch (Exception e){
-            System.out.println("ERROR AL UPSERSEAR ");
+            System.out.println("ERROR AL UPSERSETEAR ");
             System.out.println(e.getStackTrace());
+            System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
             return -1;
         }
     }
@@ -42,6 +48,7 @@ public class DatabaseManager {
             Statement st = obtenerStatement();
             return st.executeQuery(query);
         } catch (Exception e){
+            System.out.println("@@ ejecutarSelect " + e.getStackTrace());
             return null;
         }
     }

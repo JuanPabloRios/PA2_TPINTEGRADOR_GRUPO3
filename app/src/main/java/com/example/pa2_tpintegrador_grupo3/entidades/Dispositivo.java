@@ -42,7 +42,7 @@ public class Dispositivo {
         Imei = imei;
     }
 
-    public boolean isEliminado() {
+    public boolean getEliminado() {
         return eliminado;
     }
 
