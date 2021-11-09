@@ -1,16 +1,23 @@
 package com.example.pa2_tpintegrador_grupo3;
+import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
+import android.widget.ArrayAdapter;
+import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.regex.Pattern;
-public class Utilidad {
 
-    public static boolean validateString(String cadena){
+public class Utilidad extends AppCompatActivity {
+    private static final String NOMBRE_ARCHIVO = "parentalWatcher.txt";
+
+    public boolean validateString(String cadena){
 
         for (int i = 0; i < cadena.length(); i++)
         {
@@ -23,7 +30,7 @@ public class Utilidad {
         return false;
     }
 
-    public static boolean validateDate(String fecha){
+    public boolean validateDate(String fecha){
         String[] arrsplit = fecha.split("/");
         Integer dia = Integer.parseInt(arrsplit[0]);
         Integer mes = Integer.parseInt(arrsplit[1]);
@@ -45,16 +52,61 @@ public class Utilidad {
         return true;
     }
     //validar si es un email
-    public static boolean emailInvalido(String cadena){
+    public boolean emailInvalido(String cadena){
         if (!Patterns.EMAIL_ADDRESS.matcher(cadena).matches()) {
             return true;
         }return false;
     }
 
-    public static boolean validateEmpty(String campo){
+    public boolean validateEmpty(String campo){
         if(TextUtils.isEmpty(campo)){
             return true;
         }
         return false;
     }
+
+
+    public String validarTipoDispositivo(Context context) {
+        FileInputStream file = null;
+        try {
+
+            file = context.openFileInput("parentalWatcher.txt");
+
+
+            InputStreamReader inputReader = new InputStreamReader(file);
+            BufferedReader buffer = new BufferedReader(inputReader);
+            String contactoJson;
+            String tipoUser;
+            if(buffer.readLine() != null){
+                tipoUser= "MAESTRO";
+            }else{
+                tipoUser= "SUBORDINADO";
+            }
+            //Gson gson = new Gson();
+           /* int cont = 0;
+            while((contactoJson = buffer.readLine()) != null){
+                //Contacto con = gson.fromJson(contactoJson, Contacto.class);
+                //contactos.add(con.getNombre());
+                //adaptador1.notifyDataSetChanged();
+                //cont++;
+            }*/
+
+            return tipoUser;
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+            return  null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return  null;
+        } finally {
+            if(file != null){
+                try {
+                    file.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 }
