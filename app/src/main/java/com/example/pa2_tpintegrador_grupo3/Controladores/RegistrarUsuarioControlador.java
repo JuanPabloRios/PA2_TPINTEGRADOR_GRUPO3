@@ -1,12 +1,16 @@
 package com.example.pa2_tpintegrador_grupo3.Controladores;
 
+import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.MainActivity;
 import com.example.pa2_tpintegrador_grupo3.R;
-import com.example.pa2_tpintegrador_grupo3.Utilidad;
-import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
+import com.example.pa2_tpintegrador_grupo3.Utilidad; 
+import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
-import com.google.gson.Gson;
+import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion; 
+import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion; 
+import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
+import com.google.gson.Gson; 
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,13 +28,15 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-public class RegistrarUsuarioControlador extends AppCompatActivity {
+public class RegistrarUsuarioControlador extends AppCompatActivity implements InterfazDeComunicacion {
 
     private EditText txtNombreUsuario;
     private EditText txtEmail;
     private EditText txtPassword;
     private EditText txtCopiaPassoword;
     private static final String NOMBRE_ARCHIVO = "parentalWatcher.txt";
+    private UsuarioDAO usDao = new UsuarioDAO(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,21 +53,15 @@ public class RegistrarUsuarioControlador extends AppCompatActivity {
             System.out.println("Error al crear Usuario!");
         }
     }
-    public void guardarUsuarioMaestro(View view){
 
+    public void validarIngresos(View view){
+        //Primero validamos los campos ingresados.
         if(validarCampos()) {
-            TipoUsuario tu = new TipoUsuario(1,"");
-            Usuario objUser = new Usuario();
-            objUser.setUsuario(txtNombreUsuario.getText().toString());
-            objUser.setContrasenia(txtPassword.getText().toString());
-            objUser.setEmail(txtEmail.getText().toString());
-            objUser.setTipoUsuario(tu);
-
-            //ACA IRIA EL METODO DE CREAR USUARIO
-            //validar la creacion correcta para ir a esa vista.
-            //CREAR ARCHIVO INDICANDO QUE TIPODISPOSITVO = MAESTRO;
-            guardarTipoUsuario(tu);
-            setContentView(R.layout.detalles_dispositivo);
+            //Verificamos que no exista un usuario con el mismo email o nombre de usuario.
+            usDao.obtenerUsuarioPorNombreUsuarioOEmail(txtNombreUsuario.getText().toString(),txtEmail.getText().toString());
+            //ACA ACTIVAR SPINNER (EN EL METODO DE RESPUESTA DE BASE DE DATOS FRENAMOS EL SPINNER Y CONTINUAMOS
+            //guardarTipoUsuario(tu);
+            //setContentView(R.layout.detalles_dispositivo);
         }
     }
 
@@ -93,6 +93,7 @@ public class RegistrarUsuarioControlador extends AppCompatActivity {
             }
         }
     }
+
 
     public boolean validarCampos(){
         Utilidad ut = new Utilidad();
@@ -131,4 +132,47 @@ public class RegistrarUsuarioControlador extends AppCompatActivity {
         return true;
     }
 
+    //ESTE METODO RECIBE TODOS LOS RESULTADOS DE CONSULTAS A LA BASE DE DATOS.
+    //USAMOS EL IDENTIFICADOR Y SU CORRESPONDIENTE HANDLER PARA OBTENER EL RESULTADO FINAL
+    @Override
+    public void operacionConBaseDeDatosFinalizada(Object resultado) {
+        ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
+        switch (res.getIdentificador()){
+            case "OBTENERUSUARIOPORNOMBREUSUARIOOEMAIL":
+                Usuario user = UsuarioDAO.obtenerUsuarioPorNombreUsuarioHandler(res.getData());
+                //ACA DETENER SPINNER
+                usuarioExistenteHandler(user);
+                break;
+            case "CREARUSUARIO":
+                Integer user2 = UsuarioDAO.crearUsuarioHandler(res.getData());
+                //ACA DETENER SPINNER
+                if(user2 != null && user2 > 0){
+                    Toast.makeText(this,"Usuario creado correctamente",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this,"Ocurrio un problema al crear el usuario",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                System.out.println("OTRO IDENTIFICADOR");
+        }
+    }
+
+    //Si el usuario recibido por parametro tiene ID, confirmamos que campo existe e indicamos el error
+    public void usuarioExistenteHandler(Usuario us){
+        if(us != null && us.getId() != null){
+            if(txtNombreUsuario.getText().toString().equals(us.getUsuario())){
+                txtNombreUsuario.setError("El nombre de usuario ya esta en uso");
+            } else {
+                txtEmail.setError("El email ya esta en uso");
+            }
+        } else {
+            Usuario objUser = new Usuario();
+            objUser.setUsuario(txtNombreUsuario.getText().toString());
+            objUser.setContrasenia(txtPassword.getText().toString());
+            objUser.setEmail(txtEmail.getText().toString());
+            objUser.setTipoUsuario(new TipoUsuario(1,""));
+            //ACA ACTIVAR EL SPINNER
+            usDao.crearUsuario(objUser);
+        }
+    }
 }

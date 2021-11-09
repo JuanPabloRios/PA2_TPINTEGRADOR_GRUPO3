@@ -25,7 +25,7 @@ public class UpsertManager implements DatabaseProcess {
 
     @Override
     public Object ejecutarConsulta() {
-        this.resultado.setData(DatabaseManager.ejecutarSelect(this.query));
+        this.resultado.setData(DatabaseManager.ejecutarUpsert(this.query));
         return this.resultado;
     }
 
