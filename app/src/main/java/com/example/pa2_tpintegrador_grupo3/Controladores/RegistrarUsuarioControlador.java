@@ -3,11 +3,14 @@ package com.example.pa2_tpintegrador_grupo3.Controladores;
 import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.MainActivity;
 import com.example.pa2_tpintegrador_grupo3.R;
-import com.example.pa2_tpintegrador_grupo3.Utilidad;
+import com.example.pa2_tpintegrador_grupo3.Utilidad; 
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
-import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
+import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion; 
+import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion; 
+import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
+import com.google.gson.Gson; 
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -57,25 +60,23 @@ public class RegistrarUsuarioControlador extends AppCompatActivity implements In
             //Verificamos que no exista un usuario con el mismo email o nombre de usuario.
             usDao.obtenerUsuarioPorNombreUsuarioOEmail(txtNombreUsuario.getText().toString(),txtEmail.getText().toString());
             //ACA ACTIVAR SPINNER (EN EL METODO DE RESPUESTA DE BASE DE DATOS FRENAMOS EL SPINNER Y CONTINUAMOS
+            //guardarTipoUsuario(tu);
+            //setContentView(R.layout.detalles_dispositivo);
         }
     }
 
-    public void crearArchivo(String nombre, String password, String Email ,TipoUsuario tipoUsuario){
+    public void guardarTipoUsuario(TipoUsuario tipoUsuario){
         FileOutputStream file = null;
         try {
 
-            Usuario usuarioAGuardar = new Usuario(
-                    null,
-                    nombre,
-                    password,
-                    Email,
-                    false,
-                    tipoUsuario
-            );
+            Configuracion con = new Configuracion();
+            con.setTipoDispositivo(tipoUsuario.getId().toString());
+            Gson gson = new Gson();
+            String objConf = gson.toJson(con);
             file = new FileOutputStream(new File(getFilesDir(),NOMBRE_ARCHIVO),true);
             String separator = System.getProperty("line.separator");
             OutputStreamWriter writer = new OutputStreamWriter(file);
-            writer.append(usuarioAGuardar.toString());
+            writer.append(objConf);
             writer.append(separator);
             writer.close();
             Intent i = new Intent(this, MainActivity.class);
