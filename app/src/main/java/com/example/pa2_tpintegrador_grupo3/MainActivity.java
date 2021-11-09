@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity{
         String result = ut.validarTipoDispositivo(this);
         if(result != null){
             //falta agregar el resultado del metodo.. crear archivo para el mismo.
-            if(result.equals("MAESTRO")) {
+            if(result.equals("1")) {
                 LinearLayout l = (LinearLayout)findViewById(R.id.Login);
                 l.setVisibility(View.VISIBLE);
                 LinearLayout l2 = (LinearLayout)findViewById(R.id.Inicial);

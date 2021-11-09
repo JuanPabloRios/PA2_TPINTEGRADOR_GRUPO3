@@ -2,7 +2,6 @@ package com.example.pa2_tpintegrador_grupo3;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Patterns;
-import android.widget.ArrayAdapter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
@@ -14,8 +13,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
+import com.google.gson.*;
+
 public class Utilidad extends AppCompatActivity {
     private static final String NOMBRE_ARCHIVO = "parentalWatcher.txt";
+    private String tipoUsuario;
 
     public boolean validateString(String cadena){
 
@@ -71,27 +74,19 @@ public class Utilidad extends AppCompatActivity {
         try {
 
             file = context.openFileInput("parentalWatcher.txt");
-
-
             InputStreamReader inputReader = new InputStreamReader(file);
             BufferedReader buffer = new BufferedReader(inputReader);
-            String contactoJson;
-            String tipoUser;
-            if(buffer.readLine() != null){
-                tipoUser= "MAESTRO";
-            }else{
-                tipoUser= "SUBORDINADO";
-            }
-            //Gson gson = new Gson();
-           /* int cont = 0;
-            while((contactoJson = buffer.readLine()) != null){
-                //Contacto con = gson.fromJson(contactoJson, Contacto.class);
-                //contactos.add(con.getNombre());
-                //adaptador1.notifyDataSetChanged();
-                //cont++;
-            }*/
+            String toJson;
+            Gson gson = new Gson();
+            int cont = 0;
 
-            return tipoUser;
+            while((toJson = buffer.readLine()) != null){
+                Configuracion con = gson.fromJson(toJson, Configuracion.class);
+                tipoUsuario = con.getTipoDispositivo();
+                cont++;
+            }
+            System.out.println("@@tipoUsuario " + tipoUsuario);
+            return tipoUsuario;
         }catch (FileNotFoundException e){
             e.printStackTrace();
             return  null;
