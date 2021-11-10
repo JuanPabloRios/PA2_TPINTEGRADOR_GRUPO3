@@ -3,9 +3,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -23,6 +28,8 @@ import com.example.pa2_tpintegrador_grupo3.entidades.TipoDispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.UUID;
 
@@ -40,10 +47,9 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        //BUSCAMOS EL ARCHIVO DE CONFIGURACION
-        Utilidad ut = new Utilidad();
+        super.onCreate(savedInstanceState); 
+        Utilidad ut = new Utilidad(); 
+        //BUSCAMOS EL ARCHIVO DE CONFIGURACION 
         Integer result = ut.validarTipoDispositivo(this);
         setContentView(R.layout.activity_main);
         txtNombreUsuario = (EditText) findViewById(R.id.nombreUsuarioLogin);
