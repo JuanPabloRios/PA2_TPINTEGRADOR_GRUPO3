@@ -6,20 +6,20 @@ package com.example.pa2_tpintegrador_grupo3.entidades;
 public class Restricciones {
 
     private Integer id;
-    private Integer id_Dispositivo;
-    private Integer id_Tipo_Restriccion;
-    private Integer id_Aplicacion;
+    private Dispositivo Dispositivo;
+    private TipoRestriccion Tipo_Restriccion;
+    private Aplicacion Aplicacion;
     private int duracion_Minutos;
     private boolean eliminado;
 
     public Restricciones() {
     }
 
-    public Restricciones(Integer id, Integer id_Dispositivo, Integer id_Tipo_Restriccion, Integer id_Aplicacion, int duracion_Minutos, boolean eliminado) {
+    public Restricciones(Integer id, Dispositivo dispositivo, TipoRestriccion tipo_Restriccion, Aplicacion aplicacion, int duracion_Minutos, boolean eliminado) {
         this.id = id;
-        this.id_Dispositivo = id_Dispositivo;
-        this.id_Tipo_Restriccion = id_Tipo_Restriccion;
-        this.id_Aplicacion = id_Aplicacion;
+        this.Dispositivo = dispositivo;
+        this.Tipo_Restriccion = tipo_Restriccion;
+        this.Aplicacion = aplicacion;
         this.duracion_Minutos = duracion_Minutos;
         this.eliminado = eliminado;
     }
@@ -32,28 +32,28 @@ public class Restricciones {
         this.id = id;
     }
 
-    public Integer getId_Dispositivo() {
-        return id_Dispositivo;
+    public Dispositivo getDispositivo() {
+        return Dispositivo;
     }
 
-    public void setId_Dispositivo(Integer id_Dispositivo) {
-        this.id_Dispositivo = id_Dispositivo;
+    public void setDispositivo(Dispositivo dispositivo) {
+        Dispositivo = dispositivo;
     }
 
-    public Integer getId_Tipo_Restriccion() {
-        return id_Tipo_Restriccion;
+    public TipoRestriccion getTipo_Restriccion() {
+        return Tipo_Restriccion;
     }
 
-    public void setId_Tipo_Restriccion(Integer id_Tipo_Restriccion) {
-        this.id_Tipo_Restriccion = id_Tipo_Restriccion;
+    public void setTipo_Restriccion(TipoRestriccion tipo_Restriccion) {
+        Tipo_Restriccion = tipo_Restriccion;
     }
 
-    public Integer getId_Aplicacion() {
-        return id_Aplicacion;
+    public Aplicacion getAplicacion() {
+        return Aplicacion;
     }
 
-    public void setId_Aplicacion(Integer id_Aplicacion) {
-        this.id_Aplicacion = id_Aplicacion;
+    public void setAplicacion(Aplicacion aplicacion) {
+        Aplicacion = aplicacion;
     }
 
     public int getDuracion_Minutos() {
@@ -64,7 +64,7 @@ public class Restricciones {
         this.duracion_Minutos = duracion_Minutos;
     }
 
-    public boolean isEliminado() {
+    public boolean getEliminado() {
         return eliminado;
     }
 
@@ -76,10 +76,11 @@ public class Restricciones {
     public String toString() {
         return "Restricciones{" +
                 "id=" + id +
-                ", id_Dispositivo=" + id_Dispositivo +
-                ", id_Tipo_Restriccion=" + id_Tipo_Restriccion +
-                ", id_Aplicacion=" + id_Aplicacion +
+                ", Dispositivo=" + Dispositivo +
+                ", Tipo_Restriccion=" + Tipo_Restriccion +
+                ", Aplicacion=" + Aplicacion +
                 ", duracion_Minutos=" + duracion_Minutos +
+                ", eliminado=" + eliminado +
                 '}';
     }
 }

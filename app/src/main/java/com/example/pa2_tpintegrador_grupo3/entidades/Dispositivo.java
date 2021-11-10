@@ -18,6 +18,9 @@ public class Dispositivo {
         this.eliminado = eliminado;
     }
 
+
+
+
     public Integer getId() {
         return id;
     }
