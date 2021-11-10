@@ -9,5 +9,27 @@ import java.util.ArrayList;
 
 public class AplicacionDAO 
 {
+	InterfazDeComunicacion com;
+	public AplicacionDAO(InterfazDeComunicacion ic)
+	{
+		this.com = ic;
+	}
 
+	public void eliminarAplicacion(Integer idAplicacion)
+	{
+		UpsertManager manager = new UpsertManager();
+		manager.setIdentificador("ELIMINARAplicacion");
+		manager.setQuery("UPDATE Aplicacion SET Eliminado = 1 WHERE Id = "+idAplicacion);
+		DBQueryManager mg = new DBQueryManager(this.com, manager);
+		mg.execute();
+	}
+
+	public static Integer eliminarAplicacionHandler(Object obj)
+	{
+		if(obj != null)
+		{
+			return (Integer)obj;
+		}
+		return null;
+	}
 }

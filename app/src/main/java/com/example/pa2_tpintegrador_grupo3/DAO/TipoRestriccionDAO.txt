@@ -10,5 +10,27 @@ import java.util.ArrayList;
 
 public class TipoRestriccionDAO 
 {
+	InterfazDeComunicacion com;
+	public TipoRestriccionDAO(InterfazDeComunicacion ic)
+	{
+		this.com = ic;
+	}
 
+	public void eliminarTipoRestriccion(Integer idTipoRestriccion)
+	{
+		UpsertManager manager = new UpsertManager();
+		manager.setIdentificador("ELIMINARTipoRestriccion");
+		manager.setQuery("UPDATE TipoRestriccion SET Eliminado = 1 WHERE Id = "+idTipoRestriccion);
+		DBQueryManager mg = new DBQueryManager(this.com, manager);
+		mg.execute();
+	}
+
+	public static Integer eliminarTipoRestriccionHandler(Object obj)
+	{
+		if(obj != null)
+		{
+			return (Integer)obj;
+		}
+		return null;
+	}
 }
