@@ -46,6 +46,43 @@ public class AplicacionDAO
 		return null;
 	}
 
+	public void obtenerAplicacionPorNombre(String nombreAplicacion)
+	{
+		SelectManager manager = new SelectManager();
+		manager.setIdentificador("OBTENERAPLICACIONPORNOMBRE");
+		String query = "SELECT * FROM Aplicacion WHERE Nombre = \""+nombreAplicacion+"\" AND Eliminado = 0";
+		manager.setQuery(query);
+		DBQueryManager mg = new DBQueryManager(this.com, manager);
+		mg.execute();
+	}
+    
+	public static Aplicacion obtenerAplicacionPorNombreHandler(Object obj)
+	{
+		if(obj != null)
+		{
+			try
+			{
+				ResultSet rs = (ResultSet)obj;
+				while(rs.next())
+				{
+					return new Aplicacion(
+						rs.getInt("id"),
+						rs.getString("Nombre"),
+						rs.getString("Descripcion"),
+						rs.getString("Icono"),
+						rs.getBoolean("Eliminado")
+						);
+				}
+				return null;
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+		return null;
+	}
+
 	public void insertarAplicaciones(ArrayList<Aplicacion> aplicaciones)
 	{
 		UpsertManager manager = new UpsertManager();
