@@ -4,19 +4,22 @@ package com.example.pa2_tpintegrador_grupo3.entidades;
 public class Dispositivo {
 
     private Integer id;
-    private Integer id_Tipo_Dispositivo;
+    private TipoDispositivo Tipo_Dispositivo;
     private String Imei;
     private boolean eliminado;
 
     public Dispositivo() {
     }
 
-    public Dispositivo(Integer id, Integer id_Tipo_Dispositivo, String imei, boolean eliminado) {
+    public Dispositivo(Integer id, TipoDispositivo Tipo_Dispositivo, String imei, boolean eliminado) {
         this.id = id;
-        this.id_Tipo_Dispositivo = id_Tipo_Dispositivo;
+        this.Tipo_Dispositivo = Tipo_Dispositivo;
         this.Imei = imei;
         this.eliminado = eliminado;
     }
+
+
+
 
     public Integer getId() {
         return id;
@@ -26,12 +29,12 @@ public class Dispositivo {
         this.id = id;
     }
 
-    public Integer getId_Tipo_Dispositivo() {
-        return id_Tipo_Dispositivo;
+    public TipoDispositivo getTipo_Dispositivo() {
+        return Tipo_Dispositivo;
     }
 
-    public void setId_Tipo_Dispositivo(Integer id_Tipo_Dispositivo) {
-        this.id_Tipo_Dispositivo = id_Tipo_Dispositivo;
+    public void setTipo_Dispositivo(TipoDispositivo tipo_Dispositivo) {
+        Tipo_Dispositivo = tipo_Dispositivo;
     }
 
     public String getImei() {
@@ -42,7 +45,7 @@ public class Dispositivo {
         Imei = imei;
     }
 
-    public boolean isEliminado() {
+    public boolean getEliminado() {
         return eliminado;
     }
 
@@ -54,7 +57,7 @@ public class Dispositivo {
     public String toString() {
         return "Dispositivo{" +
                 "id=" + id +
-                ", id_Tipo_Dispositivo=" + id_Tipo_Dispositivo +
+                ", Tipo_Dispositivo=" + Tipo_Dispositivo +
                 ", Imei='" + Imei + '\'' +
                 '}';
     }
