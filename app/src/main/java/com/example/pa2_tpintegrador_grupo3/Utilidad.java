@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -156,61 +157,45 @@ public class Utilidad extends AppCompatActivity {
     }
 
 
-    public static String encodeIcon(Drawable icon){
-        String appIcon64 = new String();
-        Drawable ic = icon;
-        String result = null;
-        if(ic !=null){
+    public String encodeIcon(Drawable icon){
+        String res = "";
+        if(icon !=null){
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-            BitmapDrawable bitDw = ((BitmapDrawable) ic);
-            Bitmap bitmap = bitDw.getBitmap();
+            Bitmap bmp = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bmp);
+            icon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            icon.draw(canvas);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] bitmapByte = stream.toByteArray();
-
-            bitmapByte = Base64.encode(bitmapByte,Base64.DEFAULT);
-            System.out.println("..length of image..."+bitmapByte.length);
-            result = bitmapByte.toString();
-            return result;
+            res = Base64.encodeToString(bitmapByte,Base64.DEFAULT);
         }
-        return result;
+        return res;
     }
 
-    public String getBitmapFromVectorDrawable(Context context, Drawable image) {
-        Drawable drawable = image;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        String result = bitmap.toString();
-        return result;
-    }
 
     public ArrayList<InfoObject> getInstalledApps(Context context) {
         ArrayList<InfoObject> listObj = new ArrayList<InfoObject>();
         final PackageManager packageManager = context.getPackageManager();
         List<ApplicationInfo> packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
         for (ApplicationInfo applicationInfo : packages) {
-
             InfoObject newInfo = new InfoObject();
+
+            if(applicationInfo.packageName.startsWith("com.android") && !applicationInfo.packageName.equals("com.android.vending")){
+                continue;
+            }
             newInfo.appname = applicationInfo.loadLabel(packageManager).toString();
             newInfo.packagename = applicationInfo.packageName;
-            Drawable dr = applicationInfo.loadIcon(packageManager);
-            newInfo.icon = getBitmapFromVectorDrawable(this,dr);
+            Drawable icon = packageManager.getApplicationIcon(applicationInfo);
+            newInfo.icon = encodeIcon(icon);
+            Gson gson = new Gson();
             listObj.add(newInfo);
-            System.out.println("@@listObj " + listObj);
 
         }
         return listObj;
     }
 
-    class InfoObject {
+    public class InfoObject implements Serializable {
         public String appname = "";
         public String packagename = "";
         public String icon;
