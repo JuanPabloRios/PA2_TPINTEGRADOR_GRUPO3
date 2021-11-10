@@ -56,6 +56,39 @@ public class UsuarioDAO {
         mg.execute();
     }
 
+    public static Usuario obtenerUsuarioPorNombreUsuarioOEmailHandler(Object obj){
+        if(obj != null){
+            try {
+                ResultSet rs = (ResultSet)obj;
+                while(rs.next()) {
+                    return new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("Usuario"),
+                        rs.getString("Contrasenia"),
+                        rs.getString("Email"),
+                        rs.getBoolean("Eliminado"),
+                        new TipoUsuario(rs.getInt("Id_tipo_usuario"),"")
+                    );
+                }
+                return null;
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        return null;
+    }
+    //---------------------------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------------------------
+    public void obtenerUsuarioPorNombreUsuario(String nombreUsuario){
+        SelectManager manager = new SelectManager();
+        manager.setIdentificador("obtenerUsuarioPorNombreUsuario");
+        String query = "SELECT * FROM Usuario WHERE Usuario = \""+nombreUsuario+"\" AND Eliminado = 0";
+        manager.setQuery(query);
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
+    }
+
     public static Usuario obtenerUsuarioPorNombreUsuarioHandler(Object obj){
         if(obj != null){
             try {

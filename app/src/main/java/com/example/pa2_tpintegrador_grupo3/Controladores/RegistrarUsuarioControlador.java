@@ -34,7 +34,6 @@ public class RegistrarUsuarioControlador extends AppCompatActivity implements In
     private EditText txtEmail;
     private EditText txtPassword;
     private EditText txtCopiaPassoword;
-    private static final String NOMBRE_ARCHIVO = "parentalWatcher.txt";
     private UsuarioDAO usDao = new UsuarioDAO(this);
 
     @Override
@@ -60,37 +59,6 @@ public class RegistrarUsuarioControlador extends AppCompatActivity implements In
             //Verificamos que no exista un usuario con el mismo email o nombre de usuario.
             usDao.obtenerUsuarioPorNombreUsuarioOEmail(txtNombreUsuario.getText().toString(),txtEmail.getText().toString());
             //ACA ACTIVAR SPINNER (EN EL METODO DE RESPUESTA DE BASE DE DATOS FRENAMOS EL SPINNER Y CONTINUAMOS
-            //guardarTipoUsuario(tu);
-            //setContentView(R.layout.detalles_dispositivo);
-        }
-    }
-
-    public void guardarTipoUsuario(TipoUsuario tipoUsuario){
-        FileOutputStream file = null;
-        try {
-
-            Configuracion con = new Configuracion();
-            con.setTipoDispositivo(tipoUsuario.getId().toString());
-            Gson gson = new Gson();
-            String objConf = gson.toJson(con);
-            file = new FileOutputStream(new File(getFilesDir(),NOMBRE_ARCHIVO),true);
-            String separator = System.getProperty("line.separator");
-            OutputStreamWriter writer = new OutputStreamWriter(file);
-            writer.append(objConf);
-            writer.append(separator);
-            writer.close();
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
-        } catch (IOException e){
-            Toast.makeText(this,"Error guardando contacto!",Toast.LENGTH_SHORT).show();
-        } finally {
-            if(file != null){
-                try {
-                    file.close();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
@@ -139,7 +107,7 @@ public class RegistrarUsuarioControlador extends AppCompatActivity implements In
         ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
         switch (res.getIdentificador()){
             case "OBTENERUSUARIOPORNOMBREUSUARIOOEMAIL":
-                Usuario user = UsuarioDAO.obtenerUsuarioPorNombreUsuarioHandler(res.getData());
+                Usuario user = UsuarioDAO.obtenerUsuarioPorNombreUsuarioOEmailHandler(res.getData());
                 //ACA DETENER SPINNER
                 usuarioExistenteHandler(user);
                 break;
