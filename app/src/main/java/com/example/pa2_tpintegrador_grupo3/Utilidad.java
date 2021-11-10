@@ -85,6 +85,7 @@ public class Utilidad extends AppCompatActivity {
             String toJson;
             Gson gson = new Gson();
             while((toJson = buffer.readLine()) != null){
+                System.out.println("@@@ CONFIGURACION: " + toJson);
                 Configuracion con = gson.fromJson(toJson, Configuracion.class);
                 return con.getTipoDispositivo();
             }
@@ -108,12 +109,12 @@ public class Utilidad extends AppCompatActivity {
         }
     }
 
-    public void guardarArchivoDeConfiguracion(Configuracion con){
+    public void guardarArchivoDeConfiguracion(Context context,Configuracion con){
         FileOutputStream file = null;
         try {
             Gson gson = new Gson();
             String objConf = gson.toJson(con);
-            file = new FileOutputStream(new File(getFilesDir(),NOMBRE_ARCHIVO),true);
+            file = new FileOutputStream(new File(context.getFilesDir(),NOMBRE_ARCHIVO),true);
             String separator = System.getProperty("line.separator");
             OutputStreamWriter writer = new OutputStreamWriter(file);
             writer.append(objConf);

@@ -32,13 +32,13 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        txtNombreUsuario = (EditText) findViewById(R.id.nombreUsuarioLogin);
-        txtPassword = (EditText) findViewById(R.id.contraseniaLogin);
 
         //BUSCAMOS EL ARCHIVO DE CONFIGURACION
         Utilidad ut = new Utilidad();
         Integer result = ut.validarTipoDispositivo(this);
+        setContentView(R.layout.activity_main);
+        txtNombreUsuario = (EditText) findViewById(R.id.nombreUsuarioLogin);
+        txtPassword = (EditText) findViewById(R.id.contraseniaLogin);
         if(result != null){
             //SI EXISTE EL ARCHIVO Y EL USUARIO ES DE TIPO MAESTRO (1) PASAMOS A LA PANTALLA DE LOGIN
             primerInicio = false;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
             } else {
                 Toast.makeText(this,"Error obteniendo tipo de usuario",Toast.LENGTH_SHORT);
             }
-        }
+        } 
         //SI NO EXISTE EL ARCHIVO QUEDAMOS EN LA PANTALLA DE SELECCION INICIAL QUE DARA PASO A LA CREACION DEL ARCHIVO DE CONFIGURACION
     }
 
@@ -101,25 +101,33 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         }
     }
 
-    //Si el usuario recibido por parametro tiene ID, existe, chequeamos el nombre de usuario
+    //Si el usuario recibido por parametro tiene ID, existe, chequeamos la contrasenia y continuamos
     public void validarInicioSesion(Usuario us){
+        System.out.println("validarInicioSesion");
         if(us != null && us.getId() != null){
-            Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT);
+            if(txtPassword.getText().toString().equals(us.getContrasenia())){
+                //SI ES EL PRIMER INICIO GUARDAMOS LA CONFIGURACION INICIAL DE TIPO DE DISPOSITIVO
+                if(primerInicio){
+                    System.out.println("primerInicio");
+                    Utilidad utils = new Utilidad();
+                    Configuracion config = new Configuracion();
+                    config.setTipoDispositivo(esSubordinado ? 2 : 1); //1 si es MAESTRO, 2 si es SUBORDINADO
+                    utils.guardarArchivoDeConfiguracion(this,config);
+                }
+                //SI ES SUBORDINADO VAMOS A LA PANTALLA INICIAL DE SUBORDINADO
+                if(esSubordinado){
+                    System.out.println("SUBORDINADO");
+                    startActivity(new Intent(this, PrincipalSubordinadoControlador.class));
+                }else{
+                    System.out.println("MAESTRO");
+                    //SI ES MAESTRO VAMOS A LA PANTALLA INICIAL DE MAESTRO
+                    startActivity(new Intent(this, DispositivosVinculadosControlador.class));
+                }
+            } else {
+                Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT).show();
+            }
         } else {
-            //SI ES EL PRIMER INICIO GUARDAMOS LA CONFIGURACION INICIAL DE TIPO DE DISPOSITIVO
-            if(primerInicio){
-                Utilidad utils = new Utilidad();
-                Configuracion config = new Configuracion();
-                config.setTipoDispositivo(esSubordinado ? 1 : 2);
-                utils.guardarArchivoDeConfiguracion(config);
-            }
-            //SI ES SUBORDINADO VAMOS A LA PANTALLA INICIAL DE SUBORDINADO
-            if(esSubordinado){
-                startActivity(new Intent(this, PrincipalSubordinadoControlador.class));
-            }else{
-                //SI ES MAESTRO VAMOS A LA PANTALLA INICIAL DE MAESTRO
-                startActivity(new Intent(this, DispositivosVinculadosControlador.class));
-            }
+            Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT).show();
         }
     }
 }
