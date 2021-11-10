@@ -9,6 +9,10 @@ public class TipoNotificacion {
         Descripcion = descripcion;
     }
 
+    public TipoNotificacion(Integer id) {
+        this.Id = id;
+    }
+
     public Integer getId() {
         return Id;
     }

@@ -6,6 +6,11 @@ public class Aplicacion
 	private String Descripcion;
 	private boolean Eliminado;
 
+	public Aplicacion(Integer id)
+	{
+		Id = id;
+	}
+
 	public Aplicacion(Integer id, String descripcion, boolean eliminado)
 	{
 		Id = id;

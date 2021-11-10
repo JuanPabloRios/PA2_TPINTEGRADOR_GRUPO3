@@ -2,6 +2,9 @@ package com.example.pa2_tpintegrador_grupo3.DAO;
 import com.example.pa2_tpintegrador_grupo3.conexion.DBQueryManager;
 import com.example.pa2_tpintegrador_grupo3.conexion.SelectManager;
 import com.example.pa2_tpintegrador_grupo3.conexion.UpsertManager;
+import com.example.pa2_tpintegrador_grupo3.entidades.Aplicacion;
+import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
+import com.example.pa2_tpintegrador_grupo3.entidades.Estado;
 import com.example.pa2_tpintegrador_grupo3.entidades.Notificacion;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoNotificacion;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
@@ -75,13 +78,12 @@ public class NotificacionDAO {
                 ResultSet rs = (ResultSet)obj;
                 while(rs.next()) {
                     return new Notificacion(
-                            rs.getInt("id"),
-                            new Dispositivo(rs.getInt("id_dispositivo_emisor"),""),
-                            new Dispositivo(rs.getInt("id_dispositivo_receptor"),""),
-                            new Aplicacion(rs.getInt("id_aplicacion"),""),
-                            new TipoNotificacion(rs.getInt("id_tipo_notificacion"),""),
-                            new Estado(rs.getInt("id_estado"),""),
-                            rs.getBoolean("eliminado")
+                        rs.getInt("id"),
+                        new Dispositivo(rs.getInt("id_dispositivo_emisor")),
+                        new Dispositivo(rs.getInt("id_dispositivo_receptor")),
+                        new Aplicacion(rs.getInt("id_aplicacion")),
+                        new TipoNotificacion(rs.getInt("id_tipo_notificacion")),
+                        new Estado(rs.getInt("id_estado"),"")
                     );
                 }
                 return null;

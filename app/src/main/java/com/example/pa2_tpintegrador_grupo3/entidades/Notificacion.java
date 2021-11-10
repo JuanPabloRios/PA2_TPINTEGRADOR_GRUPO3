@@ -10,6 +10,15 @@ public class Notificacion {
     private Estado Estado;
     private boolean Eliminado;
 
+    public Notificacion(Integer id, Dispositivo dispositivoEmisor, Dispositivo dispositivoReceptor, com.example.pa2_tpintegrador_grupo3.entidades.Aplicacion aplicacion, com.example.pa2_tpintegrador_grupo3.entidades.TipoNotificacion tipoNotificacion, com.example.pa2_tpintegrador_grupo3.entidades.Estado estado) {
+        Id = id;
+        DispositivoEmisor = dispositivoEmisor;
+        DispositivoReceptor = dispositivoReceptor;
+        Aplicacion = aplicacion;
+        TipoNotificacion = tipoNotificacion;
+        Estado = estado;
+    }
+
     public Integer getId() {
         return Id;
     }

@@ -11,6 +11,10 @@ public class Dispositivo {
     public Dispositivo() {
     }
 
+    public Dispositivo(Integer id) {
+        this.id = id;
+    }
+
     public Dispositivo(Integer id, TipoDispositivo Tipo_Dispositivo, String imei, boolean eliminado) {
         this.id = id;
         this.Tipo_Dispositivo = Tipo_Dispositivo;
