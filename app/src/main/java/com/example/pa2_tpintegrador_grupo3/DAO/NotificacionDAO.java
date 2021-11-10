@@ -3,7 +3,7 @@ import com.example.pa2_tpintegrador_grupo3.conexion.DBQueryManager;
 import com.example.pa2_tpintegrador_grupo3.conexion.SelectManager;
 import com.example.pa2_tpintegrador_grupo3.conexion.UpsertManager;
 import com.example.pa2_tpintegrador_grupo3.entidades.Notificacion;
-import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
+import com.example.pa2_tpintegrador_grupo3.entidades.TipoNotificacion;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 
 import java.sql.ResultSet;
@@ -33,12 +33,31 @@ public class NotificacionDAO {
         mg.execute();
     }
 
+    public static Integer crearNotificacionHandler(Object obj){
+        if(obj != null){
+            try {
+                Integer rs = (Integer)obj;
+                return rs;
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     public void eliminarNotificacion(){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("ELIMINARNOTIFICACION");
         manager.setQuery("UPDATE notificacion SET ELIMINADO = 1 WHERE id = 1");
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
+    }
+
+    public static Integer eliminarNotificacionHandler(Object obj){
+        if(obj != null){
+            return (Integer)obj;
+        }
+        return null;
     }
 
     public void obtenerNotificacionPorId(Integer id){
@@ -48,6 +67,29 @@ public class NotificacionDAO {
         manager.setQuery(query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
+    }
+
+    public static Notificacion obtenerNotificacionPorIdHandler(Object obj){
+        if(obj != null){
+            try {
+                ResultSet rs = (ResultSet)obj;
+                while(rs.next()) {
+                    return new Notificacion(
+                            rs.getInt("id"),
+                            new Dispositivo(rs.getInt("id_dispositivo_emisor"),""),
+                            new Dispositivo(rs.getInt("id_dispositivo_receptor"),""),
+                            new Aplicacion(rs.getInt("id_aplicacion"),""),
+                            new TipoNotificacion(rs.getInt("id_tipo_notificacion"),""),
+                            new Estado(rs.getInt("id_estado"),""),
+                            rs.getBoolean("eliminado")
+                    );
+                }
+                return null;
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        return null;
     }
 
     public void obtenerTodasLasNotificaciones(){
