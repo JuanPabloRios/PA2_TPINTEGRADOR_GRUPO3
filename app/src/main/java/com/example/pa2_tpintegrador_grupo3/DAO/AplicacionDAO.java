@@ -32,4 +32,28 @@ public class AplicacionDAO
 		}
 		return null;
 	}
+
+	public void insertarAplicaciones(ArrayList<Aplicacion> aplicaciones) {
+		UpsertManager manager = new UpsertManager();
+		manager.setIdentificador("insertarAplicaciones");
+		String query = "INSERT INTO Aplicacion (Nombre, Descripcion, Icono) VALUES ";
+		for(Aplicacion app : aplicaciones){
+			query+= "(\""+app.getNombre()+"\",";
+			query+= "\""+app.getDescripcion()+"\",";
+			query+= "\""+app.getIcono()+"\"";
+			query+="),";
+		}
+		query = query.substring(0, query.length() -1);
+		System.out.println(query);
+		manager.setQuery(query);
+		DBQueryManager mg = new DBQueryManager(this.com, manager);
+		mg.execute();
+	}
+
+	public static Integer insertarAplicacionesHandler(Object obj) {
+		if(obj != null) {
+			return (Integer)obj;
+		}
+		return null;
+	}
 }

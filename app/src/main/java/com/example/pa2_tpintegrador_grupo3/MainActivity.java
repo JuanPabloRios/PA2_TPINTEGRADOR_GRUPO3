@@ -28,6 +28,8 @@ import com.example.pa2_tpintegrador_grupo3.entidades.TipoDispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         LinearLayout l2 = (LinearLayout)findViewById(R.id.Inicial);
         l2.setVisibility(View.GONE);
     }
+
     public void irARegistrarMaestro(View view){
         LinearLayout l = (LinearLayout)findViewById(R.id.Login);
         l.setVisibility(View.VISIBLE);
