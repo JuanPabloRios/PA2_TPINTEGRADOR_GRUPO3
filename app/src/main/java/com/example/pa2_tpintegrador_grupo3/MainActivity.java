@@ -1,9 +1,15 @@
 package com.example.pa2_tpintegrador_grupo3;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -18,6 +24,8 @@ import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements InterfazDeComunicacion
 {
@@ -35,9 +43,10 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         setContentView(R.layout.activity_main);
         txtNombreUsuario = (EditText) findViewById(R.id.nombreUsuarioLogin);
         txtPassword = (EditText) findViewById(R.id.contraseniaLogin);
-
-        //BUSCAMOS EL ARCHIVO DE CONFIGURACION
         Utilidad ut = new Utilidad();
+        System.out.println("@@getInstalledApps " + ut.getInstalledApps(this));
+        //BUSCAMOS EL ARCHIVO DE CONFIGURACION
+
         Integer result = ut.validarTipoDispositivo(this);
         if(result != null){
             //SI EXISTE EL ARCHIVO Y EL USUARIO ES DE TIPO MAESTRO (1) PASAMOS A LA PANTALLA DE LOGIN
