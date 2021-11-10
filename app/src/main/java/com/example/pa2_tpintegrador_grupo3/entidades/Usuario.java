@@ -1,7 +1,9 @@
 package com.example.pa2_tpintegrador_grupo3.entidades;
 
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
     private Integer id;
     private String usuario;
     private String contrasenia;
@@ -67,15 +69,4 @@ public class Usuario {
         this.tipoUsuario = tipoUsuario;
     }
 
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                ", usuario='" + usuario + '\'' +
-                ", contrasenia='" + contrasenia + '\'' +
-                ", email='" + email + '\'' +
-                ", eliminado=" + eliminado +
-                ", tipoUsuario=" + tipoUsuario +
-                '}';
-    }
 }

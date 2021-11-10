@@ -9,14 +9,15 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/tablaVinculados"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center_horizontal|center_vertical"
             android:orientation="vertical"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingBottom="10dp"
-            android:layout_gravity="center">
+            android:paddingBottom="10dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -27,26 +28,6 @@
                 android:text="Dispositivos Vinculados"
                 android:textColor="#00BCD4"
                 android:textSize="20sp" />
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DISPOSITIVO: NOMBRE DISP 1\nTIEMPO DE USO: 09:30\nESTADO: BLOQUEADO"
-                android:gravity="start"/>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DISPOSITIVO: NOMBRE DISP 2\nTIEMPO DE USO: 01:55\nESTADO: ACTIVO"
-                android:gravity="start"/>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DISPOSITIVO: NOMBRE DISP 3\nTIEMPO DE USO: 04:10\nESTADO: ACTIVO"
-                android:gravity="start"/>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DISPOSITIVO: NOMBRE DISP 4\nTIEMPO DE USO: 05:40\nESTADO: BLOQUEADO"
-                android:gravity="start"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

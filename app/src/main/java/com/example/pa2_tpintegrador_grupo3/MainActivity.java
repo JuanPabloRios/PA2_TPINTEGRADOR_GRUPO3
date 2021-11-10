@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         txtNombreUsuario = (EditText) findViewById(R.id.nombreUsuarioLogin);
         txtPassword = (EditText) findViewById(R.id.contraseniaLogin);
         if(result != null){
-            //SI EXISTE EL ARCHIVO Y EL USUARIO ES DE TIPO MAESTRO (1) PASAMOS A LA PANTALLA DE LOGIN
             primerInicio = false;
             if(result == 1) {
+                //SI EXISTE EL ARCHIVO Y EL USUARIO ES DE TIPO MAESTRO (1) PASAMOS A LA PANTALLA DE LOGIN
                 LinearLayout l = (LinearLayout)findViewById(R.id.Login);
                 l.setVisibility(View.VISIBLE);
                 LinearLayout l2 = (LinearLayout)findViewById(R.id.Inicial);
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
             } else {
                 Toast.makeText(this,"Error obteniendo tipo de usuario",Toast.LENGTH_SHORT);
             }
-        } 
+        }
         //SI NO EXISTE EL ARCHIVO QUEDAMOS EN LA PANTALLA DE SELECCION INICIAL QUE DARA PASO A LA CREACION DEL ARCHIVO DE CONFIGURACION
     }
 
@@ -121,7 +121,9 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                 }else{
                     System.out.println("MAESTRO");
                     //SI ES MAESTRO VAMOS A LA PANTALLA INICIAL DE MAESTRO
-                    startActivity(new Intent(this, DispositivosVinculadosControlador.class));
+                    Intent i = new Intent(this, DispositivosVinculadosControlador.class);
+                    i.putExtra("usuario",us);
+                    startActivity(i);
                 }
             } else {
                 Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT).show();
