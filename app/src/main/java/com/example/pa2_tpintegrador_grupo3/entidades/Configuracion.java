@@ -1,13 +1,13 @@
 package com.example.pa2_tpintegrador_grupo3.entidades;
 
 public class Configuracion {
-    private String tipoDispositivo;
+    private Integer tipoDispositivo;
 
-    public String getTipoDispositivo() {
+    public Integer getTipoDispositivo() {
         return tipoDispositivo;
     }
 
-    public void setTipoDispositivo(String tipoDispositivo) {
+    public void setTipoDispositivo(Integer tipoDispositivo) {
         this.tipoDispositivo = tipoDispositivo;
     }
 

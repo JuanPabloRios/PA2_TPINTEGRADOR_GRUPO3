@@ -54,7 +54,7 @@
                     tools:visibility="visible" />
 
                 <EditText
-                    android:id="@+id/editTextTextPersonName4"
+                    android:id="@+id/nombreUsuarioLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -63,7 +63,7 @@
                     android:maxLength="20" />
 
                 <EditText
-                    android:id="@+id/editTextTextPassword3"
+                    android:id="@+id/contraseniaLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
