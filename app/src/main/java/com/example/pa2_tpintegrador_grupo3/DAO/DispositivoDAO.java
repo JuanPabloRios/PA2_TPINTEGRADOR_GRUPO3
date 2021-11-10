@@ -3,8 +3,9 @@ package com.example.pa2_tpintegrador_grupo3.DAO;
 import com.example.pa2_tpintegrador_grupo3.conexion.DBQueryManager;
 import com.example.pa2_tpintegrador_grupo3.conexion.SelectManager;
 import com.example.pa2_tpintegrador_grupo3.conexion.UpsertManager;
-import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
+import com.example.pa2_tpintegrador_grupo3.entidades.TipoDispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
+import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 
 import java.sql.ResultSet;
@@ -22,7 +23,7 @@ public class DispositivoDAO {
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("CREARDISPOSITIVO");
         String query = "INSERT INTO Dispositivo (id_Tipo_Dispositivo, Imei) VALUES (";
-            query+= "\""+dispo.getId_Tipo_Dispositivo()+"\",";
+            query+= "\""+dispo.getTipo_Dispositivo().getId()+"\",";
             query+= "\""+dispo.getImei()+"\",";
             query+=")";
         manager.setQuery(query);
@@ -58,10 +59,10 @@ public class DispositivoDAO {
                 ResultSet rs = (ResultSet)obj;
                 while(rs.next()) {
                     return new Dispositivo(
-                        rs.getInt("id"),
-                        rs.getInt("id_Tipo_Dispositivo"),
-                        rs.getString("Imei"),
-                        rs.getBoolean("eliminado")
+                            rs.getInt("id"),
+                            new TipoDispositivo(rs.getInt("Id_tipo_dispositivo"),""),
+                            rs.getString("Imei"),
+                            rs.getBoolean("eliminado")
 
                     );
                 }
@@ -93,7 +94,7 @@ public class DispositivoDAO {
                     resultados.add(
                         new Dispositivo(
                                 rs.getInt("id"),
-                                rs.getInt("id_Tipo_Dispositivo"),
+                                new TipoDispositivo(rs.getInt("Id_tipo_dispositivo"),""),
                                 rs.getString("Imei"),
                                 rs.getBoolean("eliminado")
                         )
