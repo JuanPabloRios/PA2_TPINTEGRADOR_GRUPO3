@@ -19,10 +19,10 @@ public class DispositivoDAO {
 
     public void crearDispositivo(Dispositivo dispo){
         UpsertManager manager = new UpsertManager();
-        manager.setIdentificador("CREARDISPOSITIVO");
+        manager.setIdentificador("crearDispositivo");
         String query = "INSERT INTO Dispositivo (id_Tipo_Dispositivo, Imei) VALUES (";
-        query+= "\""+dispo.getTipo_Dispositivo().getId()+"\",";
-        query+= "\""+dispo.getImei()+"\",";
+        query+= dispo.getTipo_Dispositivo().getId()+" ,";
+        query+= "\""+dispo.getImei()+"\"";
         query+=")";
         manager.setQuery(query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
@@ -40,6 +40,32 @@ public class DispositivoDAO {
         }
         return null;
     }
+
+    public void relacionarDispositivoConUsuario(Integer idDispositivo, Integer idUsuario){
+        UpsertManager manager = new UpsertManager();
+        manager.setIdentificador("relacionarDispositivoConUsuario");
+        String query = "INSERT INTO Dispositivo_x_usuario (Id_Dispositivo, Id_Usuario) VALUES (";
+        query+= idDispositivo+" ,";
+        query+= idUsuario;
+        query+=")";
+        manager.setQuery(query);
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
+    }
+
+    public static Integer relacionarDispositivoConUsuarioHandler(Object obj){
+        if(obj != null){
+            try {
+                Integer rs = (Integer)obj;
+                return rs;
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
 
 
     public void obtenerDispositivoPorId(Integer dispoId){

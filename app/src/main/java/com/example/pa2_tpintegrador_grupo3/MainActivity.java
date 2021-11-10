@@ -1,8 +1,10 @@
 package com.example.pa2_tpintegrador_grupo3;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -12,12 +14,17 @@ import com.example.pa2_tpintegrador_grupo3.Controladores.DetallesDispositivoCont
 import com.example.pa2_tpintegrador_grupo3.Controladores.DispositivosVinculadosControlador;
 import com.example.pa2_tpintegrador_grupo3.Controladores.PrincipalSubordinadoControlador;
 import com.example.pa2_tpintegrador_grupo3.Controladores.RegistrarUsuarioControlador;
+import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
+import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
+import com.example.pa2_tpintegrador_grupo3.entidades.TipoDispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
+
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements InterfazDeComunicacion
 {
@@ -28,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
     private EditText txtNombreUsuario;
     private EditText txtPassword;
     private UsuarioDAO usDao = new UsuarioDAO(this);
+    private DispositivoDAO dispDao = new DispositivoDAO(this);
+    private Usuario user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +101,28 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
         switch (res.getIdentificador()){
             case "obtenerUsuarioPorNombreUsuario":
-                Usuario user = UsuarioDAO.obtenerUsuarioPorNombreUsuarioHandler(res.getData());
+                this.user = UsuarioDAO.obtenerUsuarioPorNombreUsuarioHandler(res.getData());
                 //ACA DETENER SPINNER
-                validarInicioSesion(user);
+                validarInicioSesion(this.user);
+                break;
+            case "crearDispositivo":
+                Integer idNuevoDispositivo = DispositivoDAO.crearDispositivoHandler(res.getData());
+                //ACA DETENER SPINNER
+                if(idNuevoDispositivo > 0){
+                    //ACA INICIAL EL SPINNER
+                    dispDao.relacionarDispositivoConUsuario(idNuevoDispositivo,this.user.getId());
+                } else {
+                    Toast.makeText(this,"Error creando el dispositivo en la base de datos",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case "relacionarDispositivoConUsuario":
+                Integer idNuevaRelacion = DispositivoDAO.relacionarDispositivoConUsuarioHandler(res.getData());
+                //ACA DETENER SPINNER
+                if(idNuevaRelacion > 0){
+                    redireccionar(this.user);
+                } else {
+                    Toast.makeText(this,"Error creando relacion con dispositivo",Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 System.out.println("OTRO IDENTIFICADOR");
@@ -107,29 +135,49 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         if(us != null && us.getId() != null){
             if(txtPassword.getText().toString().equals(us.getContrasenia())){
                 //SI ES EL PRIMER INICIO GUARDAMOS LA CONFIGURACION INICIAL DE TIPO DE DISPOSITIVO
+
                 if(primerInicio){
                     System.out.println("primerInicio");
                     Utilidad utils = new Utilidad();
                     Configuracion config = new Configuracion();
-                    config.setTipoDispositivo(esSubordinado ? 2 : 1); //1 si es MAESTRO, 2 si es SUBORDINADO
-                    utils.guardarArchivoDeConfiguracion(this,config);
-                }
-                //SI ES SUBORDINADO VAMOS A LA PANTALLA INICIAL DE SUBORDINADO
-                if(esSubordinado){
-                    System.out.println("SUBORDINADO");
-                    startActivity(new Intent(this, PrincipalSubordinadoControlador.class));
-                }else{
-                    System.out.println("MAESTRO");
-                    //SI ES MAESTRO VAMOS A LA PANTALLA INICIAL DE MAESTRO
-                    Intent i = new Intent(this, DispositivosVinculadosControlador.class);
-                    i.putExtra("usuario",us);
-                    startActivity(i);
+                    String identificador = UUID.randomUUID().toString();
+                    config.setIdentificadorDeDispositivo(identificador);
+                    config.setTipoDispositivo(1); //1 si es MAESTRO
+                    if(esSubordinado){
+                        config.setTipoDispositivo(2); //2 si es SUBORDINADO
+                    }
+                    if(utils.guardarArchivoDeConfiguracion(this,config)){
+                        Dispositivo d = new Dispositivo();
+                        d.setImei(identificador);
+                        d.setTipo_Dispositivo(new TipoDispositivo(esSubordinado ? 2 : 1,""));
+                        //ACA INICIAR EL SPINNER
+                        dispDao.crearDispositivo(d);
+                    }
+                } else {
+                    redireccionar(us);
                 }
             } else {
                 Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void redireccionar(Usuario us){
+        //SI ES SUBORDINADO VAMOS A LA PANTALLA INICIAL DE SUBORDINADO
+        if(esSubordinado){
+            System.out.println("SUBORDINADO");Intent i = new Intent(this, PrincipalSubordinadoControlador.class);
+            i.putExtra("usuario",us);
+            i.putExtra("primerInicio",primerInicio);
+            startActivity(i);
+        }else{
+            System.out.println("MAESTRO");
+            //SI ES MAESTRO VAMOS A LA PANTALLA INICIAL DE MAESTRO
+            Intent i = new Intent(this, DispositivosVinculadosControlador.class);
+            i.putExtra("usuario",us);
+            i.putExtra("primerInicio",primerInicio);
+            startActivity(i);
         }
     }
 }

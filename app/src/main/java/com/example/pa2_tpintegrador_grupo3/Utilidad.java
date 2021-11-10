@@ -77,6 +77,15 @@ public class Utilidad extends AppCompatActivity {
 
 
     public Integer validarTipoDispositivo(Context context) {
+        Configuracion con = obtenerConfiguracion(context);
+        if(con != null){
+            return con.getTipoDispositivo();
+        }
+        return null;
+    }
+
+
+    public Configuracion obtenerConfiguracion(Context context) {
         FileInputStream file = null;
         try {
             file = context.openFileInput("parentalWatcher.txt");
@@ -86,10 +95,9 @@ public class Utilidad extends AppCompatActivity {
             Gson gson = new Gson();
             while((toJson = buffer.readLine()) != null){
                 System.out.println("@@@ CONFIGURACION: " + toJson);
-                Configuracion con = gson.fromJson(toJson, Configuracion.class);
-                return con.getTipoDispositivo();
+                return gson.fromJson(toJson, Configuracion.class);
             }
-            return -1;
+            return null;
         }catch (FileNotFoundException e){
             e.printStackTrace();
             System.out.println("@@ ARCHIVO NO ENCONTRADO");
@@ -109,7 +117,7 @@ public class Utilidad extends AppCompatActivity {
         }
     }
 
-    public void guardarArchivoDeConfiguracion(Context context,Configuracion con){
+    public Boolean guardarArchivoDeConfiguracion(Context context,Configuracion con){
         FileOutputStream file = null;
         try {
             Gson gson = new Gson();
@@ -120,8 +128,10 @@ public class Utilidad extends AppCompatActivity {
             writer.append(objConf);
             writer.append(separator);
             writer.close();
+            return true;
         } catch (IOException e){
             Toast.makeText(this,"Error guardando archivo de configuracion!",Toast.LENGTH_SHORT).show();
+            return false;
         } finally {
             if(file != null){
                 try {
