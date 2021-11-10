@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -18,14 +19,19 @@ import com.example.pa2_tpintegrador_grupo3.Controladores.DetallesDispositivoCont
 import com.example.pa2_tpintegrador_grupo3.Controladores.DispositivosVinculadosControlador;
 import com.example.pa2_tpintegrador_grupo3.Controladores.PrincipalSubordinadoControlador;
 import com.example.pa2_tpintegrador_grupo3.Controladores.RegistrarUsuarioControlador;
+import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
+import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
+import com.example.pa2_tpintegrador_grupo3.entidades.TipoDispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 import java.util.ArrayList;
 import java.util.List;
+
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements InterfazDeComunicacion
 {
@@ -36,22 +42,22 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
     private EditText txtNombreUsuario;
     private EditText txtPassword;
     private UsuarioDAO usDao = new UsuarioDAO(this);
+    private DispositivoDAO dispDao = new DispositivoDAO(this);
+    private Usuario user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState); 
+        Utilidad ut = new Utilidad(); 
+        //BUSCAMOS EL ARCHIVO DE CONFIGURACION 
+        Integer result = ut.validarTipoDispositivo(this);
         setContentView(R.layout.activity_main);
         txtNombreUsuario = (EditText) findViewById(R.id.nombreUsuarioLogin);
         txtPassword = (EditText) findViewById(R.id.contraseniaLogin);
-        Utilidad ut = new Utilidad();
-        System.out.println("@@getInstalledApps " + ut.getInstalledApps(this));
-        //BUSCAMOS EL ARCHIVO DE CONFIGURACION
-
-        Integer result = ut.validarTipoDispositivo(this);
         if(result != null){
-            //SI EXISTE EL ARCHIVO Y EL USUARIO ES DE TIPO MAESTRO (1) PASAMOS A LA PANTALLA DE LOGIN
             primerInicio = false;
             if(result == 1) {
+                //SI EXISTE EL ARCHIVO Y EL USUARIO ES DE TIPO MAESTRO (1) PASAMOS A LA PANTALLA DE LOGIN
                 LinearLayout l = (LinearLayout)findViewById(R.id.Login);
                 l.setVisibility(View.VISIBLE);
                 LinearLayout l2 = (LinearLayout)findViewById(R.id.Inicial);
@@ -101,34 +107,83 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
         switch (res.getIdentificador()){
             case "obtenerUsuarioPorNombreUsuario":
-                Usuario user = UsuarioDAO.obtenerUsuarioPorNombreUsuarioHandler(res.getData());
+                this.user = UsuarioDAO.obtenerUsuarioPorNombreUsuarioHandler(res.getData());
                 //ACA DETENER SPINNER
-                validarInicioSesion(user);
+                validarInicioSesion(this.user);
+                break;
+            case "crearDispositivo":
+                Integer idNuevoDispositivo = DispositivoDAO.crearDispositivoHandler(res.getData());
+                //ACA DETENER SPINNER
+                if(idNuevoDispositivo > 0){
+                    //ACA INICIAL EL SPINNER
+                    dispDao.relacionarDispositivoConUsuario(idNuevoDispositivo,this.user.getId());
+                } else {
+                    Toast.makeText(this,"Error creando el dispositivo en la base de datos",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case "relacionarDispositivoConUsuario":
+                Integer idNuevaRelacion = DispositivoDAO.relacionarDispositivoConUsuarioHandler(res.getData());
+                //ACA DETENER SPINNER
+                if(idNuevaRelacion > 0){
+                    redireccionar(this.user);
+                } else {
+                    Toast.makeText(this,"Error creando relacion con dispositivo",Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 System.out.println("OTRO IDENTIFICADOR");
         }
     }
 
-    //Si el usuario recibido por parametro tiene ID, existe, chequeamos el nombre de usuario
+    //Si el usuario recibido por parametro tiene ID, existe, chequeamos la contrasenia y continuamos
     public void validarInicioSesion(Usuario us){
+        System.out.println("validarInicioSesion");
         if(us != null && us.getId() != null){
-            Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT);
+            if(txtPassword.getText().toString().equals(us.getContrasenia())){
+                //SI ES EL PRIMER INICIO GUARDAMOS LA CONFIGURACION INICIAL DE TIPO DE DISPOSITIVO
+
+                if(primerInicio){
+                    System.out.println("primerInicio");
+                    Utilidad utils = new Utilidad();
+                    Configuracion config = new Configuracion();
+                    String identificador = UUID.randomUUID().toString();
+                    config.setIdentificadorDeDispositivo(identificador);
+                    config.setTipoDispositivo(1); //1 si es MAESTRO
+                    if(esSubordinado){
+                        config.setTipoDispositivo(2); //2 si es SUBORDINADO
+                    }
+                    if(utils.guardarArchivoDeConfiguracion(this,config)){
+                        Dispositivo d = new Dispositivo();
+                        d.setImei(identificador);
+                        d.setTipo_Dispositivo(new TipoDispositivo(esSubordinado ? 2 : 1,""));
+                        //ACA INICIAR EL SPINNER
+                        dispDao.crearDispositivo(d);
+                    }
+                } else {
+                    redireccionar(us);
+                }
+            } else {
+                Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT).show();
+            }
         } else {
-            //SI ES EL PRIMER INICIO GUARDAMOS LA CONFIGURACION INICIAL DE TIPO DE DISPOSITIVO
-            if(primerInicio){
-                Utilidad utils = new Utilidad();
-                Configuracion config = new Configuracion();
-                config.setTipoDispositivo(esSubordinado ? 1 : 2);
-                utils.guardarArchivoDeConfiguracion(config);
-            }
-            //SI ES SUBORDINADO VAMOS A LA PANTALLA INICIAL DE SUBORDINADO
-            if(esSubordinado){
-                startActivity(new Intent(this, PrincipalSubordinadoControlador.class));
-            }else{
-                //SI ES MAESTRO VAMOS A LA PANTALLA INICIAL DE MAESTRO
-                startActivity(new Intent(this, DispositivosVinculadosControlador.class));
-            }
+            Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void redireccionar(Usuario us){
+        //SI ES SUBORDINADO VAMOS A LA PANTALLA INICIAL DE SUBORDINADO
+        if(esSubordinado){
+            System.out.println("SUBORDINADO");Intent i = new Intent(this, PrincipalSubordinadoControlador.class);
+            i.putExtra("usuario",us);
+            i.putExtra("primerInicio",primerInicio);
+            startActivity(i);
+        }else{
+            System.out.println("MAESTRO");
+            //SI ES MAESTRO VAMOS A LA PANTALLA INICIAL DE MAESTRO
+            Intent i = new Intent(this, DispositivosVinculadosControlador.class);
+            i.putExtra("usuario",us);
+            i.putExtra("primerInicio",primerInicio);
+            startActivity(i);
         }
     }
 }

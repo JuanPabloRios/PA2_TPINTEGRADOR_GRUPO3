@@ -89,6 +89,15 @@ public class Utilidad extends AppCompatActivity {
 
 
     public Integer validarTipoDispositivo(Context context) {
+        Configuracion con = obtenerConfiguracion(context);
+        if(con != null){
+            return con.getTipoDispositivo();
+        }
+        return null;
+    }
+
+
+    public Configuracion obtenerConfiguracion(Context context) {
         FileInputStream file = null;
         try {
             file = context.openFileInput("parentalWatcher.txt");
@@ -97,10 +106,10 @@ public class Utilidad extends AppCompatActivity {
             String toJson;
             Gson gson = new Gson();
             while((toJson = buffer.readLine()) != null){
-                Configuracion con = gson.fromJson(toJson, Configuracion.class);
-                return con.getTipoDispositivo();
+                System.out.println("@@@ CONFIGURACION: " + toJson);
+                return gson.fromJson(toJson, Configuracion.class);
             }
-            return -1;
+            return null;
         }catch (FileNotFoundException e){
             e.printStackTrace();
             System.out.println("@@ ARCHIVO NO ENCONTRADO");
@@ -120,19 +129,21 @@ public class Utilidad extends AppCompatActivity {
         }
     }
 
-    public void guardarArchivoDeConfiguracion(Configuracion con){
+    public Boolean guardarArchivoDeConfiguracion(Context context,Configuracion con){
         FileOutputStream file = null;
         try {
             Gson gson = new Gson();
             String objConf = gson.toJson(con);
-            file = new FileOutputStream(new File(getFilesDir(),NOMBRE_ARCHIVO),true);
+            file = new FileOutputStream(new File(context.getFilesDir(),NOMBRE_ARCHIVO),true);
             String separator = System.getProperty("line.separator");
             OutputStreamWriter writer = new OutputStreamWriter(file);
             writer.append(objConf);
             writer.append(separator);
             writer.close();
+            return true;
         } catch (IOException e){
             Toast.makeText(this,"Error guardando archivo de configuracion!",Toast.LENGTH_SHORT).show();
+            return false;
         } finally {
             if(file != null){
                 try {
