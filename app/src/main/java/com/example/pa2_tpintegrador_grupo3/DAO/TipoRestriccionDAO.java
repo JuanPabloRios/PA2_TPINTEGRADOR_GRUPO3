@@ -16,20 +16,38 @@ public class TipoRestriccionDAO
 		this.com = ic;
 	}
 
-	public void eliminarTipoRestriccion(Integer idTipoRestriccion)
+	public void obtenerTodosLosTipoRestricciones()
 	{
-		UpsertManager manager = new UpsertManager();
-		manager.setIdentificador("ELIMINARTipoRestriccion");
-		manager.setQuery("UPDATE TipoRestriccion SET Eliminado = 1 WHERE Id = "+idTipoRestriccion);
+		SelectManager manager = new SelectManager();
+		manager.setIdentificador("OBTENERTODOSLOSTIPORESTRICCIONES");
+		manager.setQuery("SELECT * FROM Tipo_Restriccion");
 		DBQueryManager mg = new DBQueryManager(this.com, manager);
 		mg.execute();
 	}
 
-	public static Integer eliminarTipoRestriccionHandler(Object obj)
+	public static ArrayList<TipoRestriccion> obtenerTodosLosTipoRestriccionesHandler(Object obj)
 	{
 		if(obj != null)
 		{
-			return (Integer)obj;
+			ArrayList<TipoRestriccion> resultados = new ArrayList<TipoRestriccion>();
+			try
+			{
+				ResultSet rs = (ResultSet)obj;
+				while(rs.next())
+				{
+					resultados.add(
+						new TipoRestriccion(
+							rs.getInt("id"),
+							rs.getString("Descripcion")
+						)
+					);
+				}
+				return resultados;
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
 		}
 		return null;
 	}
