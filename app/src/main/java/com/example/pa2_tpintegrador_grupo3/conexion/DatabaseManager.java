@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Locale;
 
 public class DatabaseManager {
     private static Connection conexion;
@@ -32,11 +33,15 @@ public class DatabaseManager {
         try{
             obtenerConexion();
             Statement st = obtenerStatement();
-            if(st.executeUpdate( query, Statement.RETURN_GENERATED_KEYS) > 0){
-                ResultSet rs = st.getGeneratedKeys();
-                if (rs.next()){
-                    System.out.println("NEW ID " + rs.getString(1));
-                    return Integer.parseInt(rs.getString(1));
+            if(query.toUpperCase().contains("UPDATE")){
+                return st.executeUpdate(query);
+            } else {
+                if(st.executeUpdate( query, Statement.RETURN_GENERATED_KEYS) > 0){
+                    ResultSet rs = st.getGeneratedKeys();
+                    if (rs.next()){
+                        System.out.println("NEW ID " + rs.getString(1));
+                        return Integer.parseInt(rs.getString(1));
+                    }
                 }
             }
             return -1;
