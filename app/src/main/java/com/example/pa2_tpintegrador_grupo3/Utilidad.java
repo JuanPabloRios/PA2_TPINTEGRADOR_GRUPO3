@@ -166,7 +166,7 @@ public class Utilidad extends AppCompatActivity {
             icon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
             icon.draw(canvas);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] bitmapByte = stream.toByteArray();
             res = Base64.encodeToString(bitmapByte,Base64.DEFAULT);
         }
