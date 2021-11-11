@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
     private UsuarioDAO usDao = new UsuarioDAO(this);
     private DispositivoDAO dispDao = new DispositivoDAO(this);
     private Usuario user;
+    private Integer idNuevoDispositivo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,11 +116,11 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                 validarInicioSesion(this.user);
                 break;
             case "crearDispositivo":
-                Integer idNuevoDispositivo = DispositivoDAO.crearDispositivoHandler(res.getData());
+                this.idNuevoDispositivo = DispositivoDAO.crearDispositivoHandler(res.getData());
                 //ACA DETENER SPINNER
-                if(idNuevoDispositivo > 0){
+                if(this.idNuevoDispositivo > 0){
                     //ACA INICIAL EL SPINNER
-                    dispDao.relacionarDispositivoConUsuario(idNuevoDispositivo,this.user.getId());
+                    dispDao.relacionarDispositivoConUsuario(this.idNuevoDispositivo,this.user.getId());
                 } else {
                     Toast.makeText(this,"Error creando el dispositivo en la base de datos",Toast.LENGTH_SHORT).show();
                 }
@@ -128,6 +129,10 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                 Integer idNuevaRelacion = DispositivoDAO.relacionarDispositivoConUsuarioHandler(res.getData());
                 //ACA DETENER SPINNER
                 if(idNuevaRelacion > 0){
+                    Utilidad ut = new Utilidad();
+                    Configuracion c = ut.obtenerConfiguracion(this);
+                    c.setIdDispositivo(this.idNuevoDispositivo);
+                    ut.guardarArchivoDeConfiguracion(this,c);
                     redireccionar(this.user);
                 } else {
                     Toast.makeText(this,"Error creando relacion con dispositivo",Toast.LENGTH_SHORT).show();
