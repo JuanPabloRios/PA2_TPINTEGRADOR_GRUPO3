@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PA2_TPINTEGRADOR_GRUPO3">
         <activity
+            android:name=".DetallesDispositivo"
+            android:exported="true" />
+        <activity
             android:name=".Controladores.DispositivosVinculadosControlador"
             android:exported="true" />
         <activity
