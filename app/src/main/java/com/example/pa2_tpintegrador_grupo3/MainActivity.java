@@ -1,37 +1,26 @@
 package com.example.pa2_tpintegrador_grupo3;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.pa2_tpintegrador_grupo3.Controladores.DetallesDispositivoControlador;
 import com.example.pa2_tpintegrador_grupo3.Controladores.DispositivosVinculadosControlador;
 import com.example.pa2_tpintegrador_grupo3.Controladores.PrincipalSubordinadoControlador;
 import com.example.pa2_tpintegrador_grupo3.Controladores.RegistrarUsuarioControlador;
 import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
+import com.example.pa2_tpintegrador_grupo3.Servicios.ServiceIntentApp;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoDispositivo;
-import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import java.util.UUID;
 
@@ -50,12 +39,13 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState); 
+        super.onCreate(savedInstanceState);
+        startService();
         Utilidad ut = new Utilidad(); 
         //BUSCAMOS EL ARCHIVO DE CONFIGURACION 
         Integer result = ut.validarTipoDispositivo(this);
         setContentView(R.layout.activity_main);
-        txtNombreUsuario = (EditText) findViewById(R.id.nombreUsuarioLogin);
+         txtNombreUsuario = (EditText) findViewById(R.id.nombreUsuarioLogin);
         txtPassword = (EditText) findViewById(R.id.contraseniaLogin);
         if(result != null){
             primerInicio = false;
@@ -73,6 +63,12 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
             }
         }
         //SI NO EXISTE EL ARCHIVO QUEDAMOS EN LA PANTALLA DE SELECCION INICIAL QUE DARA PASO A LA CREACION DEL ARCHIVO DE CONFIGURACION
+    }
+
+    public void startService(){
+        Intent serviceIntent = new Intent(this, ServiceIntentApp.class);
+        serviceIntent.putExtra("inputExtra","lo que va a dar");
+        ContextCompat.startForegroundService(this,serviceIntent);
     }
 
     public void irARegistrarSubordinado(View view){
