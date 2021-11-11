@@ -3,42 +3,17 @@ package com.example.pa2_tpintegrador_grupo3.entidades;
 public class Aplicacion
 {
 	private Integer Id;
-
-	public String getNombre() {
-		return Nombre;
-	}
-
-	public void setNombre(String nombre) {
-		Nombre = nombre;
-	}
-
-	public String getIcono() {
-		return Icono;
-	}
-
-	public void setIcono(String icono) {
-		Icono = icono;
-	}
-
 	private String Nombre;
-	private String Icono;
 	private String Descripcion;
+	private String Icono;
 	private boolean Eliminado;
 
-	public Aplicacion(Integer id)
+	public Aplicacion(Integer id, String nombre, String descripcion, String icono, boolean eliminado)
 	{
 		Id = id;
-	}
-
-	public Aplicacion(String descripcion, String Nombre, String Icono) {
+		Nombre = nombre;
 		Descripcion = descripcion;
-		this.Nombre = Nombre;
-		this.Icono = Icono;
-	}
-	public Aplicacion(Integer id, String descripcion, boolean eliminado)
-	{
-		Id = id;
-		Descripcion = descripcion;
+		Icono = icono;
 		Eliminado = eliminado;
 	}
 
@@ -52,6 +27,13 @@ public class Aplicacion
 		Id = id;
 	}
 
+	public String getNombre()
+	{
+		return Nombre;
+	}
+
+	public void setNombre(String nombre) { Nombre = nombre; }
+
 	public String getDescripcion()
 	{
 		return Descripcion;
@@ -60,6 +42,16 @@ public class Aplicacion
 	public void setDescripcion(String descripcion)
 	{
 		Descripcion = descripcion;
+	}
+
+	public String getIcono()
+	{
+		return Icono;
+	}
+
+	public void setIcono(String icono)
+	{
+		Icono = icono;
 	}
 
 	public boolean isEliminado()
