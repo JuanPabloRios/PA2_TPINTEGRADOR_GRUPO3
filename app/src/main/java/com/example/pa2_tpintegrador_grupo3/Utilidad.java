@@ -135,11 +135,9 @@ public class Utilidad extends AppCompatActivity {
         try {
             Gson gson = new Gson();
             String objConf = gson.toJson(con);
-            file = new FileOutputStream(new File(context.getFilesDir(),NOMBRE_ARCHIVO),true);
-            String separator = System.getProperty("line.separator");
+            file = new FileOutputStream(new File(context.getFilesDir(),NOMBRE_ARCHIVO));
             OutputStreamWriter writer = new OutputStreamWriter(file);
-            writer.append(objConf);
-            writer.append(separator);
+            writer.write(objConf);
             writer.close();
             return true;
         } catch (IOException e){
@@ -180,10 +178,21 @@ public class Utilidad extends AppCompatActivity {
         List<ApplicationInfo> packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
         for (ApplicationInfo applicationInfo : packages) {
             InfoObject newInfo = new InfoObject();
+            ArrayList<String> appsToAdd = new ArrayList<String>();
+            appsToAdd.add("com.google.android.youtube");
+            appsToAdd.add("com.google.android.googlequicksearchbox");
+            appsToAdd.add("com.google.android.gm");
+            appsToAdd.add("com.google.android.music");
+            appsToAdd.add("com.google.android.apps.docs");
 
-            if(applicationInfo.packageName.startsWith("com.android") && !applicationInfo.packageName.equals("com.android.vending")){
+            if( (applicationInfo.packageName.startsWith("com.android") && !applicationInfo.packageName.equals("com.android.vending")) ||
+                (applicationInfo.packageName.startsWith("com.google.android") && !appsToAdd.contains(applicationInfo.packageName)) ||
+                applicationInfo.packageName.equals("android") ||
+                applicationInfo.packageName.equals("com.example.pa2_tpintegrador_grupo3")
+            ){
                 continue;
             }
+
             newInfo.appname = applicationInfo.loadLabel(packageManager).toString();
             newInfo.packagename = applicationInfo.packageName;
             Drawable icon = packageManager.getApplicationIcon(applicationInfo);

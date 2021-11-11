@@ -29,7 +29,6 @@ public class DatabaseManager {
     }
 
     public static int ejecutarUpsert(String query){
-        System.out.println("@@ "+query);
         try{
             obtenerConexion();
             Statement st = obtenerStatement();
@@ -51,7 +50,6 @@ public class DatabaseManager {
     }
 
     public static ResultSet ejecutarSelect(String query){
-        System.out.println("@@ "+query);
         try{
             obtenerConexion();
             Statement st = obtenerStatement();

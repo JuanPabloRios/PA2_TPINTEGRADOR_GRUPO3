@@ -71,7 +71,7 @@ public class AplicacionDAO
 						rs.getString("Descripcion"),
 						rs.getString("Icono"),
 						rs.getBoolean("Eliminado")
-						);
+					);
 				}
 				return null;
 			}
@@ -83,6 +83,47 @@ public class AplicacionDAO
 		return null;
 	}
 
+
+	public void obtenerAplicacionesPorNombre(ArrayList<String> nombresLst) {
+		SelectManager manager = new SelectManager();
+		manager.setIdentificador("obtenerAplicacionesPorNombre");
+		String nombres = "";
+		for(String n : nombresLst){
+			nombres+= "'"+n+"',";
+		}
+		nombres = nombres.substring(0, nombres.length() -1);
+		String query = "SELECT * FROM Aplicacion WHERE Nombre IN ("+nombres+") AND Eliminado = 0";
+		manager.setQuery(query);
+		DBQueryManager mg = new DBQueryManager(this.com, manager);
+		mg.execute();
+	}
+
+	public static ArrayList<Aplicacion> obtenerAplicacionesPorNombreHandler(Object obj) {
+		if(obj != null) {
+			ArrayList<Aplicacion> res = new ArrayList<Aplicacion>();
+			try
+			{
+				ResultSet rs = (ResultSet)obj;
+				while(rs.next()) {
+					res.add(new Aplicacion(
+						rs.getInt("id"),
+						rs.getString("Nombre"),
+						rs.getString("Descripcion"),
+						rs.getString("Icono"),
+						rs.getBoolean("Eliminado")
+					));
+				}
+				return res;
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+		}
+		return null;
+	}
+
+
 	public void obtenerTodasLasAplicaciones()
 	{
 		SelectManager manager = new SelectManager();
@@ -92,13 +133,10 @@ public class AplicacionDAO
 		mg.execute();
 	}
 
-	public static ArrayList<Aplicacion> obtenerTodasLasAplicacionesHandler(Object obj)
-	{
-		if(obj != null)
-		{
+	public static ArrayList<Aplicacion> obtenerTodasLasAplicacionesHandler(Object obj) {
+		if(obj != null) {
 			ArrayList<Aplicacion> resultados = new ArrayList<Aplicacion>();
-			try
-			{
+			try {
 				ResultSet rs = (ResultSet)obj;
 				while(rs.next())
 				{
@@ -122,29 +160,50 @@ public class AplicacionDAO
 		return null;
 	}
 
-	public void insertarAplicaciones(ArrayList<Aplicacion> aplicaciones)
-	{
+	public void relacionarAplicacionesConDispositivo(ArrayList<Aplicacion> aplicaciones, Integer idDispositivo) {
+		UpsertManager manager = new UpsertManager();
+		manager.setIdentificador("relacionarAplicacionesConDispositivo");
+		String query = "INSERT INTO Restriccion (Id_Dispositivo, Id_Tipo_Restriccion, Id_Aplicacion, Duracion_Minutos) VALUES ";
+		for(Aplicacion app : aplicaciones) {
+			query+= "("+idDispositivo+",";
+			query+= "2,";
+			query+= app.getId()+",";
+			query+= -1;
+			query+="),";
+		}
+		query = query.substring(0, query.length() -1);
+		System.out.println(" relacionarAplicacionesConDispositivo "+ query);
+		manager.setQuery(query);
+		DBQueryManager mg = new DBQueryManager(this.com, manager);
+		mg.execute();
+	}
+
+	public static Integer relacionarAplicacionesConDispositivoHandler(Object obj) {
+		if(obj != null) {
+			return (Integer)obj;
+		}
+		return null;
+	}
+
+	public void insertarAplicaciones(ArrayList<Aplicacion> aplicaciones) {
 		UpsertManager manager = new UpsertManager();
 		manager.setIdentificador("insertarAplicaciones");
-		String query = "INSERT INTO Aplicacion (Nombre, Descripcion, Icono) VALUES ";
-		for(Aplicacion app : aplicaciones)
-		{
+		//AGREGAMOS EL IGNORE YA QUE ES PROBABLE QUE YA EXISTAN LAS APPS, DE ESTA MANERA NO LAS CREAMOS SI NO ES NECESARIO
+		String query = "INSERT IGNORE INTO Aplicacion (Nombre, Descripcion, Icono) VALUES ";
+		for(Aplicacion app : aplicaciones) {
 			query+= "(\""+app.getNombre()+"\",";
 			query+= "\""+app.getDescripcion()+"\",";
 			query+= "\""+app.getIcono()+"\"";
 			query+="),";
 		}
 		query = query.substring(0, query.length() -1);
-		System.out.println(query);
 		manager.setQuery(query);
 		DBQueryManager mg = new DBQueryManager(this.com, manager);
 		mg.execute();
 	}
 
-	public static Integer insertarAplicacionesHandler(Object obj)
-	{
-		if(obj != null) 
-		{
+	public static Integer insertarAplicacionesHandler(Object obj) {
+		if(obj != null) {
 			return (Integer)obj;
 		}
 		return null;
