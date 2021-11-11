@@ -23,7 +23,7 @@ public class RestriccionesDAO {
     public void crearRestricciones(Restricciones res){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("CREARRESTRICCIONES");
-        String query = "INSERT INTO Restricciones (Id_dispositivo,Id_Tipo_Restriccion,Id_Aplicacion,Duracion_Minutos,Eliminado) VALUES (";
+        String query = "INSERT INTO Restriccion (Id_dispositivo,Id_Tipo_Restriccion,Id_Aplicacion,Duracion_Minutos,Eliminado) VALUES (";
         query+= res.getDispositivo().getId();
         query+= res.getTipo_Restriccion().getId();
         query+= res.getAplicacion().getId();
@@ -51,7 +51,7 @@ public class RestriccionesDAO {
     public void obtenerRestriccionesPorId(Integer resId){
         SelectManager manager = new SelectManager();
         manager.setIdentificador("OBTENERRESTRICCIONESPORID");
-        String query = "SELECT * FROM Restricciones WHERE Id = \""+resId+"\" AND Eliminado = 0";
+        String query = "SELECT * FROM Restriccion WHERE Id = \""+resId+"\" AND Eliminado = 0";
         manager.setQuery(query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
@@ -87,7 +87,7 @@ public class RestriccionesDAO {
     public void obtenerTodasLasRestricciones(){
         SelectManager manager = new SelectManager();
         manager.setIdentificador("OBTENERTODASLASRESTRICCIONES");
-        manager.setQuery("SELECT * FROM Restricciones WHERE Eliminado = 0");
+        manager.setQuery("SELECT * FROM Restriccion WHERE Eliminado = 0");
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
     }
@@ -124,7 +124,7 @@ public class RestriccionesDAO {
     public void eliminarRestricciones(Integer resId){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("ELIMINARRESTRICCIONES");
-        manager.setQuery("UPDATE Restricciones SET Eliminado = 1 WHERE Id = "+resId);
+        manager.setQuery("UPDATE Restriccion SET Eliminado = 1 WHERE Id = "+resId);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
     }
@@ -132,6 +132,73 @@ public class RestriccionesDAO {
     public static Integer eliminarRestriccionesHandler(Object obj){
         if(obj != null){
             return (Integer)obj;
+        }
+        return null;
+    }
+
+    public void modificarTiempoEnRestriccion(Restricciones res){
+        UpsertManager manager = new UpsertManager();
+        manager.setIdentificador("modificarTiempoEnRestriccion");
+        manager.setQuery("UPDATE Restriccion SET Duracion_Minutos = "+res.getDuracion_Minutos()+" WHERE Id = "+res.getId());
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
+    }
+
+    public static Integer modificarTiempoEnRestriccionHandler(Object obj){
+        if(obj != null){
+            return (Integer)obj;
+        }
+        return null;
+    }
+
+    public void obtenerTodasLasRestriccionesPorIdDeDispositivo(Integer idDispositivo)
+    {
+        SelectManager manager = new SelectManager();
+        manager.setIdentificador("obtenerTodasLasRestriccionesPorIdDeDispositivo");
+        String query =
+                "SELECT r.Id as idRestriccion,"+
+                    "a.Id as idApp,"+
+                    "a.Nombre as appName,"+
+                    "a.Descripcion as appLabel,"+
+                    "a.Icono as appIcon,"+
+                    "r.Duracion_Minutos as duracion,"+
+                    "d.Id as idDispositivo,"+
+                    "t.Id as idTipo "+
+                "FROM Restriccion as r "+
+                "INNER JOIN Aplicacion as a ON r.Id_Aplicacion = a.Id "+
+                "INNER JOIN Dispositivo as d on r.Id_Dispositivo = d.Id "+
+                "INNER JOIN Tipo_Restriccion as t on r.Id_Tipo_Restriccion = t.Id "+
+                "WHERE r.Eliminado = 0 AND Id_Dispositivo = "+ idDispositivo+" "+
+                "ORDER BY a.Descripcion ASC";
+        manager.setQuery(query);
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
+    }
+
+    public static ArrayList<Restricciones> obtenerTodasLasRestriccionesPorIdDeDispositivoHandler(Object obj) {
+        if(obj != null) {
+            ArrayList<Restricciones> resultados = new ArrayList<Restricciones>();
+            try {
+                ResultSet rs = (ResultSet)obj;
+                while(rs.next())
+                {
+                    resultados.add(
+                        new Restricciones(
+                            rs.getInt("idRestriccion"),
+                            new Dispositivo(rs.getInt("idDispositivo"), null, "", false),
+                            new TipoRestriccion(rs.getInt("idTipo"),""),
+                            new Aplicacion(rs.getInt("idApp"), rs.getString("appName"), rs.getString("appLabel"), rs.getString("appIcon"),false),
+                            rs.getInt("duracion"),
+                            false
+                        )
+                    );
+                }
+                return resultados;
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
         return null;
     }
