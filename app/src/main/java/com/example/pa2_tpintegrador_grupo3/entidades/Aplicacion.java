@@ -8,13 +8,22 @@ public class Aplicacion
 	private String Icono;
 	private boolean Eliminado;
 
-	public Aplicacion(Integer id, String nombre, String descripcion, String icono, boolean eliminado)
-	{
+	public Aplicacion(Integer id) {
+		Id = id;
+	}
+
+	public Aplicacion(Integer id, String nombre, String descripcion, String icono, boolean eliminado) {
 		Id = id;
 		Nombre = nombre;
 		Descripcion = descripcion;
 		Icono = icono;
 		Eliminado = eliminado;
+	}
+
+	public Aplicacion(String descripcion, String Nombre, String Icono) {
+		this.Descripcion = descripcion;
+		this.Nombre = Nombre;
+		this.Icono = Icono;
 	}
 
 	public Integer getId()

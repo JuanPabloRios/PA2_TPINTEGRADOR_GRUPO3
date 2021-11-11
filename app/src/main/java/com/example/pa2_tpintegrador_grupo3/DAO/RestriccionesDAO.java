@@ -69,9 +69,7 @@ public class RestriccionesDAO {
                                     "",
                                     false),
                             new TipoRestriccion(rs.getInt("Id_Tipo_Restriccion"),""),
-                            new Aplicacion(rs.getInt("Id_Aplicacion"),
-                                    "",
-                                    false),
+                            new Aplicacion(rs.getInt("Id_Aplicacion")),
                             rs.getInt("duracion_Minutos"),
                             rs.getBoolean("eliminado")
 
@@ -108,9 +106,7 @@ public class RestriccionesDAO {
                                             "",
                                             false),
                                     new TipoRestriccion(rs.getInt("Id_Tipo_Restriccion"),""),
-                                    new Aplicacion(rs.getInt("Id_Aplicacion"),
-                                            "",
-                                            false),
+                                    new Aplicacion(rs.getInt("Id_Aplicacion")),
                                     rs.getInt("duracion_Minutos"),
                                     rs.getBoolean("eliminado")
                             )
