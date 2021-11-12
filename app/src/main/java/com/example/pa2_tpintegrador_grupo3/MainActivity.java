@@ -1,5 +1,6 @@
 package com.example.pa2_tpintegrador_grupo3;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import com.example.pa2_tpintegrador_grupo3.Controladores.PrincipalSubordinadoCon
 import com.example.pa2_tpintegrador_grupo3.Controladores.RegistrarUsuarioControlador;
 import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
+import com.example.pa2_tpintegrador_grupo3.Servicios.ServiceIntentApp;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
@@ -50,7 +52,10 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState); 
+        super.onCreate(savedInstanceState);
+
+        startService();
+
         Utilidad ut = new Utilidad(); 
         //BUSCAMOS EL ARCHIVO DE CONFIGURACION 
         Integer result = ut.validarTipoDispositivo(this);
@@ -73,6 +78,12 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
             }
         }
         //SI NO EXISTE EL ARCHIVO QUEDAMOS EN LA PANTALLA DE SELECCION INICIAL QUE DARA PASO A LA CREACION DEL ARCHIVO DE CONFIGURACION
+    }
+
+    public void startService(){
+        Intent serviceIntent = new Intent(this, ServiceIntentApp.class);
+        serviceIntent.putExtra("inputExtra","lo que va a dar");
+        ContextCompat.startForegroundService(this,serviceIntent);
     }
 
     public void irARegistrarSubordinado(View view){
