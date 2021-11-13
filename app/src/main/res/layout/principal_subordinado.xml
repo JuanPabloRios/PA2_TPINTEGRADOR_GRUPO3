@@ -104,7 +104,7 @@
                             android:id="@+id/textView6"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="subordinado@test.com.ar" />
+                            android:text="Proximamente..." />
 
                     </TableRow>
 
@@ -134,7 +134,7 @@
                             android:id="@+id/textView4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Motorola P4" />
+                            android:text="Proximamente..." />
                     </TableRow>
 
                     <TableRow
@@ -163,7 +163,7 @@
                             android:id="@+id/textView19"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Motorola P4" />
+                            android:text="Proximamente..." />
 
                     </TableRow>
 
@@ -192,7 +192,7 @@
                             android:id="@+id/textView11"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="10:20" />
+                            android:text="Proximamente..." />
                     </TableRow>
                 </TableLayout>
 
@@ -220,14 +220,16 @@
                         android:id="@+id/button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dispositivo" />
+                        android:text="Dispositivo"
+                        android:enabled="false"/>
 
                     <Button
                         android:id="@+id/button5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10sp"
-                        android:text="Aplicaciones" />
+                        android:text="Aplicaciones"
+                        android:enabled="false"/>
                 </LinearLayout>
 
             </LinearLayout>

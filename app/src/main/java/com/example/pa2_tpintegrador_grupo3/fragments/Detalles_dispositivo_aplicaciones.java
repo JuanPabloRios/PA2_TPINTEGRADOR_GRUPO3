@@ -58,7 +58,7 @@ public class Detalles_dispositivo_aplicaciones extends Fragment {
             byte[] decodedString = Base64.decode(res.getAplicacion().getIcono(), Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             ImageView imagen = new ImageView(requireActivity());
-            imagen.setImageBitmap(Bitmap.createScaledBitmap(decodedByte, 120, 120, false));
+            imagen.setImageBitmap(Bitmap.createScaledBitmap(decodedByte, 45, 45, false));
             fila.addView(imagen);
 
             TextView texto = new TextView(requireActivity());
