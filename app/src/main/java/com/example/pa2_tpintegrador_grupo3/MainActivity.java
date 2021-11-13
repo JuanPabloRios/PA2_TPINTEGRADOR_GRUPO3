@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startService();
         Utilidad ut = new Utilidad(); 
         //BUSCAMOS EL ARCHIVO DE CONFIGURACION 
         Integer result = ut.validarTipoDispositivo(this);
@@ -78,11 +77,6 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         //SI NO EXISTE EL ARCHIVO QUEDAMOS EN LA PANTALLA DE SELECCION INICIAL QUE DARA PASO A LA CREACION DEL ARCHIVO DE CONFIGURACION
     }
 
-    public void startService(){
-        Intent serviceIntent = new Intent(this, ServiceIntentApp.class);
-        ContextCompat.startForegroundService(this,serviceIntent);
-
-    }
 
     public void irARegistrarSubordinado(View view){
         esSubordinado = true;
@@ -158,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         if(us != null && us.getId() != null){
             if(txtPassword.getText().toString().equals(us.getContrasenia())){
                 //SI ES EL PRIMER INICIO GUARDAMOS LA CONFIGURACION INICIAL DE TIPO DE DISPOSITIVO
-
                 if(primerInicio){
                     System.out.println("primerInicio");
                     Utilidad utils = new Utilidad();

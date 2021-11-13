@@ -107,17 +107,14 @@ public class Utilidad extends AppCompatActivity {
             String toJson;
             Gson gson = new Gson();
             while((toJson = buffer.readLine()) != null){
-                System.out.println("@@@ CONFIGURACION: " + toJson);
                 return gson.fromJson(toJson, Configuracion.class);
             }
             return null;
         }catch (FileNotFoundException e){
             e.printStackTrace();
-            System.out.println("@@ ARCHIVO NO ENCONTRADO");
             return  null;
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("@@ IOException");
             return  null;
         } finally {
             if(file != null){
