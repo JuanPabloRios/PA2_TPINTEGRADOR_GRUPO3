@@ -24,6 +24,11 @@ public class Restricciones {
         this.eliminado = eliminado;
     }
 
+    public Restricciones(Aplicacion aplicacion, int duracion_Minutos) {
+        this.Aplicacion = aplicacion;
+        this.duracion_Minutos = duracion_Minutos;
+    }
+
     public Integer getId() {
         return id;
     }

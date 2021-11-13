@@ -43,6 +43,5 @@
     <string name="title_activity_detalles_dispositivo">detalles_dispositivo</string>
     <string name="PermisosDispositivo">Dispositivo</string>
     <string name="PermisosAplicaciones">Aplicaciones</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

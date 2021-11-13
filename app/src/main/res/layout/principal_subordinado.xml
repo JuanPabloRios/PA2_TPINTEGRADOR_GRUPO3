@@ -69,14 +69,13 @@
                             android:id="@+id/textView22"
                             android:layout_width="170dp"
                             android:layout_height="wrap_content"
-                            android:text="Email Maestro:"
+                            android:text="IMEI DISPOSITIVO"
                             android:textAlignment="center" />
 
                         <TextView
-                            android:id="@+id/textView23"
+                            android:id="@+id/imeiTxt"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="pruebaDeApp@test.com.ar" />
+                            android:layout_height="wrap_content" />
                     </TableRow>
 
                     <TableRow
