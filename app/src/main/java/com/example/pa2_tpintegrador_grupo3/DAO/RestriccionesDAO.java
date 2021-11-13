@@ -71,6 +71,7 @@ public class RestriccionesDAO {
                             new TipoRestriccion(rs.getInt("Id_Tipo_Restriccion"),""),
                             new Aplicacion(rs.getInt("Id_Aplicacion")),
                             rs.getInt("duracion_Minutos"),
+                            rs.getBoolean("Activa"),
                             rs.getBoolean("eliminado")
 
                     );
@@ -108,6 +109,7 @@ public class RestriccionesDAO {
                                     new TipoRestriccion(rs.getInt("Id_Tipo_Restriccion"),""),
                                     new Aplicacion(rs.getInt("Id_Aplicacion")),
                                     rs.getInt("duracion_Minutos"),
+                                    rs.getBoolean("Activa"),
                                     rs.getBoolean("eliminado")
                             )
                     );
@@ -136,15 +138,17 @@ public class RestriccionesDAO {
         return null;
     }
 
-    public void modificarTiempoEnRestriccion(Restricciones res){
+
+    public void modificarRestriccion(Restricciones res){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("modificarTiempoEnRestriccion");
-        manager.setQuery("UPDATE Restriccion SET Duracion_Minutos = "+res.getDuracion_Minutos()+" WHERE Id = "+res.getId());
+        manager.setQuery("UPDATE Restriccion SET Id_Dispositivo = "+res.getDispositivo().getId()+", Id_Tipo_Restriccion = "+res.getTipo_Restriccion().getId()+", Id_Aplicacion = "+res.getAplicacion().getId()
+                +", Duracion_Minutos = "+res.getDuracion_Minutos()+", Activa = "+res.isActiva()+" WHERE Id = "+res.getId());
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
     }
 
-    public static Integer modificarTiempoEnRestriccionHandler(Object obj){
+    public static Integer modificarRestriccionHandler(Object obj){
         if(obj != null){
             return (Integer)obj;
         }
@@ -162,6 +166,7 @@ public class RestriccionesDAO {
                     "a.Descripcion as appLabel,"+
                     "a.Icono as appIcon,"+
                     "r.Duracion_Minutos as duracion,"+
+                    "r.Activa as estado,"+
                     "d.Id as idDispositivo,"+
                     "t.Id as idTipo "+
                 "FROM Restriccion as r "+
@@ -189,6 +194,7 @@ public class RestriccionesDAO {
                             new TipoRestriccion(rs.getInt("idTipo"),""),
                             new Aplicacion(rs.getInt("idApp"), rs.getString("appName"), rs.getString("appLabel"), rs.getString("appIcon"),false),
                             rs.getInt("duracion"),
+                            rs.getBoolean("estado"),
                             false
                         )
                     );

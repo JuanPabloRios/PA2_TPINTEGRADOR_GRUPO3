@@ -132,7 +132,7 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
     private ArrayList<Restricciones> crearRestriccionesIniciales(ArrayList<Aplicacion> apps){
         ArrayList<Restricciones> res = new ArrayList<Restricciones>();
         for(Aplicacion app : apps){
-            res.add(new Restricciones(app,-1));
+            res.add(new Restricciones(app,0));
         }
         return res;
     }

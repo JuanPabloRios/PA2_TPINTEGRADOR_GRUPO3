@@ -35,8 +35,7 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
         detallesDispositivoViewModel.getRestriccionModificada().observe( this, new Observer<Restricciones>() {
             @Override
             public void onChanged(Restricciones res) {
-                System.out.println("THERE WAS A CHANGE " + res.toString());
-                restricDao.modificarTiempoEnRestriccion(res);
+                restricDao.modificarRestriccion(res);
             }
         });
 
@@ -62,8 +61,8 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
                     this.completarCarga();
                 }
                 break;
-            case "modificarTiempoEnRestriccion":
-                Integer resModificacionMinutos = RestriccionesDAO.modificarTiempoEnRestriccionHandler(res.getData());
+            case "modificarRestriccion":
+                Integer resModificacionMinutos = RestriccionesDAO.modificarRestriccionHandler(res.getData());
                 //ACA DETENER SPINNER
                 System.out.println("@@ resModificacionMinutos "+resModificacionMinutos);
                 if(resModificacionMinutos != null && resModificacionMinutos != -1){
@@ -92,14 +91,10 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) { }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) { }
         });
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }

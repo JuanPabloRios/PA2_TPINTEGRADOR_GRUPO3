@@ -9,24 +9,33 @@ public class Restricciones {
     private Dispositivo Dispositivo;
     private TipoRestriccion Tipo_Restriccion;
     private Aplicacion Aplicacion;
-    private int duracion_Minutos;
+    private long duracion_Minutos;
+    private boolean Activa;
     private boolean eliminado;
 
-    public Restricciones() {
-    }
+    public Restricciones() { }
 
-    public Restricciones(Integer id, Dispositivo dispositivo, TipoRestriccion tipo_Restriccion, Aplicacion aplicacion, int duracion_Minutos, boolean eliminado) {
+    public Restricciones(Integer id, Dispositivo dispositivo, TipoRestriccion tipo_Restriccion, Aplicacion aplicacion, int duracion_Minutos, boolean activa, boolean eliminado) {
         this.id = id;
         this.Dispositivo = dispositivo;
         this.Tipo_Restriccion = tipo_Restriccion;
         this.Aplicacion = aplicacion;
         this.duracion_Minutos = duracion_Minutos;
         this.eliminado = eliminado;
+        this.Activa = activa;
     }
 
-    public Restricciones(Aplicacion aplicacion, int duracion_Minutos) {
+    public Restricciones(Aplicacion aplicacion, long duracion_Minutos) {
         this.Aplicacion = aplicacion;
         this.duracion_Minutos = duracion_Minutos;
+    }
+
+    public boolean isActiva() {
+        return Activa;
+    }
+
+    public void setActiva(boolean activa) {
+        Activa = activa;
     }
 
     public Integer getId() {
@@ -61,11 +70,11 @@ public class Restricciones {
         Aplicacion = aplicacion;
     }
 
-    public int getDuracion_Minutos() {
+    public long getDuracion_Minutos() {
         return duracion_Minutos;
     }
 
-    public void setDuracion_Minutos(int duracion_Minutos) {
+    public void setDuracion_Minutos(long duracion_Minutos) {
         this.duracion_Minutos = duracion_Minutos;
     }
 

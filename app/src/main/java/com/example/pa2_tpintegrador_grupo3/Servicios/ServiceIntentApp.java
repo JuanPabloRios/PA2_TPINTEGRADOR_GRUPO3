@@ -1,26 +1,13 @@
 package com.example.pa2_tpintegrador_grupo3.Servicios;
-
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
-import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-
-import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
-import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.MainActivity;
 import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.Utilidad;
@@ -29,10 +16,7 @@ import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Restricciones;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 import com.rvalerio.fgchecker.AppChecker;
-
 import static com.example.pa2_tpintegrador_grupo3.AppNotificacion.CHANNEL_ID;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +74,6 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
             .setSmallIcon(R.drawable.ic_android)
             .setContentIntent(pendingIntent)
             .build();
-
         startForeground(1,notification);
         return START_NOT_STICKY;
     }
@@ -98,13 +81,23 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
     private ArrayList<String> obtenerAplicacionesBloqueadas(){
         ArrayList<String> result = new ArrayList<String>();
         if(this.config != null && this.config.getRestricciones() != null){
+            Utilidad ut = new Utilidad();
+            List<Utilidad.AppUsageInfo> usoDeApps = ut.obtenerStadisticasDeUso(this);
+
             for(Restricciones res : this.config.getRestricciones() ){
-                if(res.getDuracion_Minutos() == -1){
-                    result.add(res.getAplicacion().getNombre());
+                if(res.isActiva()){
+                    Utilidad.AppUsageInfo usoApp = null;
+                    for(Utilidad.AppUsageInfo uso : usoDeApps){
+                        if(uso.packageName.equals(res.getAplicacion().getNombre())){
+                            usoApp = uso;
+                        }
+                    }
+                    if(usoApp != null && res.getDuracion_Minutos() < usoApp.timeInForeground){
+                        result.add(res.getAplicacion().getNombre());
+                    }
                 }
             }
         }
-
         return result;
     }
 
@@ -132,11 +125,17 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
                     ut.guardarArchivoDeConfiguracion(this,con);
                     this.config = con;
                     this.aplicacionesBloqueadas = obtenerAplicacionesBloqueadas();
-                    System.out.println("NUEVAS RESTRICCIONES OBTENIDAS " + this.aplicacionesBloqueadas.size());
                 }
                 break;
             default:
                 System.out.println("OTRO IDENTIFICADOR");
         }
+    }
+
+
+    private Boolean verificarSiAplicacionEstaBloqueada(Restricciones res){
+        if(res.isActiva()){
+        }
+        return false;
     }
 }
