@@ -67,13 +67,13 @@ public class DispositivoXUsuarioDAO
 				ResultSet rs = (ResultSet)obj;
 				while(rs.next())
 				{
-					return new DispositivoXUsuario(
+					/*return new DispositivoXUsuario(
 						rs.getInt("id"),
 						new Dispositivo(rs.getInt("Id_Dispositivo"), 0, "", false),
 						new Usuario(rs.getInt("Id_Usuario"),"","","",false, new TipoUsuario(0,"")),
 						rs.getString("Descripcion"),
 						rs.getBoolean("Eliminado")
-						);
+						);*/
 				}
 				return null;
 			}
@@ -104,13 +104,15 @@ public class DispositivoXUsuarioDAO
 				ResultSet rs = (ResultSet)obj;
 				while(rs.next())
 				{
-					return new DispositivoXUsuario(
+					/*return new DispositivoXUsuario(
 						rs.getInt("id"),
 						new Dispositivo(rs.getInt("Id_Dispositivo"), 0, "", false),
 						new Usuario(rs.getInt("Id_Usuario"),"","","",false, new TipoUsuario(0,"")),
 						rs.getString("Descripcion"),
 						rs.getBoolean("Eliminado")
 						);
+
+					 */
 				}
 				return null;
 			}
@@ -141,7 +143,7 @@ public class DispositivoXUsuarioDAO
 				ResultSet rs = (ResultSet)obj;
 				while(rs.next())
 				{
-					resultados.add(
+					/*resultados.add(
 						new DispositivoXUsuario(
 							rs.getInt("id"),
 							new Dispositivo(rs.getInt("Id_Dispositivo"), 0, "", false),
@@ -150,6 +152,8 @@ public class DispositivoXUsuarioDAO
 							rs.getBoolean("Eliminado")
 						)
 					);
+
+					 */
 				}
 				return resultados;
 			}
