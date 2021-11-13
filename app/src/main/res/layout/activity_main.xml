@@ -69,6 +69,15 @@
                     android:hint="@string/nPass"
                     android:inputType="textPassword"
                     android:maxLength="20" />
+                <EditText
+                    android:id="@+id/nombreDispositivo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Telefono pepe"
+                    android:inputType="text"
+                    android:maxLength="75"
+                    android:visibility="gone"/>
 
                 <Button
                     android:id="@+id/btnLogin"
