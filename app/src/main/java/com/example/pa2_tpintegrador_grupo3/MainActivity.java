@@ -53,9 +53,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         startService();
-
         Utilidad ut = new Utilidad(); 
         //BUSCAMOS EL ARCHIVO DE CONFIGURACION 
         Integer result = ut.validarTipoDispositivo(this);
@@ -82,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
 
     public void startService(){
         Intent serviceIntent = new Intent(this, ServiceIntentApp.class);
-        serviceIntent.putExtra("inputExtra","lo que va a dar");
         ContextCompat.startForegroundService(this,serviceIntent);
+
     }
 
     public void irARegistrarSubordinado(View view){
