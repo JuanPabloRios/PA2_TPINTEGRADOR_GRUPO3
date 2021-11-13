@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.IBinder;
@@ -27,9 +28,11 @@ import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Restricciones;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
+import com.rvalerio.fgchecker.AppChecker;
 
 import static com.example.pa2_tpintegrador_grupo3.AppNotificacion.CHANNEL_ID;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,18 +57,15 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
 
-        final long EXECUTION_TIME = 400;
+        final long EXECUTION_TIME = 200;
         final long EXECUTION_TIME_CONSULTADB = 10000;
 
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ActivityManager mActivityManager = (ActivityManager)ServiceIntentApp.this.getSystemService(Context.ACTIVITY_SERVICE);
-                List<ActivityManager.RunningTaskInfo> taskInfo = mActivityManager.getRunningTasks(1);
-                ComponentName componentInfo = taskInfo.get(0).topActivity;
-                componentInfo.getPackageName();
-                mActivityManager.killBackgroundProcesses(componentInfo.getPackageName()); 
-                if(aplicacionesBloqueadas.contains(componentInfo.getPackageName())){
+                AppChecker appChecker = new AppChecker();
+                String packageName = appChecker.getForegroundApp(ServiceIntentApp.this);
+                if(aplicacionesBloqueadas.contains(packageName)){
                     Intent startMain = new Intent(Intent.ACTION_MAIN);
                     startMain.addCategory(Intent.CATEGORY_HOME);
                     startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

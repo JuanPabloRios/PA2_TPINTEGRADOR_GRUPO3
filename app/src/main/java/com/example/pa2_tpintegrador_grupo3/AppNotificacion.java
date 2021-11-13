@@ -12,7 +12,6 @@ public class AppNotificacion extends Application {
     @Override
     public void onCreate(){
         super.onCreate();
-
         createNotificationChannel();
     }
 

@@ -2,13 +2,17 @@ package com.example.pa2_tpintegrador_grupo3;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.annotation.TargetApi;
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -59,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         setContentView(R.layout.activity_main);
         txtNombreUsuario = (EditText) findViewById(R.id.nombreUsuarioLogin);
         txtPassword = (EditText) findViewById(R.id.contraseniaLogin);
+        requestUsageStatsPermission();
         if(result != null){
             primerInicio = false;
             if(result == 1) {
@@ -77,6 +82,21 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         //SI NO EXISTE EL ARCHIVO QUEDAMOS EN LA PANTALLA DE SELECCION INICIAL QUE DARA PASO A LA CREACION DEL ARCHIVO DE CONFIGURACION
     }
 
+    void requestUsageStatsPermission() {
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                && !hasUsageStatsPermission(this)) {
+            startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    boolean hasUsageStatsPermission(Context context) {
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOps.checkOpNoThrow("android:get_usage_stats",
+                android.os.Process.myUid(), context.getPackageName());
+        boolean granted = mode == AppOpsManager.MODE_ALLOWED;
+        return granted;
+    }
 
     public void irARegistrarSubordinado(View view){
         esSubordinado = true;
