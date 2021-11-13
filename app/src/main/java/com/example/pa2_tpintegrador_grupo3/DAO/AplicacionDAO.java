@@ -168,7 +168,7 @@ public class AplicacionDAO
 			query+= "("+idDispositivo+",";
 			query+= "2,";
 			query+= app.getId()+",";
-			query+= -1;
+			query+= 0;
 			query+="),";
 		}
 		query = query.substring(0, query.length() -1);
