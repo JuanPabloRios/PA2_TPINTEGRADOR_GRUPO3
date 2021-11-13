@@ -20,9 +20,12 @@ public class DispositivoDAO {
     public void crearDispositivo(Dispositivo dispo){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("crearDispositivo");
-        String query = "INSERT INTO Dispositivo (id_Tipo_Dispositivo, Imei) VALUES (";
+        String query = "INSERT INTO Dispositivo (id_Tipo_Dispositivo, Imei, Marca, Modelo, Nombre) VALUES (";
         query+= dispo.getTipo_Dispositivo().getId()+" ,";
-        query+= "\""+dispo.getImei()+"\"";
+        query+= "\""+dispo.getImei()+"\",";
+        query+= "\""+dispo.getMarca()+"\",";
+        query+= "\""+dispo.getModelo()+"\",";
+        query+= "\""+dispo.getNombre()+"\"";
         query+=")";
         manager.setQuery(query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
@@ -89,6 +92,40 @@ public class DispositivoDAO {
                             rs.getBoolean("eliminado")
 
                     );
+                }
+                return null;
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
+    public void obtenerDispositivoPorYUsuarioMaestroRelacionadoPorIdDeDispositivo(Integer dispoId){
+        SelectManager manager = new SelectManager();
+        manager.setIdentificador("obtenerDispositivoPorYUsuarioMaestroRelacionadoPorIdDeDispositivo");
+        String query = "SELECT d.Id as Id, dxu.Id_Usuario as idUsuario, u.Email as emailMaestro FROM Dispositivo as d " +
+                "INNER JOIN Dispositivo_x_usuario as dxu ON d.Id = dxu.Id_Dispositivo " +
+                "inner JOIN Usuario as u ON dxu.Id_Usuario = u.Id " +
+                "WHERE d.Eliminado = 0 AND dxu.Eliminado = 0 AND u.Eliminado = 0 AND d.Id = "+dispoId;
+        manager.setQuery(query);
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
+    }
+
+    public static Dispositivo obtenerDispositivoPorYUsuarioMaestroRelacionadoPorIdDeDispositivoHandler(Object obj){
+        if(obj != null){
+            try {
+                ResultSet rs = (ResultSet)obj;
+                while(rs.next()) {
+                    Dispositivo res = new Dispositivo();
+                    res.setId(rs.getInt("Id"));
+                    Usuario us = new Usuario();
+                    us.setId(rs.getInt("idUsuario"));
+                    us.setEmail(rs.getString("emailMaestro"));
+                    res.setUsuarioMaestro(us);
+                    return  res;
                 }
                 return null;
             } catch (Exception ex){

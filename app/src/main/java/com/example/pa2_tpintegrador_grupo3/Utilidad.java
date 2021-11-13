@@ -1,4 +1,6 @@
 package com.example.pa2_tpintegrador_grupo3;
+import android.app.usage.UsageEvents;
+import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -30,7 +32,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
@@ -91,8 +95,8 @@ public class Utilidad extends AppCompatActivity {
 
     public Integer validarTipoDispositivo(Context context) {
         Configuracion con = obtenerConfiguracion(context);
-        if(con != null){
-            return con.getTipoDispositivo();
+        if(con != null && con.getDispositivo() != null && con.getDispositivo().getTipo_Dispositivo() != null){
+            return con.getDispositivo().getTipo_Dispositivo().getId();
         }
         return null;
     }
@@ -205,6 +209,63 @@ public class Utilidad extends AppCompatActivity {
         public String appname = "";
         public String packagename = "";
         public String icon;
+    }
+
+    public List<AppUsageInfo> obtenerStadisticasDeUso(Context context) {
+        UsageEvents.Event currentEvent;
+        List<UsageEvents.Event> allEvents = new ArrayList<>();
+        HashMap<String, AppUsageInfo> map = new HashMap <String, AppUsageInfo> ();
+        Long phoneUsageToday = 0L;
+        long currTime = System.currentTimeMillis();
+        long startTime = currTime - 1000*3600*24; //querying past three hours
+
+        UsageStatsManager mUsageStatsManager =  (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+
+        assert mUsageStatsManager != null;
+        UsageEvents usageEvents = mUsageStatsManager.queryEvents(startTime, currTime);
+
+        while (usageEvents.hasNextEvent()) {
+            currentEvent = new UsageEvents.Event();
+            usageEvents.getNextEvent(currentEvent);
+            if (currentEvent.getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND ||
+                    currentEvent.getEventType() == UsageEvents.Event.MOVE_TO_BACKGROUND) {
+                allEvents.add(currentEvent);
+                String key = currentEvent.getPackageName();
+                if (map.get(key)==null)
+                    map.put(key,new AppUsageInfo(key));
+            }
+        }
+
+        for (int i=0;i<allEvents.size()-1;i++){
+            UsageEvents.Event E0=allEvents.get(i);
+            UsageEvents.Event E1=allEvents.get(i+1);
+            if (!E0.getPackageName().equals(E1.getPackageName()) && E1.getEventType()==1){
+                map.get(E1.getPackageName()).launchCount++;
+            }
+            if (E0.getEventType()==1 && E1.getEventType()==2
+                    && E0.getClassName().equals(E1.getClassName())){
+                long diff = E1.getTimeStamp()-E0.getTimeStamp();
+                phoneUsageToday+=diff; //gloabl Long var for total usagetime in the timerange
+                map.get(E0.getPackageName()).timeInForeground+= diff;
+            }
+        }
+        List<AppUsageInfo> smallInfoList = new ArrayList<>(map.values());
+        for(AppUsageInfo us : smallInfoList){
+            us.tiempoTotal = phoneUsageToday;
+        }
+        return smallInfoList;
+    }
+
+    public class AppUsageInfo {
+        public Drawable appIcon;
+        public String appName, packageName;
+        public long timeInForeground;
+        public int launchCount;
+        public long tiempoTotal;
+
+        AppUsageInfo(String pName) {
+            this.packageName=pName;
+        }
     }
 
 }

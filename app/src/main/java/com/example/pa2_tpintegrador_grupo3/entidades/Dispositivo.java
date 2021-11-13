@@ -6,10 +6,46 @@ public class Dispositivo {
     private Integer id;
     private TipoDispositivo Tipo_Dispositivo;
     private String Imei;
+    private String marca;
+    private String modelo;
+    private String nombre;
     private boolean eliminado;
+    private Usuario usuarioMaestro;
 
-    public Dispositivo() {
+    public Usuario getUsuarioMaestro() {
+        return usuarioMaestro;
     }
+
+    public void setUsuarioMaestro(Usuario usuarioMaestro) {
+        this.usuarioMaestro = usuarioMaestro;
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public String getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+
+    public Dispositivo() { }
 
     public Dispositivo(Integer id) {
         this.id = id;
@@ -21,9 +57,6 @@ public class Dispositivo {
         this.Imei = imei;
         this.eliminado = eliminado;
     }
-
-
-
 
     public Integer getId() {
         return id;

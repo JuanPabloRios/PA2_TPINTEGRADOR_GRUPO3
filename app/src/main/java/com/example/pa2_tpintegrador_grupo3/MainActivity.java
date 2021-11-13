@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pa2_tpintegrador_grupo3.Controladores.DetallesDispositivoControlador;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                 Toast.makeText(this,"Error obteniendo tipo de usuario",Toast.LENGTH_SHORT);
             }
         }
+
         //SI NO EXISTE EL ARCHIVO QUEDAMOS EN LA PANTALLA DE SELECCION INICIAL QUE DARA PASO A LA CREACION DEL ARCHIVO DE CONFIGURACION
     }
 
@@ -100,19 +102,25 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
 
     public void irARegistrarSubordinado(View view){
         esSubordinado = true;
-        LinearLayout l = (LinearLayout)findViewById(R.id.Login);
-        l.setVisibility(View.VISIBLE);
-        LinearLayout l2 = (LinearLayout)findViewById(R.id.Inicial);
-        l2.setVisibility(View.GONE);
+        mostrarLogin();
     }
 
     public void irARegistrarMaestro(View view){
+        mostrarLogin();
+    }
+
+    private void mostrarLogin(){
         LinearLayout l = (LinearLayout)findViewById(R.id.Login);
         l.setVisibility(View.VISIBLE);
         LinearLayout l2 = (LinearLayout)findViewById(R.id.Inicial);
         l2.setVisibility(View.GONE);
+        EditText nombreDispositivo = findViewById(R.id.nombreDispositivo);
+        if(esSubordinado){
+            nombreDispositivo.setVisibility(View.VISIBLE);
+        } else {
+            nombreDispositivo.setVisibility(View.GONE);
+        }
     }
-
     public void registrarUsuarioMaestro(View view) {
         startActivity(new Intent(this, RegistrarUsuarioControlador.class));
     }
@@ -154,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                 if(idNuevaRelacion > 0){
                     Utilidad ut = new Utilidad();
                     Configuracion c = ut.obtenerConfiguracion(this);
-                    c.setIdDispositivo(this.idNuevoDispositivo);
+                    c.getDispositivo().setId(this.idNuevoDispositivo);
                     ut.guardarArchivoDeConfiguracion(this,c);
                     redireccionar(this.user);
                 } else {
@@ -173,21 +181,23 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
             if(txtPassword.getText().toString().equals(us.getContrasenia())){
                 //SI ES EL PRIMER INICIO GUARDAMOS LA CONFIGURACION INICIAL DE TIPO DE DISPOSITIVO
                 if(primerInicio){
-                    System.out.println("primerInicio");
                     Utilidad utils = new Utilidad();
                     Configuracion config = new Configuracion();
-                    String identificador = UUID.randomUUID().toString();
-                    config.setIdentificadorDeDispositivo(identificador);
-                    config.setTipoDispositivo(1); //1 si es MAESTRO
+                    config.setDispositivo(new Dispositivo());
+                    config.getDispositivo().setImei(UUID.randomUUID().toString());
+                    config.getDispositivo().setTipo_Dispositivo(new TipoDispositivo(1, "MAESTRO")); //1 si es MAESTRO
+
                     if(esSubordinado){
-                        config.setTipoDispositivo(2); //2 si es SUBORDINADO
+                        config.getDispositivo().setTipo_Dispositivo(new TipoDispositivo(2, "SUBORDINADO")); //2 si es SUBORDINADO
                     }
+                    config.getDispositivo().setMarca(Build.MANUFACTURER);
+                    config.getDispositivo().setModelo(Build.MODEL);
+                    EditText nombreDispositivo = findViewById(R.id.nombreDispositivo);
+                    config.getDispositivo().setNombre(nombreDispositivo.getText().toString());
+                    System.out.println("DISPOSITIVO A INSERTAR " + config.getDispositivo());
                     if(utils.guardarArchivoDeConfiguracion(this,config)){
-                        Dispositivo d = new Dispositivo();
-                        d.setImei(identificador);
-                        d.setTipo_Dispositivo(new TipoDispositivo(esSubordinado ? 2 : 1,""));
                         //ACA INICIAR EL SPINNER
-                        dispDao.crearDispositivo(d);
+                        dispDao.crearDispositivo(config.getDispositivo());
                     }
                 } else {
                     redireccionar(us);

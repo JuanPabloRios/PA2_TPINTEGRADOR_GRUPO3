@@ -79,17 +79,17 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                resDao.obtenerTodasLasRestriccionesPorIdDeDispositivo(ServiceIntentApp.this.config.getIdDispositivo());
+                resDao.obtenerTodasLasRestriccionesPorIdDeDispositivo(ServiceIntentApp.this.config.getDispositivo().getId());
                 handler.postDelayed(this, EXECUTION_TIME_CONSULTADB);
             }
         }, EXECUTION_TIME);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Parental Watcher")
-                .setContentText("Parental Watcher se esta ejecutando")
-                .setSmallIcon(R.drawable.ic_android)
-                .setContentIntent(pendingIntent)
-                .build();
+            .setContentTitle("Parental Watcher")
+            .setContentText("Parental Watcher se esta ejecutando")
+            .setSmallIcon(R.drawable.ic_android)
+            .setContentIntent(pendingIntent)
+            .build();
 
         startForeground(1,notification);
         return START_NOT_STICKY;
@@ -97,11 +97,14 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
 
     private ArrayList<String> obtenerAplicacionesBloqueadas(){
         ArrayList<String> result = new ArrayList<String>();
-        for(Restricciones res : this.config.getRestricciones()){
-            if(res.getDuracion_Minutos() == -1){
-                result.add(res.getAplicacion().getNombre());
+        if(this.config != null && this.config.getRestricciones() != null){
+            for(Restricciones res : this.config.getRestricciones() ){
+                if(res.getDuracion_Minutos() == -1){
+                    result.add(res.getAplicacion().getNombre());
+                }
             }
         }
+
         return result;
     }
 
