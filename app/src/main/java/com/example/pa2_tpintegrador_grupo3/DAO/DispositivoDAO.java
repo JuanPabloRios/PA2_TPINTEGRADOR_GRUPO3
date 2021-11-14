@@ -138,12 +138,13 @@ public class DispositivoDAO {
     public void obtenerTodosLosDispositivosPorUsuario(Usuario u){
         SelectManager manager = new SelectManager();
         manager.setIdentificador("obtenerTodosLosDispositivosPorUsuario");
-        manager.setQuery("SELECT d.Id as Id, d.Imei as Imei FROM Dispositivo_x_usuario as dxu INNER JOIN Dispositivo as d ON dxu.Id_Dispositivo = d.Id WHERE d.Id_tipo_dispositivo = 2 AND d.Eliminado = 0 AND dxu.Eliminado = 0 and dxu.Id_Usuario = "+u.getId());
+        manager.setQuery("SELECT d.Id as Id, d.Imei as Imei, d.Marca as marca, d.Modelo as modelo, d.Nombre as nombre, d.Tiempo_Uso as tiempoUso FROM Dispositivo_x_usuario as dxu INNER JOIN Dispositivo as d ON dxu.Id_Dispositivo = d.Id WHERE d.Id_tipo_dispositivo = 2 AND d.Eliminado = 0 AND dxu.Eliminado = 0 and dxu.Id_Usuario = "+u.getId());
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
     }
 
-    public static ArrayList<Dispositivo> obtenerTodosLosDispositivosPorUsuario(Object obj){
+    public static ArrayList<Dispositivo> obtenerTodosLosDispositivosPorUsuarioHandler(Object obj){
+
         if(obj != null){
             ArrayList<Dispositivo> resultados = new ArrayList<Dispositivo>();
             try{
@@ -154,6 +155,10 @@ public class DispositivoDAO {
                             rs.getInt("Id"),
                             new TipoDispositivo(2,""),
                             rs.getString("Imei"),
+                            rs.getString("marca"),
+                            rs.getString("modelo"),
+                            rs.getString("nombre"),
+                            rs.getLong("tiempoUso"),
                             false
                         )
                     );
@@ -197,6 +202,21 @@ public class DispositivoDAO {
         return null;
     }
     //---------------------------------------------------------------------------------------------
+
+    public void actualizarTiempoDeUso(Integer dispoId, Long tiempo){
+        UpsertManager manager = new UpsertManager();
+        manager.setIdentificador("actualizarTiempoDeUso");
+        manager.setQuery("UPDATE Dispositivo SET Tiempo_Uso = "+tiempo+" WHERE Id = "+dispoId);
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
+    }
+
+    public static Integer actualizarTiempoDeUsoHandler(Object obj){
+        if(obj != null){
+            return (Integer)obj;
+        }
+        return null;
+    }
 
     public void eliminarDispositivo(Integer dispoId){
         UpsertManager manager = new UpsertManager();

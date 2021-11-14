@@ -133,6 +133,10 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                 //ACA DETENER SPINNER
                 if(this.idNuevoDispositivo > 0){
                     //ACA INICIAL EL SPINNER
+                    Utilidad ut = new Utilidad();
+                    Configuracion c = ut.obtenerConfiguracion(this);
+                    c.getDispositivo().setId(this.idNuevoDispositivo);
+                    ut.guardarArchivoDeConfiguracion(this,c);
                     dispDao.relacionarDispositivoConUsuario(this.idNuevoDispositivo,this.user.getId());
                 } else {
                     Toast.makeText(this,"Error creando el dispositivo en la base de datos",Toast.LENGTH_SHORT).show();
@@ -142,10 +146,6 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                 Integer idNuevaRelacion = DispositivoDAO.relacionarDispositivoConUsuarioHandler(res.getData());
                 //ACA DETENER SPINNER
                 if(idNuevaRelacion > 0){
-                    Utilidad ut = new Utilidad();
-                    Configuracion c = ut.obtenerConfiguracion(this);
-                    c.getDispositivo().setId(this.idNuevoDispositivo);
-                    ut.guardarArchivoDeConfiguracion(this,c);
                     redireccionar(this.user);
                 } else {
                     Toast.makeText(this,"Error creando relacion con dispositivo",Toast.LENGTH_SHORT).show();

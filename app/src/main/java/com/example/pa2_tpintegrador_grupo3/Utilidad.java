@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -216,9 +217,14 @@ public class Utilidad extends AppCompatActivity {
         List<UsageEvents.Event> allEvents = new ArrayList<>();
         HashMap<String, AppUsageInfo> map = new HashMap <String, AppUsageInfo> ();
         Long phoneUsageToday = 0L;
-        long currTime = System.currentTimeMillis();
-        long startTime = currTime - 1000*3600*24; //querying past three hours
 
+        Calendar now = Calendar.getInstance();
+        long currTime = now.getTimeInMillis();
+        now.set(Calendar.HOUR, 0);
+        now.set(Calendar.MINUTE, 0);
+        now.set(Calendar.SECOND, 0);
+        now.set(Calendar.MILLISECOND, 0);
+        long startTime = now.getTimeInMillis();
         UsageStatsManager mUsageStatsManager =  (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
 
         assert mUsageStatsManager != null;

@@ -11,6 +11,11 @@ public class Estadistica {
         this.tiempo_Uso = tiempo_Uso;
     }
 
+    public Estadistica(Aplicacion aplicacion, Long tiempo_Uso) {
+        this.aplicacion = aplicacion;
+        this.tiempo_Uso = tiempo_Uso;
+    }
+
     public Dispositivo getDispositivo() {
         return dispositivo;
     }

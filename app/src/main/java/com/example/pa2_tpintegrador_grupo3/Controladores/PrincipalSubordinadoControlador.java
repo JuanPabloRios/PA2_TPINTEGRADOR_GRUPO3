@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.pa2_tpintegrador_grupo3.DAO.AplicacionDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
+import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.Servicios.ServiceIntentApp;
@@ -103,16 +104,25 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
                 //ACA DETENER SPINNER
                 if(apps != null && apps.size() > 0){
                     appDao.relacionarAplicacionesConDispositivo(apps,this.idDispositivo);
-                    Utilidad ut = new Utilidad();
-                    Configuracion config = ut.obtenerConfiguracion(this);
-                    config.setRestricciones(crearRestriccionesIniciales(apps));
-                    ut.guardarArchivoDeConfiguracion(this,config);
                 }
                 break;
             case "relacionarAplicacionesConDispositivo":
                 Integer relacionesCreadas = AplicacionDAO.relacionarAplicacionesConDispositivoHandler(res.getData());
                 //ACA DETENER SPINNER
                 if(relacionesCreadas != null){
+                    RestriccionesDAO restriccionesDAO = new RestriccionesDAO(this);
+                    restriccionesDAO.obtenerTodasLasRestriccionesPorIdDeDispositivo(this.idDispositivo);
+
+                }
+                break;
+            case "obtenerTodasLasRestriccionesPorIdDeDispositivo":
+                ArrayList<Restricciones> restricciones = RestriccionesDAO.obtenerTodasLasRestriccionesPorIdDeDispositivoHandler(res.getData());
+                //ACA DETENER SPINNER
+                if(restricciones != null && !restricciones.isEmpty()){
+                    Utilidad ut = new Utilidad();
+                    Configuracion config = ut.obtenerConfiguracion(this);
+                    config.setRestricciones(restricciones);
+                    ut.guardarArchivoDeConfiguracion(this,config);
                     Intent serviceIntent = new Intent(this, ServiceIntentApp.class);
                     ContextCompat.startForegroundService(this,serviceIntent);
                 }
@@ -127,13 +137,5 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
             default:
                 System.out.println("OTRO IDENTIFICADOR");
         }
-    }
-
-    private ArrayList<Restricciones> crearRestriccionesIniciales(ArrayList<Aplicacion> apps){
-        ArrayList<Restricciones> res = new ArrayList<Restricciones>();
-        for(Aplicacion app : apps){
-            res.add(new Restricciones(app,0));
-        }
-        return res;
-    }
+    } 
 }

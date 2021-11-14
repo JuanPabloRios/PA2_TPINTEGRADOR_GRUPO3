@@ -7,6 +7,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.EstadisticaDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
 import com.example.pa2_tpintegrador_grupo3.MainActivity;
@@ -28,7 +31,7 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
     private Configuracion config;
     private ArrayList<String> aplicacionesBloqueadas;
     private RestriccionesDAO resDao = new RestriccionesDAO(this);
-
+    private Long tiempoUso = 0L;
 
     @Override
     public void onCreate(){
@@ -45,7 +48,7 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
                 0, notificationIntent, 0);
 
         final long EXECUTION_TIME = 200;
-        final long EXECUTION_TIME_CONSULTADB = 10000;
+        final long EXECUTION_TIME_CONSULTADB = 7000;
 
         handler.postDelayed(new Runnable() {
             @Override
@@ -62,11 +65,12 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
             }
         }, EXECUTION_TIME);
 
-
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 resDao.obtenerTodasLasRestriccionesPorIdDeDispositivo(ServiceIntentApp.this.config.getDispositivo().getId());
+                DispositivoDAO dispositivoDAO = new DispositivoDAO(ServiceIntentApp.this);
+                dispositivoDAO.actualizarTiempoDeUso(ServiceIntentApp.this.config.getDispositivo().getId(), ServiceIntentApp.this.tiempoUso);
                 handler.postDelayed(this, EXECUTION_TIME_CONSULTADB);
             }
         }, EXECUTION_TIME);
@@ -74,7 +78,7 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Parental Watcher")
             .setContentText("Parental Watcher se esta ejecutando")
-            .setSmallIcon(R.drawable.ic_android)
+            .setSmallIcon(R.drawable.logo)
             .setContentIntent(pendingIntent)
             .build();
         startForeground(1,notification);
@@ -130,6 +134,7 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
                 EstadisticaDAO estadisticaDAO = new EstadisticaDAO(this);
                 estadisticaDAO.insertarEstadisticas(estadisticasParaAtualizar);
             }
+            this.tiempoUso = usoDeApps.get(0).tiempoTotal;
         }
         return result;
     }

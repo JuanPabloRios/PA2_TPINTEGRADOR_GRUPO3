@@ -1,7 +1,9 @@
 package com.example.pa2_tpintegrador_grupo3.entidades;
 
 
-public class Dispositivo {
+import java.io.Serializable;
+
+public class Dispositivo implements Serializable  {
 
     private Integer id;
     private TipoDispositivo Tipo_Dispositivo;
@@ -11,6 +13,16 @@ public class Dispositivo {
     private String nombre;
     private boolean eliminado;
     private Usuario usuarioMaestro;
+
+    public Long getTiempoUso() {
+        return tiempoUso;
+    }
+
+    public void setTiempoUso(Long tiempoUso) {
+        this.tiempoUso = tiempoUso;
+    }
+
+    private Long tiempoUso;
 
     public Usuario getUsuarioMaestro() {
         return usuarioMaestro;
@@ -56,6 +68,18 @@ public class Dispositivo {
         this.Tipo_Dispositivo = Tipo_Dispositivo;
         this.Imei = imei;
         this.eliminado = eliminado;
+    }
+
+    public Dispositivo(Integer id, TipoDispositivo Tipo_Dispositivo, String imei, String marca, String modelo, String nombre, Long tiempoUso, boolean eliminado) {
+        this.id = id;
+        this.Tipo_Dispositivo = Tipo_Dispositivo;
+        this.Imei = imei;
+        this.eliminado = eliminado;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.nombre = nombre;
+        this.tiempoUso = tiempoUso;
+
     }
 
     public Integer getId() {
