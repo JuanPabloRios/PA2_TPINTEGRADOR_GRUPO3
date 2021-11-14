@@ -160,22 +160,26 @@ public class RestriccionesDAO {
         SelectManager manager = new SelectManager();
         manager.setIdentificador("obtenerTodasLasRestriccionesPorIdDeDispositivo");
         String query =
-                "SELECT r.Id as idRestriccion,"+
-                    "a.Id as idApp,"+
-                    "a.Nombre as appName,"+
-                    "a.Descripcion as appLabel,"+
-                    "a.Icono as appIcon,"+
-                    "r.Duracion_Minutos as duracion,"+
-                    "r.Activa as estado,"+
-                    "d.Id as idDispositivo,"+
-                    "t.Id as idTipo "+
-                "FROM Restriccion as r "+
-                "INNER JOIN Aplicacion as a ON r.Id_Aplicacion = a.Id "+
-                "INNER JOIN Dispositivo as d on r.Id_Dispositivo = d.Id "+
-                "INNER JOIN Tipo_Restriccion as t on r.Id_Tipo_Restriccion = t.Id "+
-                "WHERE r.Eliminado = 0 AND Id_Dispositivo = "+ idDispositivo+" "+
-                "ORDER BY a.Descripcion ASC";
+            "SELECT " +
+                "r.Id AS idRestriccion," +
+                "a.Id AS idApp," +
+                "a.Nombre AS appName," +
+                "a.Descripcion AS appLabel," +
+                "a.Icono AS appIcon," +
+                "r.Duracion_Minutos AS duracion," +
+                "r.Activa AS estado," +
+                "d.Id AS idDispositivo," +
+                "t.Id AS idTipo," +
+                "exd.Tiempo_Uso AS tiempoUso " +
+            "FROM Restriccion AS r " +
+            "INNER JOIN Aplicacion AS a ON r.Id_Aplicacion = a.Id " +
+            "INNER JOIN Dispositivo AS d ON r.Id_Dispositivo = d.Id " +
+            "INNER JOIN Tipo_Restriccion AS t ON r.Id_Tipo_Restriccion = t.Id " +
+            "LEFT JOIN Estadisticas_x_dispositivo AS exd ON r.Id_Aplicacion = exd.Id_Aplicacion AND r.Id_Dispositivo = exd.Id_Dispositivo " +
+            "WHERE r.Eliminado = 0 AND r.Id_Dispositivo = "+idDispositivo+" "+
+            "ORDER BY a.Descripcion ASC";
         manager.setQuery(query);
+        System.out.println("@@@ query " + query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
     }
