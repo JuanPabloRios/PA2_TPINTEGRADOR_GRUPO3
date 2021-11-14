@@ -1,22 +1,25 @@
 package com.example.pa2_tpintegrador_grupo3;
+
+import android.app.PendingIntent;
 import android.app.usage.UsageEvents;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Patterns;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
+import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -34,11 +37,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
-import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
-import com.google.gson.*;
 
 public class Utilidad extends AppCompatActivity {
     private static final String NOMBRE_ARCHIVO = "parentalWatcher.txt";
@@ -266,6 +264,18 @@ public class Utilidad extends AppCompatActivity {
         AppUsageInfo(String pName) {
             this.packageName=pName;
         }
+    }
+
+    public void enviarNotificacionCustom(Context context, String titulo, String mensaje , String channelID, PendingIntent intent, Integer id){
+
+        NotificationCompat.Builder  d = new NotificationCompat.Builder(context, channelID)
+                .setContentTitle(titulo)
+                .setContentText(mensaje)
+                .setSmallIcon(R.drawable.logo)
+                .setContentIntent(intent);
+        NotificationManagerCompat notificationCompat = NotificationManagerCompat.from(context);
+        notificationCompat.notify(id,d.build());
+
     }
 
 }
