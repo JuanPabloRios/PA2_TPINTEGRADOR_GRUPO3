@@ -26,6 +26,11 @@ public class Aplicacion
 		this.Icono = Icono;
 	}
 
+	public Aplicacion(String descripcion, String Icono) {
+		this.Descripcion = descripcion;
+		this.Icono = Icono;
+	}
+
 	public Integer getId()
 	{
 		return Id;

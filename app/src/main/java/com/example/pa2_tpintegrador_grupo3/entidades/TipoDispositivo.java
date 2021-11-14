@@ -1,6 +1,8 @@
 package com.example.pa2_tpintegrador_grupo3.entidades;
 
-public class TipoDispositivo {
+import java.io.Serializable;
+
+public class TipoDispositivo implements Serializable {
     private Integer id;
     private String descripcion;
 

@@ -7,9 +7,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.pa2_tpintegrador_grupo3.DAO.EstadisticaDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
 import com.example.pa2_tpintegrador_grupo3.adapters.DetallesDispositivoPagerAdapter;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
+import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
+import com.example.pa2_tpintegrador_grupo3.entidades.Estadistica;
 import com.example.pa2_tpintegrador_grupo3.entidades.Restricciones;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
@@ -22,7 +25,7 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
 
     private ViewPager viewPager;
     private Usuario user;
-    private Integer idDispositivo;
+    private Dispositivo dispositivo;
     public DetallesDispositivoPagerAdapter pagerAdapter;
     private Detalles_dispositivoViewModel detallesDispositivoViewModel;
     private RestriccionesDAO restricDao = new RestriccionesDAO(this);
@@ -31,19 +34,20 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detalles_dispositivo);
+        this.dispositivo = (Dispositivo) getIntent().getSerializableExtra("dispositivo");
+        this.user = (Usuario)getIntent().getSerializableExtra("usuario");
         detallesDispositivoViewModel = new ViewModelProvider(this).get(Detalles_dispositivoViewModel.class);
+        detallesDispositivoViewModel.setDispositivo(this.dispositivo);
         detallesDispositivoViewModel.getRestriccionModificada().observe( this, new Observer<Restricciones>() {
             @Override
             public void onChanged(Restricciones res) {
                 restricDao.modificarRestriccion(res);
             }
         });
-
-
-        this.idDispositivo = (Integer)getIntent().getSerializableExtra("idDispositivo");
-        this.user = (Usuario)getIntent().getSerializableExtra("usuario");
         //ACA HACEMOS LA LLAMADA A LA BASE DE DATOS
-        restricDao.obtenerTodasLasRestriccionesPorIdDeDispositivo(this.idDispositivo);
+        restricDao.obtenerTodasLasRestriccionesPorIdDeDispositivo(this.dispositivo.getId());
+        EstadisticaDAO estadisticaDAO = new EstadisticaDAO(this);
+        estadisticaDAO.obtenerEstadisticasDeDispositivo(this.dispositivo);
     }
 
     @Override
@@ -56,7 +60,6 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
                 //ACA DETENER SPINNER
                 if(restricciones != null && restricciones.size() > 0){
                     //CARGAMOS EN EL VIEWMODEL TODOS LOS DETALLES DE LAS APLICACIONES Y COMPLETAMOS LA CARGA DE LA PANTALLA
-
                     detallesDispositivoViewModel.setRestricciones(restricciones);
                     this.completarCarga();
                 }
@@ -69,6 +72,15 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
                     Toast.makeText(this,"Guardado",Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case "obtenerEstadisticasDeDispositivo":
+                ArrayList<Estadistica> estadisticas = EstadisticaDAO.obtenerEstadisticasDeDispositivoHandler(res.getData());
+                //ACA DETENER SPINNER
+                if(estadisticas != null && !estadisticas.isEmpty()){
+                    detallesDispositivoViewModel.setEstaditicas(estadisticas);
+                }
+                break;
+
+
             default:
                 System.out.println("OTRO IDENTIFICADOR");
         }
@@ -78,7 +90,7 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
         TabLayout tabLayout = findViewById(R.id.tabs);
 
         viewPager = findViewById(R.id.viewPager);
-        pagerAdapter = new DetallesDispositivoPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), this.idDispositivo);
+        pagerAdapter = new DetallesDispositivoPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), this.dispositivo.getId());
         viewPager.setAdapter(pagerAdapter);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){

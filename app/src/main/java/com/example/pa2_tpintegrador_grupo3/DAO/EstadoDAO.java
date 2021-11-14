@@ -4,7 +4,6 @@ import com.example.pa2_tpintegrador_grupo3.conexion.SelectManager;
 import com.example.pa2_tpintegrador_grupo3.conexion.UpsertManager;
 import com.example.pa2_tpintegrador_grupo3.entidades.Estado;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
-
 import java.sql.ResultSet;
 import java.util.ArrayList;
 

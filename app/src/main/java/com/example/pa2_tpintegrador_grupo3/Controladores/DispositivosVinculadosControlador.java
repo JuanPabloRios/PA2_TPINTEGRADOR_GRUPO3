@@ -42,7 +42,8 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
         ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
         switch (res.getIdentificador()){
             case "obtenerTodosLosDispositivosPorUsuario":
-                ArrayList<Dispositivo> dispositivos = DispositivoDAO.obtenerTodosLosDispositivosPorUsuario(res.getData());
+
+                ArrayList<Dispositivo> dispositivos = DispositivoDAO.obtenerTodosLosDispositivosPorUsuarioHandler(res.getData());
                 //ACA DETENER SPINNER
                 if(dispositivos != null && dispositivos.size() > 0){
                     cargarDispositivosVinculados(dispositivos);
@@ -60,24 +61,24 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
         for(Dispositivo d : dispositivos){
             Button button = new Button(this);
             button.setId(d.getId());
-            button.setText(d.getImei());
+            button.setText("DISPOSITIVO: "+ d.getNombre() + "\n"+"TIEMPO USO: "+d.getTiempoUso());
             button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,0));
             button.setGravity(Gravity.START);
 
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    DispositivosVinculadosControlador.this.irADetalleDeDispositivo(d.getId());
+                    DispositivosVinculadosControlador.this.irADetalleDeDispositivo(d);
                 }
             });
             tabla.addView(button);
         }
     }
 
-    public void irADetalleDeDispositivo(Integer idDispositivo){
+    public void irADetalleDeDispositivo(Dispositivo d){
         Intent i = new Intent(this, DetallesDispositivo.class);
         i.putExtra("usuario",this.user);
-        i.putExtra("idDispositivo",idDispositivo);
+        i.putExtra("dispositivo",d);
         startActivity(i);
     }
 }

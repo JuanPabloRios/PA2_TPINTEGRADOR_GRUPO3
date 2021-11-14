@@ -29,9 +29,6 @@
             android:name=".Controladores.RegistrarUsuarioControlador"
             android:exported="true" />
         <activity
-            android:name=".Controladores.DetallesDispositivoControlador"
-            android:exported="true" />
-        <activity
             android:name=".Controladores.PrincipalSubordinadoControlador"
             android:exported="true" />
         <activity
