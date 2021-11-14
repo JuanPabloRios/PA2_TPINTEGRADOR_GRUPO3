@@ -7,12 +7,14 @@ import android.os.Handler;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import com.example.pa2_tpintegrador_grupo3.DAO.EstadisticaDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
 import com.example.pa2_tpintegrador_grupo3.MainActivity;
 import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.Utilidad;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
+import com.example.pa2_tpintegrador_grupo3.entidades.Estadistica;
 import com.example.pa2_tpintegrador_grupo3.entidades.Restricciones;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 import com.rvalerio.fgchecker.AppChecker;
@@ -26,6 +28,7 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
     private Configuracion config;
     private ArrayList<String> aplicacionesBloqueadas;
     private RestriccionesDAO resDao = new RestriccionesDAO(this);
+
 
     @Override
     public void onCreate(){
@@ -83,7 +86,7 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
         if(this.config != null && this.config.getRestricciones() != null){
             Utilidad ut = new Utilidad();
             List<Utilidad.AppUsageInfo> usoDeApps = ut.obtenerStadisticasDeUso(this);
-
+            ArrayList<Estadistica> estadisticasParaAtualizar = new ArrayList<Estadistica>();
             for(Restricciones res : this.config.getRestricciones() ){
                 if(res.isActiva()){
                     Utilidad.AppUsageInfo usoApp = null;
@@ -96,6 +99,36 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
                         result.add(res.getAplicacion().getNombre());
                     }
                 }
+
+                Boolean notFound = true;
+                for(Utilidad.AppUsageInfo uso : usoDeApps){
+                    if(uso.packageName.equals(res.getAplicacion().getNombre())){
+                        if(res.getDispositivo() != null && res.getDispositivo().getId() != null &&
+                                res.getAplicacion() != null && res.getAplicacion().getId() != null
+                        ){
+                            notFound = false;
+                            Estadistica stat = new Estadistica(
+                                    res.getDispositivo(),
+                                    res.getAplicacion(),
+                                    uso.timeInForeground
+                            );
+                            estadisticasParaAtualizar.add(stat);
+                        }
+                    }
+                }
+
+                if(notFound){
+                    Estadistica stat = new Estadistica(
+                            res.getDispositivo(),
+                            res.getAplicacion(),
+                            0L
+                    );
+                    estadisticasParaAtualizar.add(stat);
+                }
+            }
+            if(!estadisticasParaAtualizar.isEmpty()){
+                EstadisticaDAO estadisticaDAO = new EstadisticaDAO(this);
+                estadisticaDAO.insertarEstadisticas(estadisticasParaAtualizar);
             }
         }
         return result;
@@ -130,12 +163,5 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
             default:
                 System.out.println("OTRO IDENTIFICADOR");
         }
-    }
-
-
-    private Boolean verificarSiAplicacionEstaBloqueada(Restricciones res){
-        if(res.isActiva()){
-        }
-        return false;
     }
 }
