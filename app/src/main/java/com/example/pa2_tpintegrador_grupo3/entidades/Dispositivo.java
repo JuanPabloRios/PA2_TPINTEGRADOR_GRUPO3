@@ -1,6 +1,4 @@
 package com.example.pa2_tpintegrador_grupo3.entidades;
-
-
 import java.io.Serializable;
 
 public class Dispositivo implements Serializable  {
@@ -13,6 +11,27 @@ public class Dispositivo implements Serializable  {
     private String nombre;
     private boolean eliminado;
     private Usuario usuarioMaestro;
+    private Long tiempoUso;
+    private Long tiempoAsignado;
+    private Long horaInicio;
+    private Long horaFin;
+    private boolean bloqueoActivo;
+
+    public boolean isBloqueoActivo() { return bloqueoActivo; }
+
+    public void setBloqueoActivo(boolean bloqueoActivo) { this.bloqueoActivo = bloqueoActivo; }
+
+    public Long getTiempoAsignado() { return tiempoAsignado; }
+
+    public void setTiempoAsignado(Long tiempoAsignado) { this.tiempoAsignado = tiempoAsignado; }
+
+    public Long getHoraInicio() { return horaInicio; }
+
+    public void setHoraInicio(Long horaInicio) { this.horaInicio = horaInicio; }
+
+    public Long getHoraFin() { return horaFin; }
+
+    public void setHoraFin(Long horaFin) { this.horaFin = horaFin; }
 
     public Long getTiempoUso() {
         return tiempoUso;
@@ -21,8 +40,6 @@ public class Dispositivo implements Serializable  {
     public void setTiempoUso(Long tiempoUso) {
         this.tiempoUso = tiempoUso;
     }
-
-    private Long tiempoUso;
 
     public Usuario getUsuarioMaestro() {
         return usuarioMaestro;
@@ -56,30 +73,10 @@ public class Dispositivo implements Serializable  {
         this.nombre = nombre;
     }
 
-
     public Dispositivo() { }
 
     public Dispositivo(Integer id) {
         this.id = id;
-    }
-
-    public Dispositivo(Integer id, TipoDispositivo Tipo_Dispositivo, String imei, boolean eliminado) {
-        this.id = id;
-        this.Tipo_Dispositivo = Tipo_Dispositivo;
-        this.Imei = imei;
-        this.eliminado = eliminado;
-    }
-
-    public Dispositivo(Integer id, TipoDispositivo Tipo_Dispositivo, String imei, String marca, String modelo, String nombre, Long tiempoUso, boolean eliminado) {
-        this.id = id;
-        this.Tipo_Dispositivo = Tipo_Dispositivo;
-        this.Imei = imei;
-        this.eliminado = eliminado;
-        this.marca = marca;
-        this.modelo = modelo;
-        this.nombre = nombre;
-        this.tiempoUso = tiempoUso;
-
     }
 
     public Integer getId() {
@@ -94,9 +91,7 @@ public class Dispositivo implements Serializable  {
         return Tipo_Dispositivo;
     }
 
-    public void setTipo_Dispositivo(TipoDispositivo tipo_Dispositivo) {
-        Tipo_Dispositivo = tipo_Dispositivo;
-    }
+    public void setTipo_Dispositivo(TipoDispositivo tipo_Dispositivo) { Tipo_Dispositivo = tipo_Dispositivo; }
 
     public String getImei() {
         return Imei;
@@ -112,6 +107,51 @@ public class Dispositivo implements Serializable  {
 
     public void setEliminado(boolean eliminado) {
         this.eliminado = eliminado;
+    }
+
+    public Dispositivo(Integer id, TipoDispositivo Tipo_Dispositivo, String imei, boolean eliminado) {
+        this.id = id;
+        this.Tipo_Dispositivo = Tipo_Dispositivo;
+        this.Imei = imei;
+        this.eliminado = eliminado;
+    }
+    public Dispositivo(
+            Integer id,
+            TipoDispositivo Tipo_Dispositivo,
+            String imei,
+            String marca,
+            String modelo,
+            String nombre,
+            Long tiempoUso,
+            Long tiempoAsignado,
+            Long horaInicio,
+            Long horaFin,
+            boolean bloqueoActivo,
+            boolean eliminado
+    ) {
+        this.id = id;
+        this.Tipo_Dispositivo = Tipo_Dispositivo;
+        this.Imei = imei;
+        this.eliminado = eliminado;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.nombre = nombre;
+        this.tiempoUso = tiempoUso;
+        this.tiempoAsignado = tiempoAsignado;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+        this.bloqueoActivo = bloqueoActivo;
+    }
+
+    public Dispositivo(Integer id, TipoDispositivo Tipo_Dispositivo, String imei, String marca, String modelo, String nombre, Long tiempoUso, boolean eliminado) {
+        this.id = id;
+        this.Tipo_Dispositivo = Tipo_Dispositivo;
+        this.Imei = imei;
+        this.eliminado = eliminado;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.nombre = nombre;
+        this.tiempoUso = tiempoUso;
     }
 
     @Override

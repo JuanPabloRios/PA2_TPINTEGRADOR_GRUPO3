@@ -12,15 +12,6 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView31"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginBottom="10sp"
-            android:text="EN CONSTRUCCION"
-            android:textSize="25sp"
-            android:gravity="center"/>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -42,21 +33,26 @@
                     android:text="Configuracion de Dispositivo"
                     android:textSize="20dp" />
 
+                <Switch
+                    android:id="@+id/stActivo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10sp"
+                    android:text="Bloqueo Activo" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start"
-                    android:text="Limite tiempo uso" />
+                    android:text="Limite tiempo de uso en minutos" />
 
                 <EditText
-                    android:id="@+id/editTextTime"
+                    android:id="@+id/tiempoUsoDispositivo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10sp"
                     android:ems="10"
-                    android:hint="HH:MM"
-                    android:inputType="time"
-                    android:enabled="false"/>
+                    android:inputType="number" />
 
                 <TextView
                     android:id="@+id/textView"
@@ -64,15 +60,12 @@
                     android:layout_height="wrap_content"
                     android:text="Hora inicio" />
 
-                <EditText
-                    android:id="@+id/editTextTime2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10sp"
-                    android:ems="10"
-                    android:hint="HH:MM"
-                    android:inputType="time"
-                    android:enabled="false"/>
+                <TimePicker
+                    android:id="@+id/horaInicioPicker"
+                    android:layout_width="224dp"
+                    android:layout_height="115dp"
+                    android:timePickerMode="spinner"
+                    />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -80,22 +73,18 @@
                     android:layout_height="wrap_content"
                     android:text="Hora fin" />
 
-                <EditText
-                    android:id="@+id/editTextTime3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="HH:MM"
-                    android:inputType="time"
-                    android:enabled="false"/>
+                <TimePicker
+                    android:id="@+id/horaFinPicker"
+                    android:layout_width="224dp"
+                    android:layout_height="115dp"
+                    android:timePickerMode="spinner" />
 
                 <Button
                     android:id="@+id/button2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10sp"
-                    android:text="@string/Aceptar"
-                    android:enabled="false"/>
+                    android:text="@string/Aceptar" />
 
             </LinearLayout>
         </ScrollView>

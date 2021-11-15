@@ -55,21 +55,19 @@ public class EstadisticaDAO {
                 "e.Tiempo_Uso AS tiempoUso " +
             "FROM Estadisticas_x_dispositivo as e " +
             "INNER JOIN Aplicacion AS a ON e.Id_Aplicacion = a.Id " +
-            "WHERE e.Id_Dispositivo = "+d.getId();
+            "WHERE e.Id_Dispositivo = "+d.getId() +" ORDER BY e.Tiempo_Uso DESC";
+        System.out.println("@@@ query " + query);
         manager.setQuery(query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
     }
 
     public static ArrayList<Estadistica> obtenerEstadisticasDeDispositivoHandler(Object obj) {
-        if(obj != null)
-        {
+        if(obj != null) {
             ArrayList<Estadistica> resultado = new ArrayList<Estadistica>();
-            try
-            {
+            try {
                 ResultSet rs = (ResultSet)obj;
-                while(rs.next())
-                {
+                while(rs.next()) {
                     resultado.add(new Estadistica(
                         new Aplicacion(rs.getString("appDescripcion"),rs.getString("appIcono")),
                         rs.getLong("tiempoUso")

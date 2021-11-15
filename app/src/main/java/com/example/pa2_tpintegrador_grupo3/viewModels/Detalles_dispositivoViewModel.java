@@ -17,6 +17,7 @@ public class Detalles_dispositivoViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<Estadistica>> estaditicas = new MutableLiveData<ArrayList<Estadistica>>();
 
     public void setEstaditicas(ArrayList<Estadistica> est ){
+        System.out.println("ESTADISTICAS EN VIEW MODEL " + est.size());
         this.estaditicas.setValue(est);
     }
 

@@ -10,11 +10,9 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -23,7 +21,6 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingBottom="10dp">
-
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="match_parent"
@@ -36,7 +33,6 @@
                     android:layout_height="match_parent"
                     android:gravity="start"
                     android:text="Nombre" />
-
                 <TextView
                     android:id="@+id/txtNombre"
                     android:layout_width="match_parent"
@@ -50,7 +46,6 @@
                     android:layout_height="match_parent"
                     android:gravity="start"
                     android:text="Marca" />
-
                 <TextView
                     android:id="@+id/txtMarca"
                     android:layout_width="match_parent"
@@ -59,13 +54,11 @@
                     android:gravity="start"
                     android:text="Cargando..."
                     android:textStyle="bold" />
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start"
                     android:text="Modelo" />
-
                 <TextView
                     android:id="@+id/txtModelo"
                     android:layout_width="match_parent"
@@ -74,13 +67,11 @@
                     android:gravity="start"
                     android:text="Cargando..."
                     android:textStyle="bold" />
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start"
                     android:text="Tiempo usado" />
-
                 <TextView
                     android:id="@+id/txtTiempoUsado"
                     android:layout_width="match_parent"
@@ -89,7 +80,6 @@
                     android:gravity="start"
                     android:text="Cargando..."
                     android:textStyle="bold" />
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -110,7 +100,6 @@
                     android:layout_height="match_parent"
                     android:gravity="start"
                     android:text="Estado" />
-
                 <TextView
                     android:id="@+id/txtEstado"
                     android:layout_width="match_parent"
@@ -119,38 +108,21 @@
                     android:gravity="start"
                     android:text="Activo"
                     android:textStyle="bold" />
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start"
                     android:text="Aplicaciones mas usadas"
                     android:textSize="20dp"/>
-
-                <TableLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" >
-
-                        <ImageView
-                            android:id="@+id/imageView"
-                            android:layout_width="52dp"
-                            android:layout_height="44dp"
-                            android:src="@drawable/chrome" />
-
-                        <TextView
-                            android:id="@+id/textView4"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="5sp"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:text="EN CONSTRUCCION" />
-                    </TableRow>
-                </TableLayout>
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:orientation="vertical"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:id="@+id/tablaEstadisticas">
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
