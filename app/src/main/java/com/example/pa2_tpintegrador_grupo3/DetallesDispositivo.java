@@ -2,11 +2,9 @@ package com.example.pa2_tpintegrador_grupo3;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
-
 import com.example.pa2_tpintegrador_grupo3.DAO.EstadisticaDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
 import com.example.pa2_tpintegrador_grupo3.adapters.DetallesDispositivoPagerAdapter;
@@ -18,11 +16,9 @@ import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 import com.example.pa2_tpintegrador_grupo3.viewModels.Detalles_dispositivoViewModel;
 import com.google.android.material.tabs.TabLayout;
-
 import java.util.ArrayList;
 
 public class DetallesDispositivo extends AppCompatActivity implements InterfazDeComunicacion {
-
     private ViewPager viewPager;
     private Usuario user;
     private Dispositivo dispositivo;
@@ -46,8 +42,6 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
         });
         //ACA HACEMOS LA LLAMADA A LA BASE DE DATOS
         restricDao.obtenerTodasLasRestriccionesPorIdDeDispositivo(this.dispositivo.getId());
-        EstadisticaDAO estadisticaDAO = new EstadisticaDAO(this);
-        estadisticaDAO.obtenerEstadisticasDeDispositivo(this.dispositivo);
     }
 
     @Override
@@ -55,19 +49,18 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
         ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
         switch (res.getIdentificador()){
             case "obtenerTodasLasRestriccionesPorIdDeDispositivo":
-                System.out.println("obtenerTodasLasRestriccionesPorIdDeDispositivo FINALIZADA");
                 ArrayList<Restricciones> restricciones = RestriccionesDAO.obtenerTodasLasRestriccionesPorIdDeDispositivoHandler(res.getData());
                 //ACA DETENER SPINNER
                 if(restricciones != null && restricciones.size() > 0){
                     //CARGAMOS EN EL VIEWMODEL TODOS LOS DETALLES DE LAS APLICACIONES Y COMPLETAMOS LA CARGA DE LA PANTALLA
                     detallesDispositivoViewModel.setRestricciones(restricciones);
-                    this.completarCarga();
+                    EstadisticaDAO estadisticaDAO = new EstadisticaDAO(this);
+                    estadisticaDAO.obtenerEstadisticasDeDispositivo(this.dispositivo);
                 }
                 break;
             case "modificarRestriccion":
                 Integer resModificacionMinutos = RestriccionesDAO.modificarRestriccionHandler(res.getData());
                 //ACA DETENER SPINNER
-                System.out.println("@@ resModificacionMinutos "+resModificacionMinutos);
                 if(resModificacionMinutos != null && resModificacionMinutos != -1){
                     Toast.makeText(this,"Guardado",Toast.LENGTH_SHORT).show();
                 }
@@ -77,10 +70,9 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
                 //ACA DETENER SPINNER
                 if(estadisticas != null && !estadisticas.isEmpty()){
                     detallesDispositivoViewModel.setEstaditicas(estadisticas);
+                    this.completarCarga();
                 }
                 break;
-
-
             default:
                 System.out.println("OTRO IDENTIFICADOR");
         }
@@ -88,7 +80,6 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
 
     public void completarCarga(){
         TabLayout tabLayout = findViewById(R.id.tabs);
-
         viewPager = findViewById(R.id.viewPager);
         pagerAdapter = new DetallesDispositivoPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), this.dispositivo.getId());
         viewPager.setAdapter(pagerAdapter);
@@ -101,10 +92,8 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
                     pagerAdapter.notifyDataSetChanged();
                 }
             }
-
             @Override
             public void onTabUnselected(TabLayout.Tab tab) { }
-
             @Override
             public void onTabReselected(TabLayout.Tab tab) { }
         });

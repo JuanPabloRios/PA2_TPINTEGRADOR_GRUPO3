@@ -138,7 +138,11 @@ public class DispositivoDAO {
     public void obtenerTodosLosDispositivosPorUsuario(Usuario u){
         SelectManager manager = new SelectManager();
         manager.setIdentificador("obtenerTodosLosDispositivosPorUsuario");
-        manager.setQuery("SELECT d.Id as Id, d.Imei as Imei, d.Marca as marca, d.Modelo as modelo, d.Nombre as nombre, d.Tiempo_Uso as tiempoUso FROM Dispositivo_x_usuario as dxu INNER JOIN Dispositivo as d ON dxu.Id_Dispositivo = d.Id WHERE d.Id_tipo_dispositivo = 2 AND d.Eliminado = 0 AND dxu.Eliminado = 0 and dxu.Id_Usuario = "+u.getId());
+        manager.setQuery(
+            "SELECT d.Id as Id, d.Imei as Imei, d.Marca as marca, d.Modelo as modelo, d.Nombre as nombre, d.Tiempo_Uso as tiempoUso, d.Tiempo_Asignado as tiempoAsignado, d.Hora_Inicio as horaInicio, d.Hora_Fin as horaFin, d.Bloqueo_Activo as bloqueoActivo "+
+                "FROM Dispositivo_x_usuario as dxu "+
+                "INNER JOIN Dispositivo as d ON dxu.Id_Dispositivo = d.Id "+
+                "WHERE d.Id_tipo_dispositivo = 2 AND d.Eliminado = 0 AND dxu.Eliminado = 0 and dxu.Id_Usuario = "+u.getId());
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
     }
@@ -159,7 +163,11 @@ public class DispositivoDAO {
                             rs.getString("modelo"),
                             rs.getString("nombre"),
                             rs.getLong("tiempoUso"),
-                            false
+                            rs.getLong("tiempoAsignado"),
+                            rs.getLong("horaInicio"),
+                            rs.getLong("horaFin"),
+                            rs.getBoolean("bloqueoActivo"),
+                    false
                         )
                     );
                 }
