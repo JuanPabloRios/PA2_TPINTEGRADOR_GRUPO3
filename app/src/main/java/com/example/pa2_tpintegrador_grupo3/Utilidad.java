@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.pa2_tpintegrador_grupo3.entidades.BloqueoWrapper;
 import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.google.gson.Gson;
 
@@ -39,6 +40,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Utilidad extends AppCompatActivity {
     private static final String NOMBRE_ARCHIVO = "parentalWatcher.txt";
@@ -153,6 +155,65 @@ public class Utilidad extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public BloqueoWrapper obtenerArchivoDeReintentosFallidos(Context context) {
+        FileInputStream file = null;
+        try {
+            file = context.openFileInput("BloqueoReintentos.txt");
+            InputStreamReader inputReader = new InputStreamReader(file);
+            BufferedReader buffer = new BufferedReader(inputReader);
+            String toJson;
+            Gson gson = new Gson();
+            while((toJson = buffer.readLine()) != null){
+                return gson.fromJson(toJson, BloqueoWrapper.class);
+            }
+            return null;
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+            return  null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return  null;
+        } finally {
+            if(file != null){
+                try {
+                    file.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public Boolean guardarArchivoReintentosFallidos(Context context, BloqueoWrapper bloqueo){
+        FileOutputStream file = null;
+        try {
+            Gson gson = new Gson();
+            String objConf = gson.toJson(bloqueo);
+            file = new FileOutputStream(new File(context.getFilesDir(),"BloqueoReintentos.txt"));
+            OutputStreamWriter writer = new OutputStreamWriter(file);
+            writer.write(objConf);
+            writer.close();
+            return true;
+        } catch (IOException e){
+            Toast.makeText(this,"Error guardando archivo de reintentos fallidos!",Toast.LENGTH_SHORT).show();
+            return false;
+        } finally {
+            if(file != null){
+                try {
+                    file.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static String obtenerHorasYMinutos(Long milis){
+        Long horas = TimeUnit.MILLISECONDS.toHours(milis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(milis));
+        Long minutos = TimeUnit.MILLISECONDS.toMinutes(milis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milis));
+        return horas+":"+minutos;
     }
 
 

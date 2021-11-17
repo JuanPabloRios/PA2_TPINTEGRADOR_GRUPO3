@@ -65,12 +65,17 @@ public class Detalles_dispositivo_detalles extends Fragment {
         if(d.isBloqueoActivo()) {
             TextView txtUsoRestante = view.findViewById(R.id.txtUsoRestante);
             milis = d.getTiempoAsignado() - d.getTiempoUso();
-            if(d.getTiempoAsignado() <= d.getTiempoUso()){
-                txtEstado.setText("BLOQUEADO");
-                milis = d.getTiempoUso();
-            }
             horas = TimeUnit.MILLISECONDS.toHours(milis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(milis));
             minutos = TimeUnit.MILLISECONDS.toMinutes(milis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milis));
+            if(d.getTiempoAsignado() <= d.getTiempoUso()){
+                txtEstado.setText("BLOQUEADO");
+                milis = d.getTiempoAsignado();
+                horas = TimeUnit.MILLISECONDS.toHours(milis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(milis));
+                minutos = TimeUnit.MILLISECONDS.toMinutes(milis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milis));
+                txtTiempoUsado.setText(horas + ":"+minutos);
+                horas = 0L;
+                minutos = 0L;
+            }
             txtUsoRestante.setText(horas + ":"+minutos);
         }
 

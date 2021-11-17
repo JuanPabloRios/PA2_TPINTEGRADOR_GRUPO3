@@ -14,6 +14,7 @@ import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.DetallesDispositivo;
 import com.example.pa2_tpintegrador_grupo3.R;
+import com.example.pa2_tpintegrador_grupo3.Utilidad;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
@@ -61,7 +62,7 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
         for(Dispositivo d : dispositivos){
             Button button = new Button(this);
             button.setId(d.getId());
-            button.setText("DISPOSITIVO: "+ d.getNombre() + "\n"+"TIEMPO USO: "+d.getTiempoUso());
+            button.setText("DISPOSITIVO: "+ d.getNombre() + "\n"+"TIEMPO USO: "+ Utilidad.obtenerHorasYMinutos(d.getTiempoUso()));
             button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,0));
             button.setGravity(Gravity.START);
 
