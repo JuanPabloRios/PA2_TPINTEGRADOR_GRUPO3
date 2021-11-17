@@ -17,13 +17,16 @@ import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.Utilidad;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
+import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Estadistica;
 import com.example.pa2_tpintegrador_grupo3.entidades.Restricciones;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 import com.rvalerio.fgchecker.AppChecker;
 import static com.example.pa2_tpintegrador_grupo3.AppNotificacion.CHANNEL_ID;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ServiceIntentApp extends Service implements InterfazDeComunicacion {
 
@@ -44,8 +47,7 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         final long EXECUTION_TIME = 200;
         final long EXECUTION_TIME_CONSULTADB = 7000;
@@ -55,11 +57,42 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
             public void run() {
                 AppChecker appChecker = new AppChecker();
                 String packageName = appChecker.getForegroundApp(ServiceIntentApp.this);
-                if(aplicacionesBloqueadas.contains(packageName)){
-                    Intent startMain = new Intent(Intent.ACTION_MAIN);
-                    startMain.addCategory(Intent.CATEGORY_HOME);
-                    startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(startMain);
+                if(!packageName.equals("com.example.pa2_tpintegrador_grupo3")){
+                    Boolean bloqueoDispositivoActivo = ServiceIntentApp.this.config.getDispositivo().isBloqueoActivo();
+                    Boolean chequeoDeBloqueoDeApps = true;
+                    System.out.println("packageName " + packageName);
+                    if(bloqueoDispositivoActivo){
+                        Dispositivo d = ServiceIntentApp.this.config.getDispositivo();
+                        if(d.getTiempoUso() >= d.getTiempoAsignado()){
+                            System.out.println("BLOQUEO POR TIEMPO ASIGNADO AL DISPOSITIVO");
+                            //Superamos el tiempo de uso
+                            ServiceIntentApp.this.irAHome();
+                            //No hace falta chequear las app, el dispositivo esta bloqueado
+                            chequeoDeBloqueoDeApps = false;
+                        } else {
+                            Long horaInicio = d.getHoraInicio();
+                            Long horaFin = d.getHoraFin();
+                            Calendar now = Calendar.getInstance();
+                            Integer horaActual = now.get(Calendar.HOUR_OF_DAY);
+                            Integer minutoActual = now.get(Calendar.MINUTE);
+                            Long horaActualEnMilisegundos = TimeUnit.HOURS.toMillis(horaActual) + TimeUnit.MINUTES.toMillis(minutoActual);
+
+                            if(horaActualEnMilisegundos < horaInicio || horaActualEnMilisegundos > horaFin){
+                                System.out.println("BLOQUEO POR FUERA DE HORARIO DE USO");
+                                //Estamos fuera del rango horario de uso
+                                ServiceIntentApp.this.irAHome();
+                                //No hace falta chequear las app, el dispositivo esta bloqueado
+                                chequeoDeBloqueoDeApps = false;
+                            }
+                        }
+                    }
+                    if(chequeoDeBloqueoDeApps){
+                        if(aplicacionesBloqueadas.contains(packageName)){
+                            System.out.println("BLOQUEO DE APLICACION");
+                            //Si la app esta en esta lista es por que se encuentra bloqueada
+                            ServiceIntentApp.this.irAHome();
+                        }
+                    }
                 }
                 handler.postDelayed(this, EXECUTION_TIME);
             }
@@ -68,9 +101,13 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                //REFRESCAMOS LAS RESTRICCIONES CON LA BASE DE DATOS
                 resDao.obtenerTodasLasRestriccionesPorIdDeDispositivo(ServiceIntentApp.this.config.getDispositivo().getId());
                 DispositivoDAO dispositivoDAO = new DispositivoDAO(ServiceIntentApp.this);
+                //ACTUALZIAMOS LAS ESTADISTICAS DE NUESTRO DISPOSITIVO EN LA BASE DE DATOS
                 dispositivoDAO.actualizarTiempoDeUso(ServiceIntentApp.this.config.getDispositivo().getId(), ServiceIntentApp.this.tiempoUso);
+                //REFRESCAMOS LA CONFIGURACION DE NUESTRO DISPOSITIVO CON LA BASE DE DATOS (Buscamos nuevas restricciones a nivel dispositivo)
+                dispositivoDAO.obtenerDispositivoPorId(ServiceIntentApp.this.config.getDispositivo().getId());
                 handler.postDelayed(this, EXECUTION_TIME_CONSULTADB);
             }
         }, EXECUTION_TIME);
@@ -83,6 +120,13 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
             .build();
         startForeground(1,notification);
         return START_NOT_STICKY;
+    }
+
+    public void irAHome(){
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
     }
 
     private ArrayList<String> obtenerAplicacionesBloqueadas(){
@@ -165,8 +209,17 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
                     this.aplicacionesBloqueadas = obtenerAplicacionesBloqueadas();
                 }
                 break;
-            default:
-                System.out.println("OTRO IDENTIFICADOR");
+            case "obtenerDispositivoPorId":
+                Dispositivo d = DispositivoDAO.obtenerDispositivoPorIdHandler(res.getData());
+                if(d != null){
+                    Utilidad ut = new Utilidad();
+                    Configuracion con = ut.obtenerConfiguracion(this);
+                    d.setUsuarioMaestro(con.getDispositivo().getUsuarioMaestro());
+                    con.setDispositivo(d);
+                    ut.guardarArchivoDeConfiguracion(this,con);
+                    this.config = con;
+                }
+                break;
         }
     }
 }

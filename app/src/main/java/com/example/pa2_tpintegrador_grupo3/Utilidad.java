@@ -2,6 +2,7 @@ package com.example.pa2_tpintegrador_grupo3;
 
 import android.app.PendingIntent;
 import android.app.usage.UsageEvents;
+import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -222,6 +223,7 @@ public class Utilidad extends AppCompatActivity {
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
         now.set(Calendar.MILLISECOND, 0);
+        now.set(Calendar.AM_PM, Calendar.AM);
         long startTime = now.getTimeInMillis();
         UsageStatsManager mUsageStatsManager =  (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
 
@@ -258,6 +260,29 @@ public class Utilidad extends AppCompatActivity {
             us.tiempoTotal = phoneUsageToday;
         }
         return smallInfoList;
+        /*
+        Long tiempototalDia = 0L;
+        Calendar now = Calendar.getInstance();
+        long currTime = now.getTimeInMillis();
+        now.set(Calendar.HOUR, 0);
+        now.set(Calendar.MINUTE, 0);
+        now.set(Calendar.SECOND, 0);
+        now.set(Calendar.MILLISECOND, 0);
+        now.set(Calendar.AM_PM, Calendar.AM);
+        long startTime = now.getTimeInMillis();
+
+        UsageStatsManager mUsageStatsManager =  (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+        List<UsageStats> queryUsageStats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_YEARLY, startTime, currTime);
+        List<AppUsageInfo> smallInfoList = new ArrayList<>();
+
+        for(UsageStats usStats : queryUsageStats){
+            AppUsageInfo info = new AppUsageInfo(usStats.getPackageName(), usStats.getTotalTimeInForeground());
+            tiempototalDia+= usStats.getTotalTimeInForeground();
+            smallInfoList.add(info);
+        }
+        smallInfoList.get(0).tiempoTotal = tiempototalDia;
+        return smallInfoList;
+        */
     }
 
     public class AppUsageInfo {

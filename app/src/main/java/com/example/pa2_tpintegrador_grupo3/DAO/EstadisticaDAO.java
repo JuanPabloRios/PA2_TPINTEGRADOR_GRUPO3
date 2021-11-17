@@ -6,7 +6,6 @@ import com.example.pa2_tpintegrador_grupo3.entidades.Aplicacion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Estadistica;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
-
 import java.sql.ResultSet;
 import java.util.ArrayList;
 

@@ -10,16 +10,25 @@ import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
+import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.Servicios.InputFilterMinMax;
+import com.example.pa2_tpintegrador_grupo3.Utilidad;
+import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
+import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
+import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 import com.example.pa2_tpintegrador_grupo3.viewModels.Detalles_dispositivoViewModel;
 import java.util.concurrent.TimeUnit;
 
-public class Detalles_dispositivo_dispositivo extends Fragment {
+public class Detalles_dispositivo_dispositivo extends Fragment implements InterfazDeComunicacion {
     private Integer idDispositivo;
     private View view;
     private Detalles_dispositivoViewModel detallesDispositivoViewModel;
@@ -33,6 +42,15 @@ public class Detalles_dispositivo_dispositivo extends Fragment {
         this.view = inflater.inflate(R.layout.fragment_detalles_dispositivo_dispositivo, container, false);
         detallesDispositivoViewModel = new ViewModelProvider(requireActivity()).get(Detalles_dispositivoViewModel.class);
         dispositivo = detallesDispositivoViewModel.getDispositivo().getValue();
+        Button button = (Button) view.findViewById(R.id.btnAceptarCambios);
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Detalles_dispositivo_dispositivo.this.guardarConfiguracion(v);
+            }
+        });
         this.cargarDatosEnPantalla();
         return this.view;
     }
@@ -67,5 +85,36 @@ public class Detalles_dispositivo_dispositivo extends Fragment {
 
         Switch stActivo = this.view.findViewById(R.id.stActivo);
         stActivo.setChecked(this.dispositivo.isBloqueoActivo());
+    }
+
+    public void guardarConfiguracion(View view){
+        Switch isActivo = this.view.findViewById(R.id.stActivo);
+        this.dispositivo.setBloqueoActivo(isActivo.isChecked());
+
+        EditText tiempoUso = this.view.findViewById(R.id.tiempoUsoDispositivo);
+        this.dispositivo.setTiempoAsignado(TimeUnit.MINUTES.toMillis(Long.valueOf(tiempoUso.getText().toString())));
+
+        TimePicker horaInicio = this.view.findViewById(R.id.horaInicioPicker);
+        Long horaInicioMilis = TimeUnit.HOURS.toMillis(horaInicio.getCurrentHour()) + TimeUnit.MINUTES.toMillis(horaInicio.getCurrentMinute());
+        this.dispositivo.setHoraInicio(horaInicioMilis);
+        TimePicker horaFin = this.view.findViewById(R.id.horaFinPicker);
+        Long horaFinMilis = TimeUnit.HOURS.toMillis(horaFin.getCurrentHour()) + TimeUnit.MINUTES.toMillis(horaFin.getCurrentMinute());
+        this.dispositivo.setHoraFin(horaFinMilis);
+        DispositivoDAO dispositivoDAO = new DispositivoDAO(this);
+        dispositivoDAO.actualizarConfiguracionBloqueoDispositivo(this.dispositivo);
+    }
+
+    @Override
+    public void operacionConBaseDeDatosFinalizada(Object resultado) {
+        ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
+        switch (res.getIdentificador()){
+            case "actualizarConfiguracionBloqueoDispositivo":
+                Integer modificado = DispositivoDAO.actualizarConfiguracionBloqueoDispositivoHandler(res.getData());
+                //ACA DETENER SPINNER
+                if(modificado != null){
+                    Toast.makeText(getContext(),"Guardado correctamente",Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 }

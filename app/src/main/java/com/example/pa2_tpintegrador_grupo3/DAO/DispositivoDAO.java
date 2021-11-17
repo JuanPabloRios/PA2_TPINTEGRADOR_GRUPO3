@@ -68,29 +68,48 @@ public class DispositivoDAO {
         return null;
     }
 
+    public void actualizarConfiguracionBloqueoDispositivo(Dispositivo d){
+        UpsertManager manager = new UpsertManager();
+        manager.setIdentificador("actualizarConfiguracionBloqueoDispositivo");
+        manager.setQuery("UPDATE Dispositivo SET Tiempo_Asignado = "+d.getTiempoAsignado()+",Hora_Inicio = "+d.getHoraInicio()+",Hora_Fin = "+d.getHoraFin()+",Bloqueo_Activo = "+d.isBloqueoActivo()+" WHERE Id = "+d.getId());
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
+    }
 
-
+    public static Integer actualizarConfiguracionBloqueoDispositivoHandler(Object obj){
+        if(obj != null){
+            return (Integer)obj;
+        }
+        return null;
+    }
 
     public void obtenerDispositivoPorId(Integer dispoId){
         SelectManager manager = new SelectManager();
-        manager.setIdentificador("OBTENERDISPOSITIVOPORID");
+        manager.setIdentificador("obtenerDispositivoPorId");
         String query = "SELECT * FROM Dispositivo WHERE id = \""+dispoId+"\" AND Eliminado = 0";
         manager.setQuery(query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
     }
 
-    public static Dispositivo obtenerDispositivoPorId(Object obj){
+    public static Dispositivo obtenerDispositivoPorIdHandler(Object obj){
         if(obj != null){
             try {
                 ResultSet rs = (ResultSet)obj;
                 while(rs.next()) {
                     return new Dispositivo(
-                            rs.getInt("id"),
-                            new TipoDispositivo(rs.getInt("Id_tipo_dispositivo"),""),
-                            rs.getString("Imei"),
-                            rs.getBoolean("eliminado")
-
+                        rs.getInt("Id"),
+                        new TipoDispositivo(rs.getInt("Id_Tipo_Dispositivo"),""),
+                        rs.getString("Imei"),
+                        rs.getString("Marca"),
+                        rs.getString("Modelo"),
+                        rs.getString("Nombre"),
+                        rs.getLong("Tiempo_Uso"),
+                        rs.getLong("Tiempo_Asignado"),
+                        rs.getLong("Hora_Inicio"),
+                        rs.getLong("Hora_Fin"),
+                        rs.getBoolean("Bloqueo_Activo"),
+                        false
                     );
                 }
                 return null;
