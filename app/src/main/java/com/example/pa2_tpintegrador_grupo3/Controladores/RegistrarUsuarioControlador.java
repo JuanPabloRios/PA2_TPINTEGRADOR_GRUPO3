@@ -59,44 +59,49 @@ public class RegistrarUsuarioControlador extends AppCompatActivity implements In
             //Verificamos que no exista un usuario con el mismo email o nombre de usuario.
             usDao.obtenerUsuarioPorNombreUsuarioOEmail(txtNombreUsuario.getText().toString(),txtEmail.getText().toString());
             //ACA ACTIVAR SPINNER (EN EL METODO DE RESPUESTA DE BASE DE DATOS FRENAMOS EL SPINNER Y CONTINUAMOS
+        } else {
+            Toast.makeText(this,"Formato de datos incorrecto",Toast.LENGTH_SHORT).show();
         }
     }
 
 
     public boolean validarCampos(){
         Utilidad ut = new Utilidad();
-        if(!ut.validateEmpty(txtNombreUsuario.getText().toString())){
-            if(ut.validateString(txtNombreUsuario.getText().toString())){
-                txtNombreUsuario.setError("No se permiten numeros en el campo Nombre.");
-                return false;
-            }
-        }else{
-            txtNombreUsuario.setError("EL campo Nombre no puede estar vacio.");
-            return false;}
-
-        if(!ut.validateEmpty(txtEmail.getText().toString())){
-            if(ut.emailInvalido(txtEmail.getText().toString())){
-                txtEmail.setError("No es un Email valido.");
-                return false;
-            }
-        }else{
-            txtEmail.setError("EL campo Email no puede estar vacio.");
-            return false;}
-        if(ut.validateEmpty(txtPassword.getText().toString())){
-            txtPassword.setError("EL campo Contraseña no puede estar vacio.");
-            return false;
-        }else if(!txtPassword.getText().toString().equals(txtCopiaPassoword.getText().toString())){
-            txtPassword.setError("EL campo Contraseña Debe ser igual al de Repetir Contraseña.");
+        if(ut.validateEmpty(txtNombreUsuario.getText().toString())){
+            txtNombreUsuario.setError("El campo Nombre no puede estar vacio.");
             return false;
         }
+
+        if(ut.validateString(txtNombreUsuario.getText().toString())){
+            txtNombreUsuario.setError("No se permiten numeros en el campo Nombre.");
+            return false;
+        }
+
+
+        if(ut.validateEmpty(txtEmail.getText().toString())){
+            txtEmail.setError("El campo Email no puede estar vacio.");
+            return false;
+        }
+
+        if(ut.emailInvalido(txtEmail.getText().toString())){
+            txtEmail.setError("No es un Email valido.");
+            return false;
+        }
+
+        if(ut.validateEmpty(txtPassword.getText().toString())){
+            txtPassword.setError("El campo Contraseña no puede estar vacio.");
+            return false;
+        }
+
         if(ut.validateEmpty(txtCopiaPassoword.getText().toString())){
             txtCopiaPassoword.setError("EL campo Repetir Contraseña no puede estar vacio.");
             return false;
-        }else if(!txtCopiaPassoword.getText().toString().equals(txtPassword.getText().toString())){
-            txtPassword.setError("EL campo Repetir Contraseña Debe ser igual al de Contraseña.");
-            return false;
         }
 
+        if(!txtPassword.getText().toString().equals(txtCopiaPassoword.getText().toString())){
+            txtPassword.setError("Las contraseñas deben ser iguales");
+            return false;
+        }
         return true;
     }
 
@@ -115,13 +120,12 @@ public class RegistrarUsuarioControlador extends AppCompatActivity implements In
                 Integer user2 = UsuarioDAO.crearUsuarioHandler(res.getData());
                 //ACA DETENER SPINNER
                 if(user2 != null && user2 > 0){
-                    Toast.makeText(this,"Usuario creado correctamente",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"Registrado correctamente",Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this, MainActivity.class)); finish();
                 } else {
                     Toast.makeText(this,"Ocurrio un problema al crear el usuario",Toast.LENGTH_SHORT).show();
                 }
                 break;
-            default:
-                System.out.println("OTRO IDENTIFICADOR");
         }
     }
 
@@ -133,6 +137,7 @@ public class RegistrarUsuarioControlador extends AppCompatActivity implements In
             } else {
                 txtEmail.setError("El email ya esta en uso");
             }
+            Toast.makeText(this,"Usuario ya registrado",Toast.LENGTH_SHORT).show();
         } else {
             Usuario objUser = new Usuario();
             objUser.setUsuario(txtNombreUsuario.getText().toString());

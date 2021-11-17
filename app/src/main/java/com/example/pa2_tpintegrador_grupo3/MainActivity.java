@@ -10,6 +10,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.pa2_tpintegrador_grupo3.Controladores.DispositivosVinculadosControlador;
 import com.example.pa2_tpintegrador_grupo3.Controladores.PrincipalSubordinadoControlador;
@@ -17,6 +18,7 @@ import com.example.pa2_tpintegrador_grupo3.Controladores.RegistrarUsuarioControl
 import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
+import com.example.pa2_tpintegrador_grupo3.entidades.BloqueoWrapper;
 import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoDispositivo;
@@ -96,10 +98,13 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         l.setVisibility(View.VISIBLE);
         LinearLayout l2 = (LinearLayout)findViewById(R.id.Inicial);
         l2.setVisibility(View.GONE);
+        TextView txtRegistrar = findViewById(R.id.txtRegistrar);
         EditText nombreDispositivo = findViewById(R.id.nombreDispositivo);
         if(esSubordinado){
             nombreDispositivo.setVisibility(View.VISIBLE);
+            txtRegistrar.setVisibility(View.GONE);
         } else {
+            txtRegistrar.setVisibility(View.VISIBLE);
             nombreDispositivo.setVisibility(View.GONE);
         }
     }
@@ -146,66 +151,94 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                 Integer idNuevaRelacion = DispositivoDAO.relacionarDispositivoConUsuarioHandler(res.getData());
                 //ACA DETENER SPINNER
                 if(idNuevaRelacion > 0){
+                    if(esSubordinado && primerInicio){
+                        Toast.makeText(this,"Equipo registrado como subordinado correctamente",Toast.LENGTH_SHORT).show();
+                    }
                     redireccionar(this.user);
                 } else {
                     Toast.makeText(this,"Error creando relacion con dispositivo",Toast.LENGTH_SHORT).show();
                 }
                 break;
-            default:
-                System.out.println("OTRO IDENTIFICADOR");
         }
     }
 
     //Si el usuario recibido por parametro tiene ID, existe, chequeamos la contrasenia y continuamos
     public void validarInicioSesion(Usuario us){
-        System.out.println("validarInicioSesion");
         if(us != null && us.getId() != null){
-            if(txtPassword.getText().toString().equals(us.getContrasenia())){
-                //SI ES EL PRIMER INICIO GUARDAMOS LA CONFIGURACION INICIAL DE TIPO DE DISPOSITIVO
-                if(primerInicio){
-                    Utilidad utils = new Utilidad();
-                    Configuracion config = new Configuracion();
-                    config.setDispositivo(new Dispositivo());
-                    config.getDispositivo().setImei(UUID.randomUUID().toString());
-                    config.getDispositivo().setTipo_Dispositivo(new TipoDispositivo(1, "MAESTRO")); //1 si es MAESTRO
+            Utilidad ut = new Utilidad();
+            BloqueoWrapper bq = ut.obtenerArchivoDeReintentosFallidos(this);
+            if(bq == null){
+                bq = new BloqueoWrapper();
+            }
+            if(validarIntentos(bq)){
+                if(txtPassword.getText().toString().equals(us.getContrasenia())){
+                    //SI ES EL PRIMER INICIO GUARDAMOS LA CONFIGURACION INICIAL DE TIPO DE DISPOSITIVO
+                    if(primerInicio){
+                        Utilidad utils = new Utilidad();
+                        Configuracion config = new Configuracion();
+                        config.setDispositivo(new Dispositivo());
+                        config.getDispositivo().setImei(UUID.randomUUID().toString());
+                        config.getDispositivo().setTipo_Dispositivo(new TipoDispositivo(1, "MAESTRO")); //1 si es MAESTRO
 
-                    if(esSubordinado){
-                        config.getDispositivo().setTipo_Dispositivo(new TipoDispositivo(2, "SUBORDINADO")); //2 si es SUBORDINADO
-                    }
-                    config.getDispositivo().setMarca(Build.MANUFACTURER);
-                    config.getDispositivo().setModelo(Build.MODEL);
-                    EditText nombreDispositivo = findViewById(R.id.nombreDispositivo);
-                    config.getDispositivo().setNombre(nombreDispositivo.getText().toString());
-                    System.out.println("DISPOSITIVO A INSERTAR " + config.getDispositivo());
-                    if(utils.guardarArchivoDeConfiguracion(this,config)){
-                        //ACA INICIAR EL SPINNER
-                        dispDao.crearDispositivo(config.getDispositivo());
+                        if(esSubordinado){
+                            config.getDispositivo().setTipo_Dispositivo(new TipoDispositivo(2, "SUBORDINADO")); //2 si es SUBORDINADO
+                        }
+                        config.getDispositivo().setMarca(Build.MANUFACTURER);
+                        config.getDispositivo().setModelo(Build.MODEL);
+                        EditText nombreDispositivo = findViewById(R.id.nombreDispositivo);
+                        config.getDispositivo().setNombre(nombreDispositivo.getText().toString());
+                        if(utils.guardarArchivoDeConfiguracion(this,config)){
+                            //ACA INICIAR EL SPINNER
+                            dispDao.crearDispositivo(config.getDispositivo());
+                        }
+                    } else {
+                        redireccionar(us);
                     }
                 } else {
-                    redireccionar(us);
+                    bq.setIntentos(bq.getIntentos()+1);
+                    if(bq.getIntentos() == 3){
+                        bq.setInicio(System.currentTimeMillis());
+                    }
+                    ut.guardarArchivoReintentosFallidos(this,bq);
+                    Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"A superado los 3 intentos permitidos, debera esperar 30 minutos.",Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT).show();
         }
     }
 
+    private Boolean validarIntentos(BloqueoWrapper bq){
+        if(bq.getIntentos() <= 2){
+            return true;
+        } else {
+            if(System.currentTimeMillis() > (bq.getInicio()+30*60*1000)){
+                Utilidad ut = new Utilidad();
+                bq = new BloqueoWrapper();
+                ut.guardarArchivoReintentosFallidos(this,bq);
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void redireccionar(Usuario us){
         //SI ES SUBORDINADO VAMOS A LA PANTALLA INICIAL DE SUBORDINADO
         if(esSubordinado){
-            System.out.println("SUBORDINADO");Intent i = new Intent(this, PrincipalSubordinadoControlador.class);
+            Intent i = new Intent(this, PrincipalSubordinadoControlador.class);
             i.putExtra("usuario",us);
             i.putExtra("primerInicio",primerInicio);
             startActivity(i);
+            finish();
         }else{
-            System.out.println("MAESTRO");
             //SI ES MAESTRO VAMOS A LA PANTALLA INICIAL DE MAESTRO
             Intent i = new Intent(this, DispositivosVinculadosControlador.class);
             i.putExtra("usuario",us);
             i.putExtra("primerInicio",primerInicio);
             startActivity(i);
+            finish();
         }
     }
 }
