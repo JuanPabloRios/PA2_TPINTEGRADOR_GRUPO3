@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -48,6 +49,9 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
                 //ACA DETENER SPINNER
                 if(dispositivos != null && dispositivos.size() > 0){
                     cargarDispositivosVinculados(dispositivos);
+                } else {
+                    TextView txtTitulo = findViewById(R.id.tituloDispositivosVinculados);
+                    txtTitulo.setText("No existen dispositivos subordinados vinculados");
                 }
                 break;
             default:
@@ -73,6 +77,10 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
                 }
             });
             tabla.addView(button);
+        }
+        if(dispositivos.isEmpty()){
+            TextView txtTitulo = findViewById(R.id.tituloDispositivosVinculados);
+            txtTitulo.setText("No existen dispositivos subordinados vinculados");
         }
     }
 

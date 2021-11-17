@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Restricciones;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
+import com.example.pa2_tpintegrador_grupo3.fragments.solicitar_extension_uso_dispositivo;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 
 import java.util.ArrayList;
@@ -36,7 +39,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
-public class PrincipalSubordinadoControlador  extends AppCompatActivity implements InterfazDeComunicacion {
+public class PrincipalSubordinadoControlador  extends AppCompatActivity implements InterfazDeComunicacion, solicitar_extension_uso_dispositivo.SolicitarExtensionDispositivoListener {
 
     private final AplicacionDAO appDao = new AplicacionDAO(this);
     private ArrayList<String> nombresAplicaciones;
@@ -50,6 +53,8 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         setContentView(R.layout.principal_subordinado);
         Usuario user = (Usuario) getIntent().getSerializableExtra("usuario");
         Boolean primerInicio = (Boolean) getIntent().getSerializableExtra("primerInicio");
+
+
 
         ArrayList<Aplicacion> aplicacionesInstaladas = new ArrayList<Aplicacion>();
         this.nombresAplicaciones = new ArrayList<String>();
@@ -65,6 +70,18 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         marcaDispositivoTxtView.setText(c.getDispositivo().getMarca());
         modeloDispositivoTxtView.setText(c.getDispositivo().getModelo());
         nombreDispositivoTxtView.setText(c.getDispositivo().getNombre());
+
+        solicitar_extension_uso_dispositivo.SolicitarExtensionDispositivoListener list = this;
+        Button solicitarTiempoDispositivo = findViewById(R.id.btnTiempoDispositivo);
+        solicitarTiempoDispositivo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                solicitar_extension_uso_dispositivo dialog = new solicitar_extension_uso_dispositivo();
+                dialog.setListener(list);
+                dialog.setIdDispositivo(c.getDispositivo().getId());
+                dialog.show(getSupportFragmentManager(),null);
+            }
+        });
 
         //CALCULAMOS EL TIEMPO TOTAL DE USO DEL DISPOSITIVO
         Long milis = ut.obtenerStadisticasDeUso(this).get(0).tiempoTotal;
@@ -86,6 +103,15 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
             dispositivoDAO.obtenerDispositivoPorYUsuarioMaestroRelacionadoPorIdDeDispositivo(this.idDispositivo);
         }
     }
+
+    public void solicitarTiempoAplicacion(View view){
+        System.out.println("solicitarTiempoAplicacion");
+    }
+
+    public void solicitarTiempoDispositivo(View view){
+        System.out.println("solicitarTiempoDispositivo");
+    }
+
 
     @Override
     public void operacionConBaseDeDatosFinalizada(Object resultado) {
@@ -134,8 +160,11 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
                     emailMaestroTxtView.setText(datosMaestro.getUsuarioMaestro().getEmail());
                 }
                 break;
-            default:
-                System.out.println("OTRO IDENTIFICADOR");
         }
-    } 
+    }
+
+    @Override
+    public void guardarSolicitudDispositivo(Integer idDispositivo, Long tiempo) {
+
+    }
 }
