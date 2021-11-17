@@ -24,6 +24,9 @@ import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoDispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
+
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements InterfazDeComunicacion
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
     private Boolean primerInicio = true;
     private EditText txtNombreUsuario;
     private EditText txtPassword;
+    private EditText nombreDispositivo;
     private UsuarioDAO usDao = new UsuarioDAO(this);
     private DispositivoDAO dispDao = new DispositivoDAO(this);
     private Usuario user;
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         setContentView(R.layout.activity_main);
         txtNombreUsuario = (EditText) findViewById(R.id.nombreUsuarioLogin);
         txtPassword = (EditText) findViewById(R.id.contraseniaLogin);
+        nombreDispositivo = (EditText) findViewById(R.id.nombreDispositivo);
         requestUsageStatsPermission();
         if(result != null){
             primerInicio = false;
@@ -121,6 +126,10 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
 
     public Boolean validarCampos(){
         //ACA VALIDAR EL CAMPO DE NOMBRE DE USUARIO (txtNombreUsuario) Y CONTRASENIA (txtPassword)
+        if(esSubordinado){
+            //validar campo nombre de telefono
+
+        }
         return true;
     }
 
@@ -159,6 +168,38 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                     Toast.makeText(this,"Error creando relacion con dispositivo",Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case "obtenerTodosLosDispositivosPorUsuario":
+                ArrayList<Dispositivo> dispositivos = DispositivoDAO.obtenerTodosLosDispositivosPorUsuarioHandler(res.getData());
+                boolean encontrado = false;
+
+                //ACA DETENER SPINNER
+                if(dispositivos != null || !dispositivos.isEmpty()) {
+                    //poner el adderror en el campo
+                    for(Dispositivo disp : dispositivos){
+                        if(disp.getNombre().toUpperCase().equals(nombreDispositivo.getText().toString().toUpperCase())){
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                }
+                if(!encontrado){
+                    Utilidad utils = new Utilidad();
+                    Configuracion config = new Configuracion();
+                    config.setDispositivo(new Dispositivo());
+                    config.getDispositivo().setImei(UUID.randomUUID().toString());
+                    config.getDispositivo().setTipo_Dispositivo(new TipoDispositivo(2, "SUBORDINADO")); //2 si es SUBORDINADO
+                    config.getDispositivo().setMarca(Build.MANUFACTURER);
+                    config.getDispositivo().setModelo(Build.MODEL);
+                    EditText nombreDispositivo = findViewById(R.id.nombreDispositivo);
+                    config.getDispositivo().setNombre(nombreDispositivo.getText().toString());
+                    if(utils.guardarArchivoDeConfiguracion(this,config)){
+                        //ACA INICIAR EL SPINNER
+                        dispDao.crearDispositivo(config.getDispositivo());
+                    }
+                } else {
+                    nombreDispositivo.setError("El nombre del Subordinado ya esta en uso!");
+                }
+                break;
         }
     }
 
@@ -173,16 +214,15 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
             if(validarIntentos(bq)){
                 if(txtPassword.getText().toString().equals(us.getContrasenia())){
                     //SI ES EL PRIMER INICIO GUARDAMOS LA CONFIGURACION INICIAL DE TIPO DE DISPOSITIVO
-                    if(primerInicio){
+                    if(primerInicio && esSubordinado){
+                        dispDao.obtenerTodosLosDispositivosPorUsuario(us);
+
+                    }else if(!esSubordinado && primerInicio){
                         Utilidad utils = new Utilidad();
                         Configuracion config = new Configuracion();
                         config.setDispositivo(new Dispositivo());
                         config.getDispositivo().setImei(UUID.randomUUID().toString());
                         config.getDispositivo().setTipo_Dispositivo(new TipoDispositivo(1, "MAESTRO")); //1 si es MAESTRO
-
-                        if(esSubordinado){
-                            config.getDispositivo().setTipo_Dispositivo(new TipoDispositivo(2, "SUBORDINADO")); //2 si es SUBORDINADO
-                        }
                         config.getDispositivo().setMarca(Build.MANUFACTURER);
                         config.getDispositivo().setModelo(Build.MODEL);
                         EditText nombreDispositivo = findViewById(R.id.nombreDispositivo);
