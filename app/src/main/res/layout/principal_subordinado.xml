@@ -218,19 +218,19 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/button"
+                        android:id="@+id/btnTiempoDispositivo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dispositivo"
-                        android:enabled="false"/>
+                        android:onClick="solicitarTiempoDispositivo"
+                        android:text="Dispositivo" />
 
                     <Button
-                        android:id="@+id/button5"
+                        android:id="@+id/btntiempoAplicacion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10sp"
-                        android:text="Aplicaciones"
-                        android:enabled="false"/>
+                        android:onClick="solicitarTiempoAplicacion"
+                        android:text="Aplicaciones" />
                 </LinearLayout>
 
             </LinearLayout>
