@@ -3,6 +3,7 @@ package com.example.pa2_tpintegrador_grupo3.DAO;
 import com.example.pa2_tpintegrador_grupo3.conexion.DBQueryManager;
 import com.example.pa2_tpintegrador_grupo3.conexion.SelectManager;
 import com.example.pa2_tpintegrador_grupo3.conexion.UpsertManager;
+import com.example.pa2_tpintegrador_grupo3.entidades.Notificacion;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoRestriccion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Restricciones;
 import com.example.pa2_tpintegrador_grupo3.entidades.Aplicacion;
@@ -136,6 +137,14 @@ public class RestriccionesDAO {
             return (Integer)obj;
         }
         return null;
+    }
+
+    public void actualizarRestriccionesPorSolicitud(Notificacion solicitud){
+        UpsertManager manager = new UpsertManager();
+        manager.setIdentificador("actualizarRestriccionesPorSolicitud");
+        manager.setQuery("UPDATE Restriccion SET Duracion_Minutos = Duracion_Minutos + "+solicitud.getTiempo_Solicitado()+" WHERE Id_Dispositivo = "+solicitud.getDispositivoEmisor().getId()+" AND Id_Aplicacion = "+solicitud.getAplicacion().getId());
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
     }
 
 

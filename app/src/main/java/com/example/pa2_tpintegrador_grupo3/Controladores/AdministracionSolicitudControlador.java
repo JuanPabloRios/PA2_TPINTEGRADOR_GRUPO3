@@ -8,10 +8,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.NotificacionDAO;
+import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
 import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Notificacion;
+import com.example.pa2_tpintegrador_grupo3.entidades.Restricciones;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 import java.util.concurrent.TimeUnit;
 
@@ -78,6 +82,13 @@ public class AdministracionSolicitudControlador extends AppCompatActivity implem
                     NotificationManager nMgr = (NotificationManager) this.getSystemService(ns);
                     nMgr.cancel(notificacion.getId());
                     Toast.makeText(this,"Solicitud Aceptada",Toast.LENGTH_SHORT).show();
+                    if(notificacion.getTipoNotificacion().getId() == 1){
+                        DispositivoDAO dispositivoDAO = new DispositivoDAO(this);
+                        dispositivoDAO.sumarTiempoDeUsoDeDispositivo(notificacion.getDispositivoEmisor(),notificacion.getTiempo_Solicitado());
+                    } else{
+                        RestriccionesDAO restriccionesDAO = new RestriccionesDAO(this);
+                        restriccionesDAO.actualizarRestriccionesPorSolicitud(notificacion);
+                    }
                     finish();
                 }
                 break;
