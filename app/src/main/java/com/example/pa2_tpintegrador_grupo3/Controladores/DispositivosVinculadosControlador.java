@@ -10,11 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.DetallesDispositivo;
 import com.example.pa2_tpintegrador_grupo3.R;
+import com.example.pa2_tpintegrador_grupo3.Servicios.ServiceIntentMaestro;
 import com.example.pa2_tpintegrador_grupo3.Utilidad;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
@@ -37,6 +39,8 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
         this.user = (Usuario)getIntent().getSerializableExtra("usuario");
         //ACA INICIAR SPINNER
         dispoDao.obtenerTodosLosDispositivosPorUsuario(this.user);
+        Intent serviceIntent = new Intent(this, ServiceIntentMaestro.class);
+        ContextCompat.startForegroundService(this,serviceIntent);
     }
 
     @Override
