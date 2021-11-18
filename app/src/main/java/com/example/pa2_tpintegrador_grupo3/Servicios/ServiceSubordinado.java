@@ -5,9 +5,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-
 import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.EstadisticaDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
@@ -59,7 +59,6 @@ public class ServiceSubordinado extends Service implements InterfazDeComunicacio
                 if(!packageName.equals("com.example.pa2_tpintegrador_grupo3")){
                     Boolean bloqueoDispositivoActivo = ServiceSubordinado.this.config.getDispositivo().isBloqueoActivo();
                     Boolean chequeoDeBloqueoDeApps = true;
-                    System.out.println("packageName " + packageName);
                     if(bloqueoDispositivoActivo){
                         Dispositivo d = ServiceSubordinado.this.config.getDispositivo();
                         if(d.getTiempoUso() >= d.getTiempoAsignado()){
@@ -134,7 +133,7 @@ public class ServiceSubordinado extends Service implements InterfazDeComunicacio
             Utilidad ut = new Utilidad();
             List<Utilidad.AppUsageInfo> usoDeApps = ut.obtenerStadisticasDeUso(this);
             ArrayList<Estadistica> estadisticasParaAtualizar = new ArrayList<Estadistica>();
-            for(Restricciones res : this.config.getRestricciones() ){
+            for(Restricciones res : this.config.getRestricciones()){
                 if(res.isActiva()){
                     Utilidad.AppUsageInfo usoApp = null;
                     for(Utilidad.AppUsageInfo uso : usoDeApps){
@@ -217,6 +216,12 @@ public class ServiceSubordinado extends Service implements InterfazDeComunicacio
                     con.setDispositivo(d);
                     ut.guardarArchivoDeConfiguracion(this,con);
                     this.config = con;
+                } else {
+                    Utilidad ut = new Utilidad();
+                    if(ut.eliminarConfiguracion(this)){
+                        Toast.makeText(this,"El dispositivo maestro ha eliminado este subordinado.",Toast.LENGTH_SHORT).show();
+                        this.stopSelf();
+                    }
                 }
                 break;
         }

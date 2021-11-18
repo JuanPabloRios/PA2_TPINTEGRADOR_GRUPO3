@@ -170,7 +170,6 @@ public class NotificacionDAO {
         return null;
     }
 
-
     public void obtenerNotificacionPorId(Integer id){
         SelectManager manager = new SelectManager();
         manager.setIdentificador("OBTENERNOTIFICACIONPORID");
