@@ -43,6 +43,7 @@ public class ServiceIntentMaestro extends Service implements InterfazDeComunicac
     public void onCreate(){
         super.onCreate();
         Utilidad ut = new Utilidad();
+
         this.config = ut.obtenerConfiguracion(this);
         aplicacionesBloqueadas = obtenerAplicacionesBloqueadas();
     }

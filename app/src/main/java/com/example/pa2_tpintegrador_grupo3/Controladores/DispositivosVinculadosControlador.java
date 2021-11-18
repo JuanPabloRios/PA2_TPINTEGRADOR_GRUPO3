@@ -39,6 +39,7 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
         this.user = (Usuario)getIntent().getSerializableExtra("usuario");
         //ACA INICIAR SPINNER
         dispoDao.obtenerTodosLosDispositivosPorUsuario(this.user);
+
         Intent serviceIntent = new Intent(this, ServiceIntentMaestro.class);
         ContextCompat.startForegroundService(this,serviceIntent);
     }
