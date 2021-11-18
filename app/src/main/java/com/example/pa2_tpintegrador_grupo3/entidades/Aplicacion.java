@@ -1,6 +1,8 @@
 package com.example.pa2_tpintegrador_grupo3.entidades;
 
-public class Aplicacion
+import java.io.Serializable;
+
+public class Aplicacion implements Serializable
 {
 	private Integer Id;
 	private String Nombre;
@@ -30,8 +32,13 @@ public class Aplicacion
 		this.Descripcion = descripcion;
 		this.Icono = Icono;
 	}
+	public Aplicacion(Integer id, String descripcion) {
+		this.Descripcion = descripcion;
+		this.Id = id;
+	}
 
-	public Integer getId()
+
+		public Integer getId()
 	{
 		return Id;
 	}

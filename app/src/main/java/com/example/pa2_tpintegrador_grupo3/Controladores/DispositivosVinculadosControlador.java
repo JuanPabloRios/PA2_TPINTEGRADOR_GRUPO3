@@ -72,7 +72,13 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
             button.setText("DISPOSITIVO: "+ d.getNombre() + "\n"+"TIEMPO USO: "+ Utilidad.obtenerHorasYMinutos(d.getTiempoUso()));
             button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,0));
             button.setGravity(Gravity.START);
+            button.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
 
+                    return false;
+                }
+            });
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

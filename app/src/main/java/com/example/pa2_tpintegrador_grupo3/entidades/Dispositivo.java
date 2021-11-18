@@ -109,6 +109,11 @@ public class Dispositivo implements Serializable  {
         this.eliminado = eliminado;
     }
 
+    public Dispositivo(Integer id,String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
     public Dispositivo(Integer id, TipoDispositivo Tipo_Dispositivo, String imei, boolean eliminado) {
         this.id = id;
         this.Tipo_Dispositivo = Tipo_Dispositivo;
