@@ -68,6 +68,21 @@ public class DispositivoDAO {
         return null;
     }
 
+    public void eliminarSubordinado(Integer id){
+        UpsertManager manager = new UpsertManager();
+        manager.setIdentificador("eliminarSubordinado");
+        manager.setQuery("DELETE FROM Dispositivo WHERE Id = "+id);
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
+    }
+
+    public static Integer eliminarSubordinadoHandler(Object obj){
+        if(obj != null){
+            return (Integer)obj;
+        }
+        return null;
+    }
+
     public void actualizarConfiguracionBloqueoDispositivo(Dispositivo d){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("actualizarConfiguracionBloqueoDispositivo");

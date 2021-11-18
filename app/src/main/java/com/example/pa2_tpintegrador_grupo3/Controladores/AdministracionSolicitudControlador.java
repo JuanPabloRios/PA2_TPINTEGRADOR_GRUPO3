@@ -2,30 +2,17 @@ package com.example.pa2_tpintegrador_grupo3.Controladores;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.NotificacionDAO;
-import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.R;
-import com.example.pa2_tpintegrador_grupo3.Utilidad;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
-import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
-import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Notificacion;
-import com.example.pa2_tpintegrador_grupo3.entidades.TipoDispositivo;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
-
-import java.util.ArrayList;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class AdministracionSolicitudControlador extends AppCompatActivity implements InterfazDeComunicacion {
@@ -99,6 +86,7 @@ public class AdministracionSolicitudControlador extends AppCompatActivity implem
 
     public void rechazar(View view){
         notificacionDAO.rechazarNotificacion(notificacion);
+
     }
 
     public void aceptar(View view){
