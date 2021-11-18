@@ -112,7 +112,7 @@ public class Detalles_dispositivo_dispositivo extends Fragment implements Interf
                 Integer modificado = DispositivoDAO.actualizarConfiguracionBloqueoDispositivoHandler(res.getData());
                 //ACA DETENER SPINNER
                 if(modificado != null){
-                    Toast.makeText(getContext(),"Guardado correctamente",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"Cambios guardados correctamente",Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

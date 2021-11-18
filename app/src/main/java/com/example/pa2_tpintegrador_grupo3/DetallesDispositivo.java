@@ -62,7 +62,7 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
                 Integer resModificacionMinutos = RestriccionesDAO.modificarRestriccionHandler(res.getData());
                 //ACA DETENER SPINNER
                 if(resModificacionMinutos != null && resModificacionMinutos != -1){
-                    Toast.makeText(this,"Guardado",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"Cambios guardados correctamente",Toast.LENGTH_SHORT).show();
                 }
                 break;
             case "obtenerEstadisticasDeDispositivo":

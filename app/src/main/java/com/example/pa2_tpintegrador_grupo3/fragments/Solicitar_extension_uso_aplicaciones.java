@@ -26,6 +26,7 @@ public class Solicitar_extension_uso_aplicaciones extends AppCompatDialogFragmen
     private  ArrayList<String> appSpinnerValues = new ArrayList<>();
     private Map<Integer,Integer> appIdsByIndex = new HashMap<Integer,Integer>();
     private Integer selectedAppId;
+
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

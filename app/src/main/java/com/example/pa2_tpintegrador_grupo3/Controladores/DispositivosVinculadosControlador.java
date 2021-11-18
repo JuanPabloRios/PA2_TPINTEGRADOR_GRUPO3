@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -19,11 +21,13 @@ import com.example.pa2_tpintegrador_grupo3.Utilidad;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
+import com.example.pa2_tpintegrador_grupo3.fragments.eliminar_subordinado;
+import com.example.pa2_tpintegrador_grupo3.fragments.solicitar_extension_uso_dispositivo;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 
 import java.util.ArrayList;
 
-public class DispositivosVinculadosControlador extends AppCompatActivity implements InterfazDeComunicacion {
+public class DispositivosVinculadosControlador extends AppCompatActivity implements InterfazDeComunicacion, eliminar_subordinado.eliminar_subordinadoListener {
 
     private Usuario user;
     private DispositivoDAO dispoDao = new DispositivoDAO(this);
@@ -44,7 +48,6 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
         ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
         switch (res.getIdentificador()){
             case "obtenerTodosLosDispositivosPorUsuario":
-
                 ArrayList<Dispositivo> dispositivos = DispositivoDAO.obtenerTodosLosDispositivosPorUsuarioHandler(res.getData());
                 //ACA DETENER SPINNER
                 if(dispositivos != null && dispositivos.size() > 0){
@@ -57,6 +60,19 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
                     txtTitulo.setText("No existen dispositivos subordinados vinculados");
                 }
                 break;
+            case "eliminarSubordinado":
+                Integer dispEliminado = DispositivoDAO.eliminarSubordinadoHandler(res.getData());
+                //ACA DETENER SPINNER
+                if(dispEliminado != null){
+                    Toast.makeText(this,"Dispositivo eliminado correctamente",Toast.LENGTH_SHORT).show();
+                    LinearLayout tabla = findViewById(R.id.tablaVinculados);
+                    tabla.removeAllViews();
+                    dispoDao.obtenerTodosLosDispositivosPorUsuario(this.user);
+                } else {
+                    Toast.makeText(this,"Error al eliminar",Toast.LENGTH_SHORT).show();
+                }
+                break;
+
             default:
                 System.out.println("OTRO IDENTIFICADOR");
         }
@@ -64,8 +80,9 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
 
 
     public void cargarDispositivosVinculados(ArrayList<Dispositivo> dispositivos){
-
+        eliminar_subordinado.eliminar_subordinadoListener list = this;
         LinearLayout tabla = findViewById(R.id.tablaVinculados);
+        tabla.removeAllViews();
         for(Dispositivo d : dispositivos){
             Button button = new Button(this);
             button.setId(d.getId());
@@ -75,7 +92,10 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
             button.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-
+                    eliminar_subordinado dialog = new eliminar_subordinado();
+                    dialog.setListener(list);
+                    dialog.setDispositivo(d);
+                    dialog.show(getSupportFragmentManager(),null);
                     return false;
                 }
             });
@@ -98,5 +118,10 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
         i.putExtra("usuario",this.user);
         i.putExtra("dispositivo",d);
         startActivity(i);
+    }
+
+    @Override
+    public void eliminarSubordinado(Integer idDispositivo) {
+        dispoDao.eliminarSubordinado(idDispositivo);
     }
 }
