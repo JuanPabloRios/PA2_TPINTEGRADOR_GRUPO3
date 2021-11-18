@@ -1,4 +1,6 @@
 package com.example.pa2_tpintegrador_grupo3.Controladores;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -73,10 +75,15 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         solicitarTiempoDispositivo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                solicitar_extension_uso_dispositivo dialog = new solicitar_extension_uso_dispositivo();
-                dialog.setListener(list);
-                dialog.setIdDispositivo(c.getDispositivo().getId());
-                dialog.show(getSupportFragmentManager(),null);
+                if(!isMyServiceRunning(ServiceSubordinado.class)){
+                    finish();
+                } else {
+                    solicitar_extension_uso_dispositivo dialog = new solicitar_extension_uso_dispositivo();
+                    dialog.setListener(list);
+                    dialog.setIdDispositivo(c.getDispositivo().getId());
+                    dialog.show(getSupportFragmentManager(),null);
+                }
+
             }
         });
         //---------------------------------------------------------------
@@ -125,10 +132,14 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
                     solicitarTiempoApp.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Solicitar_extension_uso_aplicaciones dialog = new Solicitar_extension_uso_aplicaciones();
-                            dialog.setListener(list2);
-                            dialog.setAplicaciones(apps);
-                            dialog.show(getSupportFragmentManager(),null);
+                            if(!isMyServiceRunning(ServiceSubordinado.class)){
+                                finish();
+                            } else {
+                                Solicitar_extension_uso_aplicaciones dialog = new Solicitar_extension_uso_aplicaciones();
+                                dialog.setListener(list2);
+                                dialog.setAplicaciones(apps);
+                                dialog.show(getSupportFragmentManager(), null);
+                            }
                         }
                     });
                     //---------------------------------------------------------------
@@ -177,7 +188,6 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
 
     @Override
     public void guardarSolicitudDispositivo(Integer idDispositivo, Long tiempo) {
-
         //GUARDAR EN LA DB tabla Notificaciones.
 
         Dispositivo dispositivo = new Dispositivo();
@@ -212,5 +222,15 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         notificacion.setTiempo_Solicitado(tiempo);
         notificacion.setEstado(estado);
         notiDao.crearNotificacion(notificacion);
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

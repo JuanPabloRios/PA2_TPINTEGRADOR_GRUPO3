@@ -31,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.text.ParseException;
@@ -103,11 +104,17 @@ public class Utilidad extends AppCompatActivity {
         return null;
     }
 
-
     public Configuracion obtenerConfiguracion(Context context) {
+        File file1 = context.getFileStreamPath(NOMBRE_ARCHIVO);
+        System.out.println("obtenerConfiguracion");
+        System.out.println("file1 == null " + file1 == null);
+        System.out.println("!file1.exists() " + !file1.exists());
+        if(file1 == null || !file1.exists()) {
+            return null;
+        }
         FileInputStream file = null;
         try {
-            file = context.openFileInput("parentalWatcher.txt");
+            file = context.openFileInput(NOMBRE_ARCHIVO);
             InputStreamReader inputReader = new InputStreamReader(file);
             BufferedReader buffer = new BufferedReader(inputReader);
             String toJson;
@@ -130,6 +137,19 @@ public class Utilidad extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    public Boolean eliminarConfiguracion(Context context){
+        File file = new File(context.getFilesDir(),NOMBRE_ARCHIVO);
+        try {
+            if (!file.delete()) {
+                return  false;
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  false;
         }
     }
 
