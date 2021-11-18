@@ -221,7 +221,6 @@
                         android:id="@+id/btnTiempoDispositivo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="solicitarTiempoDispositivo"
                         android:text="Dispositivo" />
 
                     <Button
@@ -229,7 +228,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10sp"
-                        android:onClick="solicitarTiempoAplicacion"
                         android:text="Aplicaciones" />
                 </LinearLayout>
 

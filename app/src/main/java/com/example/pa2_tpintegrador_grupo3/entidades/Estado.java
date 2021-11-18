@@ -8,6 +8,7 @@ public class Estado {
         this.id = id;
         this.descripcion = descripcion;
     }
+    public Estado(Integer id) { this.id = id;  }
 
     public Integer getId() {
         return id;

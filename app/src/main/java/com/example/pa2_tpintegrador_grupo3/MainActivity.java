@@ -126,8 +126,26 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
 
     public Boolean validarCampos(){
         //ACA VALIDAR EL CAMPO DE NOMBRE DE USUARIO (txtNombreUsuario) Y CONTRASENIA (txtPassword)
+        Utilidad ut = new Utilidad();
+        if(ut.validateEmpty(txtNombreUsuario.getText().toString())){
+            txtNombreUsuario.setError("El campo Nombre no puede estar vacio.");
+            return false;
+        }
+        if(ut.validateString(txtNombreUsuario.getText().toString())){
+            txtNombreUsuario.setError("No se permiten numeros en el campo Nombre.");
+            return false;
+        }
+
+        if(ut.validateEmpty(txtPassword.getText().toString())){
+            txtPassword.setError("El campo Contraseña no puede estar vacio.");
+            return false;
+        }
         if(esSubordinado){
             //validar campo nombre de telefono
+            if(ut.validateEmpty(nombreDispositivo.getText().toString())){
+                nombreDispositivo.setError("El campo Nombre dispositvo no puede estar vacio.");
+                return false;
+            }
 
         }
         return true;
