@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.EstadisticaDAO;
@@ -28,7 +27,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class ServiceIntentApp extends Service implements InterfazDeComunicacion {
+public class ServiceSubordinado extends Service implements InterfazDeComunicacion {
 
     private Handler handler = new Handler();
     private Configuracion config;
@@ -56,17 +55,17 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
             @Override
             public void run() {
                 AppChecker appChecker = new AppChecker();
-                String packageName = appChecker.getForegroundApp(ServiceIntentApp.this);
+                String packageName = appChecker.getForegroundApp(ServiceSubordinado.this);
                 if(!packageName.equals("com.example.pa2_tpintegrador_grupo3")){
-                    Boolean bloqueoDispositivoActivo = ServiceIntentApp.this.config.getDispositivo().isBloqueoActivo();
+                    Boolean bloqueoDispositivoActivo = ServiceSubordinado.this.config.getDispositivo().isBloqueoActivo();
                     Boolean chequeoDeBloqueoDeApps = true;
                     System.out.println("packageName " + packageName);
                     if(bloqueoDispositivoActivo){
-                        Dispositivo d = ServiceIntentApp.this.config.getDispositivo();
+                        Dispositivo d = ServiceSubordinado.this.config.getDispositivo();
                         if(d.getTiempoUso() >= d.getTiempoAsignado()){
                             System.out.println("BLOQUEO POR TIEMPO ASIGNADO AL DISPOSITIVO");
                             //Superamos el tiempo de uso
-                            ServiceIntentApp.this.irAHome();
+                            ServiceSubordinado.this.irAHome();
                             //No hace falta chequear las app, el dispositivo esta bloqueado
                             chequeoDeBloqueoDeApps = false;
                         } else {
@@ -80,7 +79,7 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
                             if(horaActualEnMilisegundos < horaInicio || horaActualEnMilisegundos > horaFin){
                                 System.out.println("BLOQUEO POR FUERA DE HORARIO DE USO");
                                 //Estamos fuera del rango horario de uso
-                                ServiceIntentApp.this.irAHome();
+                                ServiceSubordinado.this.irAHome();
                                 //No hace falta chequear las app, el dispositivo esta bloqueado
                                 chequeoDeBloqueoDeApps = false;
                             }
@@ -90,7 +89,7 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
                         if(aplicacionesBloqueadas.contains(packageName)){
                             System.out.println("BLOQUEO DE APLICACION");
                             //Si la app esta en esta lista es por que se encuentra bloqueada
-                            ServiceIntentApp.this.irAHome();
+                            ServiceSubordinado.this.irAHome();
                         }
                     }
                 }
@@ -102,12 +101,12 @@ public class ServiceIntentApp extends Service implements InterfazDeComunicacion 
             @Override
             public void run() {
                 //REFRESCAMOS LAS RESTRICCIONES CON LA BASE DE DATOS
-                resDao.obtenerTodasLasRestriccionesPorIdDeDispositivo(ServiceIntentApp.this.config.getDispositivo().getId());
-                DispositivoDAO dispositivoDAO = new DispositivoDAO(ServiceIntentApp.this);
+                resDao.obtenerTodasLasRestriccionesPorIdDeDispositivo(ServiceSubordinado.this.config.getDispositivo().getId());
+                DispositivoDAO dispositivoDAO = new DispositivoDAO(ServiceSubordinado.this);
                 //ACTUALZIAMOS LAS ESTADISTICAS DE NUESTRO DISPOSITIVO EN LA BASE DE DATOS
-                dispositivoDAO.actualizarTiempoDeUso(ServiceIntentApp.this.config.getDispositivo().getId(), ServiceIntentApp.this.tiempoUso);
+                dispositivoDAO.actualizarTiempoDeUso(ServiceSubordinado.this.config.getDispositivo().getId(), ServiceSubordinado.this.tiempoUso);
                 //REFRESCAMOS LA CONFIGURACION DE NUESTRO DISPOSITIVO CON LA BASE DE DATOS (Buscamos nuevas restricciones a nivel dispositivo)
-                dispositivoDAO.obtenerDispositivoPorId(ServiceIntentApp.this.config.getDispositivo().getId());
+                dispositivoDAO.obtenerDispositivoPorId(ServiceSubordinado.this.config.getDispositivo().getId());
                 handler.postDelayed(this, EXECUTION_TIME_CONSULTADB);
             }
         }, EXECUTION_TIME);
