@@ -1,19 +1,23 @@
 package com.example.pa2_tpintegrador_grupo3.entidades;
 
+import com.example.pa2_tpintegrador_grupo3.DAO.NotificacionDAO;
+
 public class Notificacion {
 
     private Integer Id;
     private Dispositivo DispositivoEmisor;
-    private Dispositivo DispositivoReceptor;
+    private Usuario Id_Usuario_Receptor;
     private Aplicacion Aplicacion;
     private TipoNotificacion TipoNotificacion;
     private Estado Estado;
     private boolean Eliminado;
+    private Long Tiempo_Solicitado;
 
-    public Notificacion(Integer id, Dispositivo dispositivoEmisor, Dispositivo dispositivoReceptor, com.example.pa2_tpintegrador_grupo3.entidades.Aplicacion aplicacion, com.example.pa2_tpintegrador_grupo3.entidades.TipoNotificacion tipoNotificacion, com.example.pa2_tpintegrador_grupo3.entidades.Estado estado) {
+    public Notificacion(){}
+    public Notificacion(Integer id, Dispositivo dispositivoEmisor, Usuario id_Usuario_Receptor, com.example.pa2_tpintegrador_grupo3.entidades.Aplicacion aplicacion, com.example.pa2_tpintegrador_grupo3.entidades.TipoNotificacion tipoNotificacion, com.example.pa2_tpintegrador_grupo3.entidades.Estado estado) {
         Id = id;
         DispositivoEmisor = dispositivoEmisor;
-        DispositivoReceptor = dispositivoReceptor;
+        Id_Usuario_Receptor = id_Usuario_Receptor;
         Aplicacion = aplicacion;
         TipoNotificacion = tipoNotificacion;
         Estado = estado;
@@ -35,12 +39,12 @@ public class Notificacion {
         DispositivoEmisor = dispositivoEmisor;
     }
 
-    public Dispositivo getDispositivoReceptor() {
-        return DispositivoReceptor;
+    public Usuario getId_Usuario_Receptor() {
+        return Id_Usuario_Receptor;
     }
 
-    public void setDispositivoReceptor(Dispositivo dispositivoReceptor) {
-        DispositivoReceptor = dispositivoReceptor;
+    public void setId_Usuario_Receptor(Usuario id_Usuario_Receptor) {
+        Id_Usuario_Receptor = id_Usuario_Receptor;
     }
 
     public com.example.pa2_tpintegrador_grupo3.entidades.Aplicacion getAplicacion() {
@@ -65,6 +69,14 @@ public class Notificacion {
 
     public void setTipoNotificacion(com.example.pa2_tpintegrador_grupo3.entidades.TipoNotificacion tipoNotificacion) {
         TipoNotificacion = tipoNotificacion;
+    }
+
+    public Long getTiempo_Solicitado() {
+        return Tiempo_Solicitado;
+    }
+
+    public void setTiempo_Solicitado(Long tiempo_Solicitado) {
+        Tiempo_Solicitado = tiempo_Solicitado;
     }
 
     public boolean isEliminado() {

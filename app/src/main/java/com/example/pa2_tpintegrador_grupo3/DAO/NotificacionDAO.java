@@ -7,6 +7,7 @@ import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Estado;
 import com.example.pa2_tpintegrador_grupo3.entidades.Notificacion;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoNotificacion;
+import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 
 import java.sql.ResultSet;
@@ -23,14 +24,18 @@ public class NotificacionDAO {
     public void crearNotificacion(Notificacion n){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("CREARNOTIFICACION");
-        String query = "INSERT INTO notificacion (id_dispositivo_emisor, id_dispositivo_receptor, id_aplicacion, id_tipo_notificacion, id_estado, eliminado) VALUES (";
+        String query = "INSERT INTO Notificacion (id_dispositivo_emisor, id_Usuario_Receptor, id_aplicacion, id_tipo_notificacion, id_estado, Tiempo_Solicitado, Eliminado) VALUES (";
         query += "\""+n.getDispositivoEmisor().getId()+"\",";
-        query += "\""+n.getDispositivoReceptor().getId()+"\",";
-        query += "\""+n.getAplicacion().getId()+"\",";
+        query += "\""+n.getId_Usuario_Receptor().getId()+"\",";
+        if(n.getAplicacion() != null){
+            query += "\""+n.getAplicacion().getId()+"\",";
+        }else{
+            query += "null,";
+        }
         query += "\""+n.getTipoNotificacion().getId()+"\",";
         query += "\""+n.getEstado().getId()+"\",";
-        query += "\""+0;
-        query +=")";
+        query += "\""+n.getTiempo_Solicitado()+"\",";
+        query+="0)";
         manager.setQuery(query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
@@ -80,7 +85,7 @@ public class NotificacionDAO {
                     return new Notificacion(
                         rs.getInt("id"),
                         new Dispositivo(rs.getInt("id_dispositivo_emisor")),
-                        new Dispositivo(rs.getInt("id_dispositivo_receptor")),
+                        new Usuario(rs.getInt("id_Usuario_Receptor")),
                         new Aplicacion(rs.getInt("id_aplicacion")),
                         new TipoNotificacion(rs.getInt("id_tipo_notificacion")),
                         new Estado(rs.getInt("id_estado"),"")
