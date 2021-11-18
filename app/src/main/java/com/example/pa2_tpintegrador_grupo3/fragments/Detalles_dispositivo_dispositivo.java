@@ -35,7 +35,7 @@ public class Detalles_dispositivo_dispositivo extends Fragment implements Interf
     private Dispositivo dispositivo;
     public Detalles_dispositivo_dispositivo() { }
     public Detalles_dispositivo_dispositivo(Integer id) { this.idDispositivo = id;}
-    
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +48,9 @@ public class Detalles_dispositivo_dispositivo extends Fragment implements Interf
             @Override
             public void onClick(View v)
             {
-                Detalles_dispositivo_dispositivo.this.guardarConfiguracion(v);
+                if(validarHorario()){
+                    Detalles_dispositivo_dispositivo.this.guardarConfiguracion(v);
+                }
             }
         });
         this.cargarDatosEnPantalla();
@@ -117,4 +119,19 @@ public class Detalles_dispositivo_dispositivo extends Fragment implements Interf
                 break;
         }
     }
+
+    public boolean validarHorario(){
+        TimePicker horaInicio = this.view.findViewById(R.id.horaInicioPicker);
+        Long horaInicioMilis = TimeUnit.HOURS.toMillis(horaInicio.getCurrentHour()) + TimeUnit.MINUTES.toMillis(horaInicio.getCurrentMinute());
+
+        TimePicker horaFin = this.view.findViewById(R.id.horaFinPicker);
+        Long horaFinMilis = TimeUnit.HOURS.toMillis(horaFin.getCurrentHour()) + TimeUnit.MINUTES.toMillis(horaFin.getCurrentMinute());
+
+        if(horaInicioMilis > horaFinMilis){
+            Toast.makeText(getContext(),"La hora de Inicio no puede ser superior a la de Fin",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
 }
