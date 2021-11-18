@@ -19,26 +19,6 @@
             android:layout_gravity="center">
 
             <TextView
-                android:id="@+id/textView33"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5sp"
-                android:layout_marginBottom="5sp"
-                android:gravity="center"
-                android:text="EN CONSTRUCCION"
-                android:textColor="#00BCD4"
-                android:textSize="24sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5sp"
-                android:layout_marginBottom="5sp"
-                android:gravity="center"
-                android:text="Solicitar extension uso aplicacion"
-                android:textColor="#00BCD4"
-                android:textSize="20sp" />
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Aplicacion" />
@@ -53,36 +33,15 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tiempo" />
+                android:text="Tiempo en minutos" />
 
             <Spinner
-                android:id="@+id/spinnerTiempo"
+                android:id="@+id/spinnerTiempoAplicacion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10sp"
                 android:layout_marginBottom="10sp"
                 android:entries="@array/tiempos" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/button3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Solicitar" />
-
-                <Button
-                    android:id="@+id/button4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10sp"
-                    android:layout_weight="0"
-                    android:text="Cancelar" />
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 

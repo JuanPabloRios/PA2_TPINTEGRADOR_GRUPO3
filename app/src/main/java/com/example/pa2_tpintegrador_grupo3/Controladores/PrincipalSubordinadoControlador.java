@@ -31,6 +31,7 @@ import com.example.pa2_tpintegrador_grupo3.entidades.Notificacion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Restricciones;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoNotificacion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
+import com.example.pa2_tpintegrador_grupo3.fragments.Solicitar_extension_uso_aplicaciones;
 import com.example.pa2_tpintegrador_grupo3.fragments.solicitar_extension_uso_dispositivo;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 
@@ -43,7 +44,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
-public class PrincipalSubordinadoControlador  extends AppCompatActivity implements InterfazDeComunicacion, solicitar_extension_uso_dispositivo.SolicitarExtensionDispositivoListener {
+public class PrincipalSubordinadoControlador  extends AppCompatActivity implements InterfazDeComunicacion, solicitar_extension_uso_dispositivo.SolicitarExtensionDispositivoListener , Solicitar_extension_uso_aplicaciones.SolicitarExtensionAplicacion {
 
     private final AplicacionDAO appDao = new AplicacionDAO(this);
     private final NotificacionDAO notiDao = new NotificacionDAO(this);
@@ -53,6 +54,7 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
     private TextView emailMaestroTxtView;
     private TextView tiempoUsoTxtView;
     private Integer idMaestro;
+    private ArrayList<Aplicacion> apps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +62,6 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         setContentView(R.layout.principal_subordinado);
         Usuario user = (Usuario) getIntent().getSerializableExtra("usuario");
         Boolean primerInicio = (Boolean) getIntent().getSerializableExtra("primerInicio");
-
-
 
         ArrayList<Aplicacion> aplicacionesInstaladas = new ArrayList<Aplicacion>();
         this.nombresAplicaciones = new ArrayList<String>();
@@ -78,9 +78,9 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         modeloDispositivoTxtView.setText(c.getDispositivo().getModelo());
         nombreDispositivoTxtView.setText(c.getDispositivo().getNombre());
 
+        //POPUP SOLICITUD DE TIEMPO DE DISPOSITIVO
         solicitar_extension_uso_dispositivo.SolicitarExtensionDispositivoListener list = this;
         Button solicitarTiempoDispositivo = findViewById(R.id.btnTiempoDispositivo);
-        //ESTO LEVANTA POPUP DE MINUTOS A SOLICITAR PARA DISPOSITIVO..
         solicitarTiempoDispositivo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,6 +90,7 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
                 dialog.show(getSupportFragmentManager(),null);
             }
         });
+        //---------------------------------------------------------------
 
         //CALCULAMOS EL TIEMPO TOTAL DE USO DEL DISPOSITIVO
         Long milis = ut.obtenerStadisticasDeUso(this).get(0).tiempoTotal;
@@ -104,7 +105,7 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         if(primerInicio != null && primerInicio){
             appDao.insertarAplicaciones(aplicacionesInstaladas);
         } else {
-            System.out.println(ut.obtenerConfiguracion(this).toString());
+            appDao.obtenerAplicacionesPorNombre(nombresAplicaciones);
             Intent serviceIntent = new Intent(this, ServiceIntentApp.class);
             ContextCompat.startForegroundService(this,serviceIntent);
             DispositivoDAO dispositivoDAO = new DispositivoDAO(this);
@@ -129,6 +130,19 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
                 //ACA DETENER SPINNER
                 if(apps != null && apps.size() > 0){
                     appDao.relacionarAplicacionesConDispositivo(apps,this.idDispositivo);
+                    //POPUP SOLICITUD DE TIEMPO DE APLICACION
+                    Solicitar_extension_uso_aplicaciones.SolicitarExtensionAplicacion list2 = this;
+                    Button solicitarTiempoApp = findViewById(R.id.btntiempoAplicacion);
+                    solicitarTiempoApp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Solicitar_extension_uso_aplicaciones dialog = new Solicitar_extension_uso_aplicaciones();
+                            dialog.setListener(list2);
+                            dialog.setAplicaciones(apps);
+                            dialog.show(getSupportFragmentManager(),null);
+                        }
+                    });
+                    //---------------------------------------------------------------
                 }
                 break;
             case "relacionarAplicacionesConDispositivo":
@@ -160,12 +174,12 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
                     idMaestro = datosMaestro.getUsuarioMaestro().getId();
                 }
                 break;
-            case "crearNotificacion":
+            case "CREARNOTIFICACION":
                 Integer result = notiDao.crearNotificacionHandler(res.getData());
                 //ACA DETENER SPINNER
                 if(result != null){
                     //ACA INICIAR SPINNER
-                    Toast.makeText(this,"Notificacion enviada con exito!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"Solicitud registrada correctamente",Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -179,18 +193,12 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
 
         Dispositivo dispositivo = new Dispositivo();
         dispositivo.setId(idDispositivo);
-
         TipoNotificacion tNoti = new TipoNotificacion(1);
-
         Estado estado = new Estado(1);
-
         Notificacion notificacion = new Notificacion();
         notificacion.setDispositivoEmisor(dispositivo);
-
-        System.out.println("@@con idMaestro " +idMaestro);
         Usuario us = new Usuario(idMaestro);
         notificacion.setId_Usuario_Receptor(us);
-
         notificacion.setAplicacion(null);
         notificacion.setTipoNotificacion(tNoti);
         notificacion.setTiempo_Solicitado(tiempo);
@@ -198,5 +206,22 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
 
         notiDao.crearNotificacion(notificacion);
 
+    }
+
+    @Override
+    public void guardarSolicitudAplicacion(Integer idAplicacion, Long tiempo) {
+        Dispositivo dispositivo = new Dispositivo();
+        dispositivo.setId(idDispositivo);
+        TipoNotificacion tNoti = new TipoNotificacion(2);
+        Estado estado = new Estado(1);
+        Notificacion notificacion = new Notificacion();
+        notificacion.setDispositivoEmisor(dispositivo);
+        Usuario us = new Usuario(idMaestro);
+        notificacion.setId_Usuario_Receptor(us);
+        notificacion.setAplicacion(new Aplicacion(idAplicacion));
+        notificacion.setTipoNotificacion(tNoti);
+        notificacion.setTiempo_Solicitado(tiempo);
+        notificacion.setEstado(estado);
+        notiDao.crearNotificacion(notificacion);
     }
 }
