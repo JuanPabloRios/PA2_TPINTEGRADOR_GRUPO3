@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.pa2_tpintegrador_grupo3.Controladores.AdministracionSolicitudControlador;
 import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.NotificacionDAO;
 import com.example.pa2_tpintegrador_grupo3.MainActivity;
@@ -24,6 +25,7 @@ import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Notificacion;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -93,11 +95,13 @@ public class ServiceMaestro extends Service implements InterfazDeComunicacion {
             } else {
                 mensaje = "Solicitud de tiempo de aplicacion ";
             }
-
-            Intent notificationIntent = new Intent(this, MainActivity.class);
-            PendingIntent intent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
             Integer id = n.getId();
-            ut.enviarNotificacionCustom(this,titulo,mensaje,channelID,intent,id);
+            Intent intent = new Intent(this, AdministracionSolicitudControlador.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setAction("dummy_action_" + id);
+            intent.putExtra("notificacion",n);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            ut.enviarNotificacionCustom(this,titulo,mensaje,channelID,pendingIntent,id);
         }
     }
 

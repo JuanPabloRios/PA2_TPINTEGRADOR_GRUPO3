@@ -1,6 +1,8 @@
 package com.example.pa2_tpintegrador_grupo3.entidades;
 
-public class Estado {
+import java.io.Serializable;
+
+public class Estado implements Serializable  {
     private Integer id;
     private String descripcion;
 

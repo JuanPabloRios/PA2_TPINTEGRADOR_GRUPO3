@@ -69,6 +69,53 @@ public class NotificacionDAO {
         return null;
     }
 
+    public void rechazarNotificacion(Notificacion n){
+        UpsertManager manager = new UpsertManager();
+        manager.setIdentificador("rechazarNotificacion");
+        manager.setQuery("UPDATE Notificacion SET Id_Estado = 4 WHERE id = "+n.getId());
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
+    }
+
+    public static Integer rechazarNotificacionHandler(Object obj){
+        if(obj != null){
+            if(obj != null){
+                try {
+                    Integer rs = (Integer)obj;
+                    return rs;
+                } catch (Exception ex){
+                    ex.printStackTrace();
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void aceptarNotificacion(Notificacion n){
+        UpsertManager manager = new UpsertManager();
+        manager.setIdentificador("aceptarNotificacion");
+        manager.setQuery("UPDATE Notificacion SET Id_Estado = 3 WHERE id = "+n.getId());
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
+    }
+
+    public static Integer aceptarNotificacionHandler(Object obj){
+        if(obj != null){
+            if(obj != null){
+                try {
+                    Integer rs = (Integer)obj;
+                    return rs;
+                } catch (Exception ex){
+                    ex.printStackTrace();
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
+
     public void marcarNotifiacionesComoRecibidas(ArrayList<Notificacion> notifiaciones){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("marcarNotifiacionesComoRecibidas");
@@ -87,7 +134,11 @@ public class NotificacionDAO {
     public void obtenerNotificacionPorIdDeUsuarioMaestro(Integer idUsuario){
         SelectManager manager = new SelectManager();
         manager.setIdentificador("obtenerNotificacionPorIdDeUsuarioMaestro");
-        manager.setQuery("SELECT * FROM Notificacion WHERE eliminado = 0 AND Id_Estado = 1 AND Id_Usuario_Receptor = " + idUsuario);
+        String query = "SELECT n.Id as idNotificacion, d.Id as idDispositivoEmisor, d.Nombre as nombreDispositivoEmisor, n.Id_Usuario_Receptor as idUsuarioReceptor, a.Id as idAplicacion, a.Descripcion as nombreAplicacion, n.Id_Tipo_Notificacion as idTipo, n.Id_Estado as idEstado, n.Tiempo_Solicitado as tiempoSolicitado FROM Notificacion AS n " +
+                "LEFT JOIN Aplicacion AS a ON n.Id_Aplicacion = a.Id " +
+                "INNER JOIN Dispositivo AS d ON n.Id_Dispositivo_Emisor = d.Id " +
+                "WHERE n.eliminado = 0 AND Id_Estado = 1 AND Id_Usuario_Receptor = " + idUsuario;
+        manager.setQuery(query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
     }
@@ -100,12 +151,13 @@ public class NotificacionDAO {
                 while(rs.next()) {
                     result.add(
                         new Notificacion(
-                            rs.getInt("id"),
-                            new Dispositivo(rs.getInt("id_dispositivo_emisor")),
-                            new Usuario(rs.getInt("id_Usuario_Receptor")),
-                            new Aplicacion(rs.getInt("id_aplicacion")),
-                            new TipoNotificacion(rs.getInt("id_tipo_notificacion")),
-                            new Estado(rs.getInt("id_estado"),"")
+                            rs.getInt("idNotificacion"),
+                            new Dispositivo(rs.getInt("idDispositivoEmisor"), rs.getString("nombreDispositivoEmisor")),
+                            new Usuario(rs.getInt("idUsuarioReceptor")),
+                            new Aplicacion(rs.getInt("idAplicacion"), rs.getString("nombreAplicacion")),
+                            new TipoNotificacion(rs.getInt("idTipo")),
+                            new Estado(rs.getInt("idEstado"),""),
+                            rs.getLong("tiempoSolicitado")
                         )
                     );
                 }
@@ -139,7 +191,8 @@ public class NotificacionDAO {
                         new Usuario(rs.getInt("id_Usuario_Receptor")),
                         new Aplicacion(rs.getInt("id_aplicacion")),
                         new TipoNotificacion(rs.getInt("id_tipo_notificacion")),
-                        new Estado(rs.getInt("id_estado"),"")
+                        new Estado(rs.getInt("id_estado"),""),
+                        rs.getLong("Tiempo_Solicitado")
                     );
                 }
                 return null;

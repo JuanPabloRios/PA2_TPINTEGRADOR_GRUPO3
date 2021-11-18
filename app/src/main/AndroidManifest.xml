@@ -23,6 +23,11 @@
             android:name=".DetallesDispositivo"
             android:exported="true" />
         <activity
+            android:name=".Controladores.AdministracionSolicitudControlador"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"/>
+        <activity
             android:name=".Controladores.DispositivosVinculadosControlador"
             android:exported="true" />
         <activity

@@ -1,6 +1,8 @@
 package com.example.pa2_tpintegrador_grupo3.entidades;
 
-public class TipoNotificacion {
+import java.io.Serializable;
+
+public class TipoNotificacion implements Serializable {
 
     private Integer Id;
     private String Descripcion;

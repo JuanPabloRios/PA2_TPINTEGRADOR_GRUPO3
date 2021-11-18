@@ -1,9 +1,8 @@
 package com.example.pa2_tpintegrador_grupo3.entidades;
+import java.io.Serializable;
 
-import com.example.pa2_tpintegrador_grupo3.DAO.NotificacionDAO;
-
-public class Notificacion {
-
+public class Notificacion implements Serializable {
+    //private static final long serialVersionUID = -172079496589283616L;
     private Integer Id;
     private Dispositivo DispositivoEmisor;
     private Usuario Id_Usuario_Receptor;
@@ -14,13 +13,14 @@ public class Notificacion {
     private Long Tiempo_Solicitado;
 
     public Notificacion(){}
-    public Notificacion(Integer id, Dispositivo dispositivoEmisor, Usuario id_Usuario_Receptor, com.example.pa2_tpintegrador_grupo3.entidades.Aplicacion aplicacion, com.example.pa2_tpintegrador_grupo3.entidades.TipoNotificacion tipoNotificacion, com.example.pa2_tpintegrador_grupo3.entidades.Estado estado) {
+    public Notificacion(Integer id, Dispositivo dispositivoEmisor, Usuario id_Usuario_Receptor, com.example.pa2_tpintegrador_grupo3.entidades.Aplicacion aplicacion, com.example.pa2_tpintegrador_grupo3.entidades.TipoNotificacion tipoNotificacion, com.example.pa2_tpintegrador_grupo3.entidades.Estado estado, long tiempoSolicitado) {
         Id = id;
         DispositivoEmisor = dispositivoEmisor;
         Id_Usuario_Receptor = id_Usuario_Receptor;
         Aplicacion = aplicacion;
         TipoNotificacion = tipoNotificacion;
         Estado = estado;
+        Tiempo_Solicitado = tiempoSolicitado;
     }
 
     public Integer getId() {
