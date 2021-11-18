@@ -4,6 +4,7 @@ import com.example.pa2_tpintegrador_grupo3.conexion.SelectManager;
 import com.example.pa2_tpintegrador_grupo3.conexion.UpsertManager;
 import com.example.pa2_tpintegrador_grupo3.entidades.Aplicacion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
+import com.example.pa2_tpintegrador_grupo3.entidades.Estadistica;
 import com.example.pa2_tpintegrador_grupo3.entidades.Estado;
 import com.example.pa2_tpintegrador_grupo3.entidades.Notificacion;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoNotificacion;
@@ -56,7 +57,7 @@ public class NotificacionDAO {
     public void eliminarNotificacion(){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("ELIMINARNOTIFICACION");
-        manager.setQuery("UPDATE notificacion SET ELIMINADO = 1 WHERE id = 1");
+        manager.setQuery("UPDATE Notificacion SET ELIMINADO = 1 WHERE id = 1");
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
     }
@@ -67,6 +68,56 @@ public class NotificacionDAO {
         }
         return null;
     }
+
+    public void marcarNotifiacionesComoRecibidas(ArrayList<Notificacion> notifiaciones){
+        UpsertManager manager = new UpsertManager();
+        manager.setIdentificador("marcarNotifiacionesComoRecibidas");
+        String ids = "(";
+        for(Notificacion n : notifiaciones) {
+            ids+= n.getId()+",";
+        }
+        ids = ids.substring(0, ids.length() -1);
+        ids += ")";
+
+        manager.setQuery("UPDATE Notificacion SET Id_Estado = 5 WHERE id IN "+ids);
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
+    }
+
+    public void obtenerNotificacionPorIdDeUsuarioMaestro(Integer idUsuario){
+        SelectManager manager = new SelectManager();
+        manager.setIdentificador("obtenerNotificacionPorIdDeUsuarioMaestro");
+        manager.setQuery("SELECT * FROM Notificacion WHERE eliminado = 0 AND Id_Estado = 1 AND Id_Usuario_Receptor = " + idUsuario);
+        DBQueryManager mg = new DBQueryManager(this.com, manager);
+        mg.execute();
+    }
+
+    public static ArrayList<Notificacion> obtenerNotificacionPorIdDeUsuarioMaestroHandler(Object obj){
+        if(obj != null){
+            try {
+                ArrayList<Notificacion> result = new ArrayList<Notificacion>();
+                ResultSet rs = (ResultSet)obj;
+                while(rs.next()) {
+                    result.add(
+                        new Notificacion(
+                            rs.getInt("id"),
+                            new Dispositivo(rs.getInt("id_dispositivo_emisor")),
+                            new Usuario(rs.getInt("id_Usuario_Receptor")),
+                            new Aplicacion(rs.getInt("id_aplicacion")),
+                            new TipoNotificacion(rs.getInt("id_tipo_notificacion")),
+                            new Estado(rs.getInt("id_estado"),"")
+                        )
+                    );
+                }
+                return result;
+            } catch (Exception ex){
+                ex.printStackTrace();
+                return null;
+            }
+        }
+        return null;
+    }
+
 
     public void obtenerNotificacionPorId(Integer id){
         SelectManager manager = new SelectManager();

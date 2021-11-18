@@ -1,10 +1,5 @@
 package com.example.pa2_tpintegrador_grupo3.Controladores;
-import android.app.usage.UsageEvents;
-import android.app.usage.UsageStats;
-import android.app.usage.UsageStatsManager;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +15,7 @@ import com.example.pa2_tpintegrador_grupo3.DAO.NotificacionDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.R;
-import com.example.pa2_tpintegrador_grupo3.Servicios.ServiceIntentApp;
+import com.example.pa2_tpintegrador_grupo3.Servicios.ServiceSubordinado;
 import com.example.pa2_tpintegrador_grupo3.Utilidad;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Aplicacion;
@@ -36,12 +31,6 @@ import com.example.pa2_tpintegrador_grupo3.fragments.solicitar_extension_uso_dis
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 public class PrincipalSubordinadoControlador  extends AppCompatActivity implements InterfazDeComunicacion, solicitar_extension_uso_dispositivo.SolicitarExtensionDispositivoListener , Solicitar_extension_uso_aplicaciones.SolicitarExtensionAplicacion {
@@ -106,7 +95,7 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
             appDao.insertarAplicaciones(aplicacionesInstaladas);
         } else {
             appDao.obtenerAplicacionesPorNombre(nombresAplicaciones);
-            Intent serviceIntent = new Intent(this, ServiceIntentApp.class);
+            Intent serviceIntent = new Intent(this, ServiceSubordinado.class);
             ContextCompat.startForegroundService(this,serviceIntent);
             DispositivoDAO dispositivoDAO = new DispositivoDAO(this);
             dispositivoDAO.obtenerDispositivoPorYUsuarioMaestroRelacionadoPorIdDeDispositivo(this.idDispositivo);
@@ -162,7 +151,7 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
                     Configuracion config = ut.obtenerConfiguracion(this);
                     config.setRestricciones(restricciones);
                     ut.guardarArchivoDeConfiguracion(this,config);
-                    Intent serviceIntent = new Intent(this, ServiceIntentApp.class);
+                    Intent serviceIntent = new Intent(this, ServiceSubordinado.class);
                     ContextCompat.startForegroundService(this,serviceIntent);
                 }
                 break;

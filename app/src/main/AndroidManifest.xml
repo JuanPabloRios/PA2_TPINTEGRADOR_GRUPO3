@@ -39,7 +39,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".Servicios.ServiceIntentApp"></service>
+        <service android:name=".Servicios.ServiceSubordinado"></service>
+        <service android:name=".Servicios.ServiceMaestro"></service>
+
     </application>
 
 </manifest>

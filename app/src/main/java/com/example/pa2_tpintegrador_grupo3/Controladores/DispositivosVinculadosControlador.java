@@ -1,5 +1,4 @@
 package com.example.pa2_tpintegrador_grupo3.Controladores;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,13 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
-import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.DetallesDispositivo;
 import com.example.pa2_tpintegrador_grupo3.R;
+import com.example.pa2_tpintegrador_grupo3.Servicios.ServiceMaestro;
+import com.example.pa2_tpintegrador_grupo3.Servicios.ServiceSubordinado;
 import com.example.pa2_tpintegrador_grupo3.Utilidad;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
@@ -49,6 +49,9 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
                 //ACA DETENER SPINNER
                 if(dispositivos != null && dispositivos.size() > 0){
                     cargarDispositivosVinculados(dispositivos);
+                    Intent serviceIntent = new Intent(this, ServiceMaestro.class);
+                    serviceIntent.putExtra("idUsuario",this.user.getId());
+                    ContextCompat.startForegroundService(this,serviceIntent);
                 } else {
                     TextView txtTitulo = findViewById(R.id.tituloDispositivosVinculados);
                     txtTitulo.setText("No existen dispositivos subordinados vinculados");
