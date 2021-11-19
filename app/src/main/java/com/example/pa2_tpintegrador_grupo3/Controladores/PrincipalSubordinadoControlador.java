@@ -52,6 +52,9 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.principal_subordinado);
         Usuario user = (Usuario) getIntent().getSerializableExtra("usuario");
+        if(user != null){
+            idMaestro = user.getId();
+        }
         Boolean primerInicio = (Boolean) getIntent().getSerializableExtra("primerInicio");
 
         ArrayList<Aplicacion> aplicacionesInstaladas = new ArrayList<Aplicacion>();

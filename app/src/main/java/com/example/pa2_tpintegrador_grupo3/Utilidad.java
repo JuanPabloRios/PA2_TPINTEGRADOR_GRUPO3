@@ -174,6 +174,19 @@ public class Utilidad extends AppCompatActivity {
         }
     }
 
+    public Boolean eliminarArchivoDeReintentosFallidos(Context context){
+        File file = new File(context.getFilesDir(),"BloqueoReintentos.txt");
+        try {
+            if (!file.delete()) {
+                return  false;
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  false;
+        }
+    }
+
     public BloqueoWrapper obtenerArchivoDeReintentosFallidos(Context context) {
         FileInputStream file = null;
         try {

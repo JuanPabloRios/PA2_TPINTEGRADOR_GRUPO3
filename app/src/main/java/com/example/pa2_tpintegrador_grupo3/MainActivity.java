@@ -69,8 +69,23 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                 Toast.makeText(this,"Error obteniendo tipo de usuario",Toast.LENGTH_SHORT);
             }
         }
-
         //SI NO EXISTE EL ARCHIVO QUEDAMOS EN LA PANTALLA DE SELECCION INICIAL QUE DARA PASO A LA CREACION DEL ARCHIVO DE CONFIGURACION
+    }
+
+    void mostrarSpinner(){
+        System.out.println("@@@ mostrarSpinner");
+        LinearLayout spinner = findViewById(R.id.spinnerMain);
+        spinner.setVisibility(View.VISIBLE);
+        LinearLayout mainContainer = findViewById(R.id.mainContainer);
+        mainContainer.setVisibility(View.GONE);
+    }
+
+    void ocultarSpinner(){
+        System.out.println("@@@ ocultarSpinner");
+        LinearLayout spinner = findViewById(R.id.spinnerMain);
+        spinner.setVisibility(View.GONE);
+        LinearLayout mainContainer = findViewById(R.id.mainContainer);
+        mainContainer.setVisibility(View.VISIBLE);
     }
 
     void requestUsageStatsPermission() {
@@ -119,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
 
     public void validarInicioSesionTipoUsuario(View view){
         if(validarCampos()){
-            //ACA INICIAR SPINNER
+            mostrarSpinner();
             usDao.obtenerUsuarioPorNombreUsuario(txtNombreUsuario.getText().toString());
         }
     }
@@ -157,14 +172,11 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
         switch (res.getIdentificador()){
             case "obtenerUsuarioPorNombreUsuario":
                 this.user = UsuarioDAO.obtenerUsuarioPorNombreUsuarioHandler(res.getData());
-                //ACA DETENER SPINNER
                 validarInicioSesion(this.user);
                 break;
             case "crearDispositivo":
                 this.idNuevoDispositivo = DispositivoDAO.crearDispositivoHandler(res.getData());
-                //ACA DETENER SPINNER
                 if(this.idNuevoDispositivo > 0){
-                    //ACA INICIAL EL SPINNER
                     Utilidad ut = new Utilidad();
                     Configuracion c = ut.obtenerConfiguracion(this);
                     c.getDispositivo().setId(this.idNuevoDispositivo);
@@ -176,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                 break;
             case "relacionarDispositivoConUsuario":
                 Integer idNuevaRelacion = DispositivoDAO.relacionarDispositivoConUsuarioHandler(res.getData());
-                //ACA DETENER SPINNER
+                ocultarSpinner();
                 if(idNuevaRelacion > 0){
                     if(esSubordinado && primerInicio){
                         Toast.makeText(this,"Equipo registrado como subordinado correctamente",Toast.LENGTH_SHORT).show();
@@ -212,10 +224,10 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                     EditText nombreDispositivo = findViewById(R.id.nombreDispositivo);
                     config.getDispositivo().setNombre(nombreDispositivo.getText().toString());
                     if(utils.guardarArchivoDeConfiguracion(this,config)){
-                        //ACA INICIAR EL SPINNER
                         dispDao.crearDispositivo(config.getDispositivo());
                     }
                 } else {
+                    ocultarSpinner();
                     nombreDispositivo.setError("El nombre del Subordinado ya esta en uso!");
                 }
                 break;
@@ -233,9 +245,9 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
             if(validarIntentos(bq)){
                 if(txtPassword.getText().toString().equals(us.getContrasenia())){
                     //SI ES EL PRIMER INICIO GUARDAMOS LA CONFIGURACION INICIAL DE TIPO DE DISPOSITIVO
+                    ut.eliminarArchivoDeReintentosFallidos(this);
                     if(primerInicio && esSubordinado){
                         dispDao.obtenerTodosLosDispositivosPorUsuario(us);
-
                     }else if(!esSubordinado && primerInicio){
                         Utilidad utils = new Utilidad();
                         Configuracion config = new Configuracion();
@@ -248,13 +260,13 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                         EditText nombreDispositivo = findViewById(R.id.nombreDispositivo);
                         config.getDispositivo().setNombre(nombreDispositivo.getText().toString());
                         if(utils.guardarArchivoDeConfiguracion(this,config)){
-                            //ACA INICIAR EL SPINNER
                             dispDao.crearDispositivo(config.getDispositivo());
                         }
                     } else {
                         redireccionar(us);
                     }
                 } else {
+                    ocultarSpinner();
                     bq.setIntentos(bq.getIntentos()+1);
                     if(bq.getIntentos() == 3){
                         bq.setInicio(System.currentTimeMillis());
@@ -263,9 +275,11 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                     Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT).show();
                 }
             } else {
+                ocultarSpinner();
                 Toast.makeText(this,"A superado los 3 intentos permitidos, debera esperar 30 minutos.",Toast.LENGTH_SHORT).show();
             }
         } else {
+            ocultarSpinner();
             Toast.makeText(this,"Usuario o contrasenia no validos",Toast.LENGTH_SHORT).show();
         }
     }
