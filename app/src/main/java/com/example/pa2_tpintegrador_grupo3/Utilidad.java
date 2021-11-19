@@ -19,9 +19,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.pa2_tpintegrador_grupo3.Servicios.ServiceSubordinado;
 import com.example.pa2_tpintegrador_grupo3.entidades.BloqueoWrapper;
 import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.google.gson.Gson;
+import com.rvalerio.fgchecker.AppChecker;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -324,56 +326,43 @@ public class Utilidad extends AppCompatActivity {
         while (usageEvents.hasNextEvent()) {
             currentEvent = new UsageEvents.Event();
             usageEvents.getNextEvent(currentEvent);
-            if (currentEvent.getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND ||
-                    currentEvent.getEventType() == UsageEvents.Event.MOVE_TO_BACKGROUND) {
+            if (currentEvent.getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND || currentEvent.getEventType() == UsageEvents.Event.MOVE_TO_BACKGROUND) {
                 allEvents.add(currentEvent);
                 String key = currentEvent.getPackageName();
-                if (map.get(key)==null)
+                if (map.get(key)==null){
                     map.put(key,new AppUsageInfo(key));
+                }
             }
         }
 
         for (int i=0;i<allEvents.size()-1;i++){
-            UsageEvents.Event E0=allEvents.get(i);
-            UsageEvents.Event E1=allEvents.get(i+1);
+            UsageEvents.Event E0 = allEvents.get(i);
+            UsageEvents.Event E1 = allEvents.get(i+1);
             if (!E0.getPackageName().equals(E1.getPackageName()) && E1.getEventType()==1){
                 map.get(E1.getPackageName()).launchCount++;
             }
-            if (E0.getEventType()==1 && E1.getEventType()==2
-                    && E0.getClassName().equals(E1.getClassName())){
-                long diff = E1.getTimeStamp()-E0.getTimeStamp();
+            if (E0.getEventType()==1 && E1.getEventType()==2 && E0.getClassName().equals(E1.getClassName())){
+                long diff = E1.getTimeStamp() - E0.getTimeStamp();
                 phoneUsageToday+=diff; //gloabl Long var for total usagetime in the timerange
                 map.get(E0.getPackageName()).timeInForeground+= diff;
             }
         }
+
+        if(allEvents.get(allEvents.size()-1).getEventType() == 1){
+            AppChecker appChecker = new AppChecker();
+            String packageName = appChecker.getForegroundApp(context);
+
+            if(allEvents.get(allEvents.size()-1).getPackageName().equals(packageName)){
+                Long diff = System.currentTimeMillis() - allEvents.get(allEvents.size()-1).getTimeStamp();
+                map.get(allEvents.get(allEvents.size()-1).getPackageName()).timeInForeground+= diff;
+            }
+        }
+
         List<AppUsageInfo> smallInfoList = new ArrayList<>(map.values());
         for(AppUsageInfo us : smallInfoList){
             us.tiempoTotal = phoneUsageToday;
         }
         return smallInfoList;
-        /*
-        Long tiempototalDia = 0L;
-        Calendar now = Calendar.getInstance();
-        long currTime = now.getTimeInMillis();
-        now.set(Calendar.HOUR, 0);
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);
-        now.set(Calendar.MILLISECOND, 0);
-        now.set(Calendar.AM_PM, Calendar.AM);
-        long startTime = now.getTimeInMillis();
-
-        UsageStatsManager mUsageStatsManager =  (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
-        List<UsageStats> queryUsageStats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_YEARLY, startTime, currTime);
-        List<AppUsageInfo> smallInfoList = new ArrayList<>();
-
-        for(UsageStats usStats : queryUsageStats){
-            AppUsageInfo info = new AppUsageInfo(usStats.getPackageName(), usStats.getTotalTimeInForeground());
-            tiempototalDia+= usStats.getTotalTimeInForeground();
-            smallInfoList.add(info);
-        }
-        smallInfoList.get(0).tiempoTotal = tiempototalDia;
-        return smallInfoList;
-        */
     }
 
     public class AppUsageInfo {
