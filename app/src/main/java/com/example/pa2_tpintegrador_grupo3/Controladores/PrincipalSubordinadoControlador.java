@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +40,6 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
 
     private final AplicacionDAO appDao = new AplicacionDAO(this);
     private final NotificacionDAO notiDao = new NotificacionDAO(this);
-    private final UsuarioDAO usDao = new UsuarioDAO(this);
     private ArrayList<String> nombresAplicaciones;
     private Integer idDispositivo;
     private TextView emailMaestroTxtView;
@@ -106,8 +106,10 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
             this.nombresAplicaciones.add(app.packagename);
         }
         if(primerInicio != null && primerInicio){
+            mostrarSpinner();
             appDao.insertarAplicaciones(aplicacionesInstaladas);
         } else {
+            mostrarSpinner();
             appDao.obtenerAplicacionesPorNombre(nombresAplicaciones);
             Intent serviceIntent = new Intent(this, ServiceSubordinado.class);
             ContextCompat.startForegroundService(this,serviceIntent);
@@ -122,18 +124,15 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         switch (res.getIdentificador()){
             case "insertarAplicaciones":
                 Integer respuesta = AplicacionDAO.insertarAplicacionesHandler(res.getData());
-                //ACA DETENER SPINNER
                 if(respuesta != null){
-                    //ACA INICIAR SPINNER
                     appDao.obtenerAplicacionesPorNombre(nombresAplicaciones);
                 }
                 break;
             case "obtenerAplicacionesPorNombre":
                 ArrayList<Aplicacion> apps = AplicacionDAO.obtenerAplicacionesPorNombreHandler(res.getData());
-                //ACA DETENER SPINNER
                 if(apps != null && apps.size() > 0){
                     appDao.relacionarAplicacionesConDispositivo(apps,this.idDispositivo);
-                    //POPUP SOLICITUD DE TIEMPO DE APLICACION
+
                     Solicitar_extension_uso_aplicaciones.SolicitarExtensionAplicacion list2 = this;
                     Button solicitarTiempoApp = findViewById(R.id.btntiempoAplicacion);
                     solicitarTiempoApp.setOnClickListener(new View.OnClickListener() {
@@ -154,20 +153,24 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
                         }
                     });
                     //---------------------------------------------------------------
+                } else {
+                    ocultarSpinner();
+                    Toast.makeText(PrincipalSubordinadoControlador.this, "Error obteniendo aplicaciones", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case "relacionarAplicacionesConDispositivo":
                 Integer relacionesCreadas = AplicacionDAO.relacionarAplicacionesConDispositivoHandler(res.getData());
-                //ACA DETENER SPINNER
                 if(relacionesCreadas != null){
                     RestriccionesDAO restriccionesDAO = new RestriccionesDAO(this);
                     restriccionesDAO.obtenerTodasLasRestriccionesPorIdDeDispositivo(this.idDispositivo);
-
+                } else {
+                    ocultarSpinner();
+                    Toast.makeText(PrincipalSubordinadoControlador.this, "Error relacionando aplicaciones", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case "obtenerTodasLasRestriccionesPorIdDeDispositivo":
                 ArrayList<Restricciones> restricciones = RestriccionesDAO.obtenerTodasLasRestriccionesPorIdDeDispositivoHandler(res.getData());
-                //ACA DETENER SPINNER
+                ocultarSpinner();
                 if(restricciones != null && !restricciones.isEmpty()){
                     Utilidad ut = new Utilidad();
                     Configuracion config = ut.obtenerConfiguracion(this);
@@ -175,22 +178,27 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
                     ut.guardarArchivoDeConfiguracion(this,config);
                     Intent serviceIntent = new Intent(this, ServiceSubordinado.class);
                     ContextCompat.startForegroundService(this,serviceIntent);
+                } else {
+                    Toast.makeText(PrincipalSubordinadoControlador.this, "Error obteniendo restricciones", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case "obtenerDispositivoPorYUsuarioMaestroRelacionadoPorIdDeDispositivo":
                 Dispositivo datosMaestro = DispositivoDAO.obtenerDispositivoPorYUsuarioMaestroRelacionadoPorIdDeDispositivoHandler(res.getData());
-                //ACA DETENER SPINNER
+                ocultarSpinner();
                 if(datosMaestro != null){
                     emailMaestroTxtView.setText(datosMaestro.getUsuarioMaestro().getEmail());
                     idMaestro = datosMaestro.getUsuarioMaestro().getId();
+                } else {
+                    Toast.makeText(this,"Error obteniendo maestro",Toast.LENGTH_SHORT).show();
                 }
                 break;
             case "CREARNOTIFICACION":
                 Integer result = notiDao.crearNotificacionHandler(res.getData());
-                //ACA DETENER SPINNER
+                ocultarSpinner();
                 if(result != null){
-                    //ACA INICIAR SPINNER
                     Toast.makeText(this,"Solicitud registrada correctamente",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this,"Error creando notificacion",Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -213,7 +221,7 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         notificacion.setTipoNotificacion(tNoti);
         notificacion.setTiempo_Solicitado(tiempo);
         notificacion.setEstado(estado);
-
+        mostrarSpinner();
         notiDao.crearNotificacion(notificacion);
 
     }
@@ -232,7 +240,22 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         notificacion.setTipoNotificacion(tNoti);
         notificacion.setTiempo_Solicitado(tiempo);
         notificacion.setEstado(estado);
+        mostrarSpinner();
         notiDao.crearNotificacion(notificacion);
+    }
+
+    void mostrarSpinner(){
+        LinearLayout spinner = findViewById(R.id.spinnerPrincipalSubordinado);
+        spinner.setVisibility(View.VISIBLE);
+        LinearLayout mainContainer = findViewById(R.id.mainContainerPrincipalSubordinado);
+        mainContainer.setVisibility(View.GONE);
+    }
+
+    void ocultarSpinner(){
+        LinearLayout spinner = findViewById(R.id.spinnerPrincipalSubordinado);
+        spinner.setVisibility(View.GONE);
+        LinearLayout mainContainer = findViewById(R.id.mainContainerPrincipalSubordinado);
+        mainContainer.setVisibility(View.VISIBLE);
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
