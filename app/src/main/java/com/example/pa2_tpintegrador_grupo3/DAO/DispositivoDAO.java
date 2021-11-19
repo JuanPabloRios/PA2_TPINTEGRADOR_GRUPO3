@@ -86,7 +86,7 @@ public class DispositivoDAO {
     public void sumarTiempoDeUsoDeDispositivo(Dispositivo d, Long tiempo){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("actualizarConfiguracionBloqueoDispositivo");
-        String query = "UPDATE Dispositivo SET Tiempo_Asignado = Tiempo_Asignado + "+tiempo+" WHERE Id = "+d.getId();
+        String query = "UPDATE Dispositivo SET Tiempo_Asignado = Tiempo_Asignado + "+tiempo+" WHERE Id = "+d.getId()+ " AND Tiempo_Asignado + "+tiempo+" <= 86400000";
         manager.setQuery(query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();

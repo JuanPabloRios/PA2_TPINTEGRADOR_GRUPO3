@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                     config.getDispositivo().setTipo_Dispositivo(new TipoDispositivo(2, "SUBORDINADO")); //2 si es SUBORDINADO
                     config.getDispositivo().setMarca(Build.MANUFACTURER);
                     config.getDispositivo().setModelo(Build.MODEL);
+                    config.getDispositivo().setUsuarioMaestro(this.user);
                     EditText nombreDispositivo = findViewById(R.id.nombreDispositivo);
                     config.getDispositivo().setNombre(nombreDispositivo.getText().toString());
                     if(utils.guardarArchivoDeConfiguracion(this,config)){
@@ -243,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                         config.getDispositivo().setTipo_Dispositivo(new TipoDispositivo(1, "MAESTRO")); //1 si es MAESTRO
                         config.getDispositivo().setMarca(Build.MANUFACTURER);
                         config.getDispositivo().setModelo(Build.MODEL);
+                        config.getDispositivo().setUsuarioMaestro(us);
                         EditText nombreDispositivo = findViewById(R.id.nombreDispositivo);
                         config.getDispositivo().setNombre(nombreDispositivo.getText().toString());
                         if(utils.guardarArchivoDeConfiguracion(this,config)){

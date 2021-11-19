@@ -142,7 +142,7 @@ public class RestriccionesDAO {
     public void actualizarRestriccionesPorSolicitud(Notificacion solicitud){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("actualizarRestriccionesPorSolicitud");
-        manager.setQuery("UPDATE Restriccion SET Duracion_Minutos = Duracion_Minutos + "+solicitud.getTiempo_Solicitado()+" WHERE Id_Dispositivo = "+solicitud.getDispositivoEmisor().getId()+" AND Id_Aplicacion = "+solicitud.getAplicacion().getId());
+        manager.setQuery("UPDATE Restriccion SET Duracion_Minutos = Duracion_Minutos + "+solicitud.getTiempo_Solicitado()+" WHERE Id_Dispositivo = "+solicitud.getDispositivoEmisor().getId()+" AND Id_Aplicacion = "+solicitud.getAplicacion().getId() +" AND Duracion_Minutos + "+solicitud.getTiempo_Solicitado() + " <= 86400000");
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
     }
