@@ -1,28 +1,23 @@
 package com.example.pa2_tpintegrador_grupo3.fragments;
 import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
-import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
 import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.Servicios.InputFilterMinMax;
-import com.example.pa2_tpintegrador_grupo3.Utilidad;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
-import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 import com.example.pa2_tpintegrador_grupo3.viewModels.Detalles_dispositivoViewModel;
@@ -48,13 +43,27 @@ public class Detalles_dispositivo_dispositivo extends Fragment implements Interf
             @Override
             public void onClick(View v)
             {
-                if(validarHorario()){
+                if(validarConfiguracion()){
                     Detalles_dispositivo_dispositivo.this.guardarConfiguracion(v);
                 }
             }
         });
         this.cargarDatosEnPantalla();
         return this.view;
+    }
+
+    void mostrarSpinner(){
+        LinearLayout spinner = view.findViewById(R.id.spinnerFragmentDetallesDispositivo);
+        spinner.setVisibility(View.VISIBLE);
+        LinearLayout mainContainer = view.findViewById(R.id.mainFragmentDetallesDispositivo);
+        mainContainer.setVisibility(View.GONE);
+    }
+
+    void ocultarSpinner(){
+        LinearLayout spinner = view.findViewById(R.id.spinnerFragmentDetallesDispositivo);
+        spinner.setVisibility(View.GONE);
+        LinearLayout mainContainer = view.findViewById(R.id.mainFragmentDetallesDispositivo);
+        mainContainer.setVisibility(View.VISIBLE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -102,7 +111,9 @@ public class Detalles_dispositivo_dispositivo extends Fragment implements Interf
         TimePicker horaFin = this.view.findViewById(R.id.horaFinPicker);
         Long horaFinMilis = TimeUnit.HOURS.toMillis(horaFin.getCurrentHour()) + TimeUnit.MINUTES.toMillis(horaFin.getCurrentMinute());
         this.dispositivo.setHoraFin(horaFinMilis);
+
         DispositivoDAO dispositivoDAO = new DispositivoDAO(this);
+        mostrarSpinner();
         dispositivoDAO.actualizarConfiguracionBloqueoDispositivo(this.dispositivo);
     }
 
@@ -112,15 +123,23 @@ public class Detalles_dispositivo_dispositivo extends Fragment implements Interf
         switch (res.getIdentificador()){
             case "actualizarConfiguracionBloqueoDispositivo":
                 Integer modificado = DispositivoDAO.actualizarConfiguracionBloqueoDispositivoHandler(res.getData());
-                //ACA DETENER SPINNER
+                ocultarSpinner();
                 if(modificado != null){
                     Toast.makeText(getContext(),"Cambios guardados correctamente",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(),"Error guardando cambios",Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
     }
 
-    public boolean validarHorario(){
+    public boolean validarConfiguracion(){
+        EditText tiempoDeUso = this.view.findViewById(R.id.tiempoUsoDispositivo);
+        if(tiempoDeUso.getText().toString().trim().isEmpty()){
+            Toast.makeText(getContext(),"El limite de tiempo en minutos no puede estar vacio",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         TimePicker horaInicio = this.view.findViewById(R.id.horaInicioPicker);
         Long horaInicioMilis = TimeUnit.HOURS.toMillis(horaInicio.getCurrentHour()) + TimeUnit.MINUTES.toMillis(horaInicio.getCurrentMinute());
 

@@ -9,7 +9,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.text.style.BackgroundColorSpan;
 import android.util.Base64;
 import android.view.Gravity;
@@ -23,8 +25,10 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
+import com.example.pa2_tpintegrador_grupo3.DetallesDispositivo;
 import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.Servicios.InputFilterMinMax;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
@@ -35,6 +39,8 @@ import com.example.pa2_tpintegrador_grupo3.viewModels.Detalles_dispositivoViewMo
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class Detalles_dispositivo_aplicaciones extends Fragment {
@@ -82,6 +88,39 @@ public class Detalles_dispositivo_aplicaciones extends Fragment {
             duracion.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "1440")});
             duracion.setId(res.getId());
             duracion.setText(String.valueOf(TimeUnit.MILLISECONDS.toMinutes(res.getDuracion_Minutos())));
+            duracion.addTextChangedListener(new TextWatcher() {
+                private Timer timer = new Timer();
+                private final long DELAY = 1000;
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count,
+                                              int after) {
+                }
+                @Override
+                public void onTextChanged(final CharSequence s, int start, int before,
+                                          int count) {
+                    if(timer != null)
+                        timer.cancel();
+                }
+                @Override
+                public void afterTextChanged(final Editable s) {
+                    //avoid triggering event when text is too short
+                    if (s.length()  != 0) {
+
+                        timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        actualizarRestriccion(res);
+                                    }
+                                });
+                            }
+
+                        }, DELAY);
+                    }
+                }
+            });
             fila.addView(duracion);
 
             @SuppressLint("UseSwitchCompatOrMaterialCode") Switch s = new Switch(requireActivity());
@@ -91,14 +130,22 @@ public class Detalles_dispositivo_aplicaciones extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     res.setActiva(b);
-                    EditText tiempo = Detalles_dispositivo_aplicaciones.this.view.findViewById(res.getId());
-                    long value = TimeUnit.MINUTES.toMillis(Long.valueOf(tiempo.getText().toString()));
-                    res.setDuracion_Minutos(value);
-                    detallesDispositivoViewModel.setRestriccionModificada(res);
+                    actualizarRestriccion(res);
                 }
             });
             fila.addView(s);
             tabla.addView(fila);
         }
+    }
+
+    public void actualizarRestriccion(Restricciones res){
+        EditText tiempo = Detalles_dispositivo_aplicaciones.this.view.findViewById(res.getId());
+        if(tiempo.getText().toString().trim().isEmpty()){
+            Toast.makeText(getContext(),"El tiempo diponible para la aplicacion ("+res.getAplicacion().getDescripcion()+") no puede estar vacio",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        long value = TimeUnit.MINUTES.toMillis(Long.valueOf(tiempo.getText().toString()));
+        res.setDuracion_Minutos(value);
+        detallesDispositivoViewModel.setRestriccionModificada(res);
     }
 }

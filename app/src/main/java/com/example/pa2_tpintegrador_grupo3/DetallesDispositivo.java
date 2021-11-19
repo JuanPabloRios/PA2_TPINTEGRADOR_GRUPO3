@@ -47,8 +47,7 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
         mostrarSpinner();
         restricDao.obtenerTodasLasRestriccionesPorIdDeDispositivo(this.dispositivo.getId());
     }
-
-    void mostrarSpinner(){
+     void mostrarSpinner(){
         System.out.println("@@@ mostrarSpinner");
         LinearLayout spinner = findViewById(R.id.spinnerDetalles);
         spinner.setVisibility(View.VISIBLE);
