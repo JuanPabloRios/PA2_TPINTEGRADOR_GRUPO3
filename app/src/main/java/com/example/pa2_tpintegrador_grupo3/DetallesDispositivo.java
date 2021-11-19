@@ -1,6 +1,8 @@
 package com.example.pa2_tpintegrador_grupo3;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -37,32 +39,53 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
         detallesDispositivoViewModel.getRestriccionModificada().observe( this, new Observer<Restricciones>() {
             @Override
             public void onChanged(Restricciones res) {
+                mostrarSpinner();
                 restricDao.modificarRestriccion(res);
             }
         });
         //ACA HACEMOS LA LLAMADA A LA BASE DE DATOS
+        mostrarSpinner();
         restricDao.obtenerTodasLasRestriccionesPorIdDeDispositivo(this.dispositivo.getId());
     }
 
+    void mostrarSpinner(){
+        System.out.println("@@@ mostrarSpinner");
+        LinearLayout spinner = findViewById(R.id.spinnerDetalles);
+        spinner.setVisibility(View.VISIBLE);
+        LinearLayout mainContainer = findViewById(R.id.mainContainerDetalles);
+        mainContainer.setVisibility(View.GONE);
+    }
+
+    void ocultarSpinner(){
+        System.out.println("@@@ ocultarSpinner");
+        LinearLayout spinner = findViewById(R.id.spinnerDetalles);
+        spinner.setVisibility(View.GONE);
+        LinearLayout mainContainer = findViewById(R.id.mainContainerDetalles);
+        mainContainer.setVisibility(View.VISIBLE);
+    }
     @Override
     public void operacionConBaseDeDatosFinalizada(Object resultado) {
         ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
         switch (res.getIdentificador()){
             case "obtenerTodasLasRestriccionesPorIdDeDispositivo":
                 ArrayList<Restricciones> restricciones = RestriccionesDAO.obtenerTodasLasRestriccionesPorIdDeDispositivoHandler(res.getData());
-                //ACA DETENER SPINNER
                 if(restricciones != null && restricciones.size() > 0){
                     //CARGAMOS EN EL VIEWMODEL TODOS LOS DETALLES DE LAS APLICACIONES Y COMPLETAMOS LA CARGA DE LA PANTALLA
                     detallesDispositivoViewModel.setRestricciones(restricciones);
                     EstadisticaDAO estadisticaDAO = new EstadisticaDAO(this);
                     estadisticaDAO.obtenerEstadisticasDeDispositivo(this.dispositivo);
+                } else {
+                    ocultarSpinner();
+                    Toast.makeText(this,"Error obteniendo aplicaciones",Toast.LENGTH_SHORT).show();
                 }
                 break;
             case "modificarRestriccion":
                 Integer resModificacionMinutos = RestriccionesDAO.modificarRestriccionHandler(res.getData());
-                //ACA DETENER SPINNER
-                if(resModificacionMinutos != null && resModificacionMinutos != -1){
+                ocultarSpinner();
+                if(resModificacionMinutos != null){
                     Toast.makeText(this,"Cambios guardados correctamente",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this,"Error guardando los cambios",Toast.LENGTH_SHORT).show();
                 }
                 break;
             case "obtenerEstadisticasDeDispositivo":
@@ -71,6 +94,9 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
                 if(estadisticas != null && !estadisticas.isEmpty()){
                     detallesDispositivoViewModel.setEstaditicas(estadisticas);
                     this.completarCarga();
+                } else {
+                    ocultarSpinner();
+                    Toast.makeText(this,"Error obteniendo estadisticas",Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -95,6 +121,7 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
             @Override
             public void onTabReselected(TabLayout.Tab tab) { }
         });
+        ocultarSpinner();
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 }

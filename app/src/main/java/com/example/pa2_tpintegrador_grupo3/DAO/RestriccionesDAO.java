@@ -150,7 +150,7 @@ public class RestriccionesDAO {
 
     public void modificarRestriccion(Restricciones res){
         UpsertManager manager = new UpsertManager();
-        manager.setIdentificador("modificarTiempoEnRestriccion");
+        manager.setIdentificador("modificarRestriccion");
         manager.setQuery("UPDATE Restriccion SET Id_Dispositivo = "+res.getDispositivo().getId()+", Id_Tipo_Restriccion = "+res.getTipo_Restriccion().getId()+", Id_Aplicacion = "+res.getAplicacion().getId()
                 +", Duracion_Minutos = "+res.getDuracion_Minutos()+", Activa = "+res.isActiva()+" WHERE Id = "+res.getId());
         DBQueryManager mg = new DBQueryManager(this.com, manager);
