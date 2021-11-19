@@ -163,12 +163,13 @@ public class AplicacionDAO
 	public void relacionarAplicacionesConDispositivo(ArrayList<Aplicacion> aplicaciones, Integer idDispositivo) {
 		UpsertManager manager = new UpsertManager();
 		manager.setIdentificador("relacionarAplicacionesConDispositivo");
-		String query = "INSERT INTO Restriccion (Id_Dispositivo, Id_Tipo_Restriccion, Id_Aplicacion, Duracion_Minutos) VALUES ";
+		String query = "REPLACE INTO Restriccion (Id_Dispositivo, Id_Tipo_Restriccion, Id_Aplicacion, Duracion_Minutos, Activa) VALUES ";
 		for(Aplicacion app : aplicaciones) {
 			query+= "("+idDispositivo+",";
 			query+= "2,";
 			query+= app.getId()+",";
-			query+= 0;
+			query+= 0+",";
+			query+= "false";
 			query+="),";
 		}
 		query = query.substring(0, query.length() -1);
