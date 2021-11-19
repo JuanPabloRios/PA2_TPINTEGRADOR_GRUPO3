@@ -73,8 +73,6 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
                     this.completarCarga();
                 }
                 break;
-            default:
-                System.out.println("OTRO IDENTIFICADOR");
         }
     }
 

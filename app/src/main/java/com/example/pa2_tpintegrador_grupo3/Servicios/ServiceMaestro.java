@@ -41,7 +41,7 @@ public class ServiceMaestro extends Service implements InterfazDeComunicacion {
         if(extras != null) {
             idUsuario = extras.getInt("idUsuario");
         }
-        final long EXECUTION_TIME = 7000;
+        final long EXECUTION_TIME = 10000;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {

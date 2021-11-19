@@ -73,8 +73,6 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
                 }
                 break;
 
-            default:
-                System.out.println("OTRO IDENTIFICADOR");
         }
     }
 

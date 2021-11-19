@@ -188,7 +188,6 @@ public class RestriccionesDAO {
             "WHERE r.Eliminado = 0 AND r.Id_Dispositivo = "+idDispositivo+" "+
             "ORDER BY a.Descripcion ASC";
         manager.setQuery(query);
-        System.out.println("@@@ query " + query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
     }

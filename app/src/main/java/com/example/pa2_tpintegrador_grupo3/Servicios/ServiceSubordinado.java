@@ -49,7 +49,7 @@ public class ServiceSubordinado extends Service implements InterfazDeComunicacio
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         final long EXECUTION_TIME = 200;
-        final long EXECUTION_TIME_CONSULTADB = 7000;
+        final long EXECUTION_TIME_CONSULTADB = 10000;
 
         handler.postDelayed(new Runnable() {
             @Override

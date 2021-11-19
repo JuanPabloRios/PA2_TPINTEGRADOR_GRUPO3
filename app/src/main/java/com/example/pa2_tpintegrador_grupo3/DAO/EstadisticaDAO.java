@@ -55,7 +55,6 @@ public class EstadisticaDAO {
             "FROM Estadisticas_x_dispositivo as e " +
             "INNER JOIN Aplicacion AS a ON e.Id_Aplicacion = a.Id " +
             "WHERE e.Id_Dispositivo = "+d.getId() +" ORDER BY e.Tiempo_Uso DESC";
-        System.out.println("@@@ query " + query);
         manager.setQuery(query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();
