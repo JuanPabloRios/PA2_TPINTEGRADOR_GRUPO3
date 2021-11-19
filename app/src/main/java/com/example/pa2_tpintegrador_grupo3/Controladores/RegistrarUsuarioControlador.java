@@ -122,6 +122,7 @@ public class RegistrarUsuarioControlador extends AppCompatActivity implements In
                 if(user2 != null && user2 > 0){
                     Toast.makeText(this,"Registrado correctamente",Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(this, MainActivity.class)); finish();
+                    finish();
                 } else {
                     Toast.makeText(this,"Ocurrio un problema al crear el usuario",Toast.LENGTH_SHORT).show();
                 }

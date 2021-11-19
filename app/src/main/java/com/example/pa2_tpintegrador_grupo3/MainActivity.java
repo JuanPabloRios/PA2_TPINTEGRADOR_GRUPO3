@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
             } else if(result == 2) {
                 //SI EXISTE EL ARCHIVO Y EL USUARIO ES DE TIPO SUBORDINADO (2) PASAMOS A LA PANTALLA DE INICIO DE SUBORDINADO
                 startActivity(new Intent(this, PrincipalSubordinadoControlador.class));
+                finish();
             } else {
                 Toast.makeText(this,"Error obteniendo tipo de usuario",Toast.LENGTH_SHORT);
             }
