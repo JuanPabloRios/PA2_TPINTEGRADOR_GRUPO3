@@ -78,10 +78,14 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
                 if(!isMyServiceRunning(ServiceSubordinado.class)){
                     finish();
                 } else {
-                    solicitar_extension_uso_dispositivo dialog = new solicitar_extension_uso_dispositivo();
-                    dialog.setListener(list);
-                    dialog.setIdDispositivo(c.getDispositivo().getId());
-                    dialog.show(getSupportFragmentManager(),null);
+                    if(idMaestro != null){
+                        solicitar_extension_uso_dispositivo dialog = new solicitar_extension_uso_dispositivo();
+                        dialog.setListener(list);
+                        dialog.setIdDispositivo(c.getDispositivo().getId());
+                        dialog.show(getSupportFragmentManager(),null);
+                    } else {
+                        Toast.makeText(PrincipalSubordinadoControlador.this, "Usuario maesto aun no cargado, cierre la aplicacion y vuelva a intentar", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
             }
@@ -135,10 +139,14 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
                             if(!isMyServiceRunning(ServiceSubordinado.class)){
                                 finish();
                             } else {
-                                Solicitar_extension_uso_aplicaciones dialog = new Solicitar_extension_uso_aplicaciones();
-                                dialog.setListener(list2);
-                                dialog.setAplicaciones(apps);
-                                dialog.show(getSupportFragmentManager(), null);
+                                if(idMaestro != null){
+                                    Solicitar_extension_uso_aplicaciones dialog = new Solicitar_extension_uso_aplicaciones();
+                                    dialog.setListener(list2);
+                                    dialog.setAplicaciones(apps);
+                                    dialog.show(getSupportFragmentManager(), null);
+                                } else {
+                                    Toast.makeText(PrincipalSubordinadoControlador.this, "Usuario maesto aun no cargado, cierre la aplicacion y vuelva a intentar", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     });

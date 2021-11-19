@@ -1,21 +1,39 @@
 package com.example.pa2_tpintegrador_grupo3.conexion;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
 
 public class DatabaseManager {
     private static Connection conexion;
-    public static Connection obtenerConexion(){
-        try{
-            Class.forName("com.mysql.jdbc.Driver");
-            conexion = DriverManager.getConnection(DataDB.urlMySQL, DataDB.user, DataDB.pass);
-            return conexion;
-        } catch (Exception e){
-
-            System.out.println("@@ obtenerConexion " + e.getStackTrace());
-            return null;
+    public static Connection obtenerConexion() {
+        if(conexion == null){
+            try{
+                Class.forName("com.mysql.jdbc.Driver");
+                System.out.println("## Creating new connexion");
+                conexion = DriverManager.getConnection(DataDB.urlMySQL, DataDB.user, DataDB.pass);
+                return conexion;
+            } catch (Exception e){
+                return null;
+            }
+        } else {
+            try{
+                Boolean isValid = conexion.isValid(15);
+                if(isValid){
+                    return conexion;
+                } else {
+                    conexion = null;
+                    System.out.println("## Connexion not valid recalling");
+                    return obtenerConexion();
+                }
+            } catch (Exception e){
+                conexion = null;
+                System.out.println("## Exception recalling");
+                return obtenerConexion();
+            }
         }
     }
 
@@ -23,8 +41,6 @@ public class DatabaseManager {
         try {
             return conexion.createStatement();
         } catch (Exception e){
-
-            System.out.println("@@ obtenerStatement " + e.getStackTrace());
             return null;
         }
     }
@@ -39,7 +55,6 @@ public class DatabaseManager {
                 if(st.executeUpdate( query, Statement.RETURN_GENERATED_KEYS) > 0){
                     ResultSet rs = st.getGeneratedKeys();
                     if (rs.next()){
-                        System.out.println("NEW ID " + rs.getString(1));
                         return Integer.parseInt(rs.getString(1));
                     }
                 }

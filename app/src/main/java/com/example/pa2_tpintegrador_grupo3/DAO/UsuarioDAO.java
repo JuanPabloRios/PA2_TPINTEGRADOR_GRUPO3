@@ -84,7 +84,6 @@ public class UsuarioDAO {
         SelectManager manager = new SelectManager();
         manager.setIdentificador("obtenerUsuarioPorNombreUsuario");
         String query = "SELECT * FROM Usuario WHERE Usuario = \""+nombreUsuario+"\" AND Eliminado = 0";
-        System.out.println("@@ query " +query);
         manager.setQuery(query);
         DBQueryManager mg = new DBQueryManager(this.com, manager);
         mg.execute();

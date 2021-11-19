@@ -49,7 +49,6 @@ public class Solicitar_extension_uso_aplicaciones extends AppCompatDialogFragmen
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedAppId = appIdsByIndex.get(position);
-                System.out.println("APPID " + appIdsByIndex.get(position));
             }
             @Override
             public void onNothingSelected(AdapterView <?> parent) {

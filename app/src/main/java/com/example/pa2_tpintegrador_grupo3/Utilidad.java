@@ -106,9 +106,6 @@ public class Utilidad extends AppCompatActivity {
 
     public Configuracion obtenerConfiguracion(Context context) {
         File file1 = context.getFileStreamPath(NOMBRE_ARCHIVO);
-        System.out.println("obtenerConfiguracion");
-        System.out.println("file1 == null " + file1 == null);
-        System.out.println("!file1.exists() " + !file1.exists());
         if(file1 == null || !file1.exists()) {
             return null;
         }
