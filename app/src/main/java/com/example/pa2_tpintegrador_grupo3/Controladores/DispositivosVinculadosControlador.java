@@ -39,17 +39,32 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
         setContentView(R.layout.dispositivos_vinculados);
         //OBTENEMOS EL USUARIO ACTUAL
         this.user = (Usuario)getIntent().getSerializableExtra("usuario");
-        //ACA INICIAR SPINNER
+        mostrarSpinner();
         dispoDao.obtenerTodosLosDispositivosPorUsuario(this.user);
     }
 
+    void mostrarSpinner(){
+        System.out.println("@@@ mostrarSpinner");
+        LinearLayout spinner = findViewById(R.id.spinnerDispositivosVinculados);
+        spinner.setVisibility(View.VISIBLE);
+        LinearLayout mainContainer = findViewById(R.id.mainDispositivosVinculados);
+        mainContainer.setVisibility(View.GONE);
+    }
+
+    void ocultarSpinner(){
+        System.out.println("@@@ ocultarSpinner");
+        LinearLayout spinner = findViewById(R.id.spinnerDispositivosVinculados);
+        spinner.setVisibility(View.GONE);
+        LinearLayout mainContainer = findViewById(R.id.mainDispositivosVinculados);
+        mainContainer.setVisibility(View.VISIBLE);
+    }
     @Override
     public void operacionConBaseDeDatosFinalizada(Object resultado) {
         ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
         switch (res.getIdentificador()){
             case "obtenerTodosLosDispositivosPorUsuario":
                 ArrayList<Dispositivo> dispositivos = DispositivoDAO.obtenerTodosLosDispositivosPorUsuarioHandler(res.getData());
-                //ACA DETENER SPINNER
+                ocultarSpinner();
                 if(dispositivos != null && dispositivos.size() > 0){
                     cargarDispositivosVinculados(dispositivos);
                     Intent serviceIntent = new Intent(this, ServiceMaestro.class);
@@ -62,7 +77,7 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
                 break;
             case "eliminarSubordinado":
                 Integer dispEliminado = DispositivoDAO.eliminarSubordinadoHandler(res.getData());
-                //ACA DETENER SPINNER
+                ocultarSpinner();
                 if(dispEliminado != null){
                     Toast.makeText(this,"Dispositivo eliminado correctamente",Toast.LENGTH_SHORT).show();
                     LinearLayout tabla = findViewById(R.id.tablaVinculados);
@@ -120,6 +135,7 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
 
     @Override
     public void eliminarSubordinado(Integer idDispositivo) {
+        mostrarSpinner();
         dispoDao.eliminarSubordinado(idDispositivo);
     }
 }

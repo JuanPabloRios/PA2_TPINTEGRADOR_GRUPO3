@@ -183,18 +183,19 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                     ut.guardarArchivoDeConfiguracion(this,c);
                     dispDao.relacionarDispositivoConUsuario(this.idNuevoDispositivo,this.user.getId());
                 } else {
+                    ocultarSpinner();
                     Toast.makeText(this,"Error creando el dispositivo en la base de datos",Toast.LENGTH_SHORT).show();
                 }
                 break;
             case "relacionarDispositivoConUsuario":
                 Integer idNuevaRelacion = DispositivoDAO.relacionarDispositivoConUsuarioHandler(res.getData());
-                ocultarSpinner();
                 if(idNuevaRelacion > 0){
                     if(esSubordinado && primerInicio){
                         Toast.makeText(this,"Equipo registrado como subordinado correctamente",Toast.LENGTH_SHORT).show();
                     }
                     redireccionar(this.user);
                 } else {
+                    ocultarSpinner();
                     Toast.makeText(this,"Error creando relacion con dispositivo",Toast.LENGTH_SHORT).show();
                 }
                 break;
