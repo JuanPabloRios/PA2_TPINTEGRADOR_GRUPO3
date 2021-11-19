@@ -24,9 +24,7 @@ import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoDispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
-
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements InterfazDeComunicacion
@@ -73,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
     }
 
     void mostrarSpinner(){
-        System.out.println("@@@ mostrarSpinner");
         LinearLayout spinner = findViewById(R.id.spinnerMain);
         spinner.setVisibility(View.VISIBLE);
         LinearLayout mainContainer = findViewById(R.id.mainContainer);
@@ -81,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
     }
 
     void ocultarSpinner(){
-        System.out.println("@@@ ocultarSpinner");
         LinearLayout spinner = findViewById(R.id.spinnerMain);
         spinner.setVisibility(View.GONE);
         LinearLayout mainContainer = findViewById(R.id.mainContainer);

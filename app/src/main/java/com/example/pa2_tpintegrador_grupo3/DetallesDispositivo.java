@@ -49,7 +49,6 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
     }
 
     void mostrarSpinner(){
-        System.out.println("@@@ mostrarSpinner");
         LinearLayout spinner = findViewById(R.id.spinnerDetalles);
         spinner.setVisibility(View.VISIBLE);
         LinearLayout mainContainer = findViewById(R.id.mainContainerDetalles);
@@ -57,12 +56,12 @@ public class DetallesDispositivo extends AppCompatActivity implements InterfazDe
     }
 
     void ocultarSpinner(){
-        System.out.println("@@@ ocultarSpinner");
         LinearLayout spinner = findViewById(R.id.spinnerDetalles);
         spinner.setVisibility(View.GONE);
         LinearLayout mainContainer = findViewById(R.id.mainContainerDetalles);
         mainContainer.setVisibility(View.VISIBLE);
     }
+
     @Override
     public void operacionConBaseDeDatosFinalizada(Object resultado) {
         ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
