@@ -62,9 +62,8 @@ public class ServiceSubordinado extends Service implements InterfazDeComunicacio
                     if(bloqueoDispositivoActivo){
                         Dispositivo d = ServiceSubordinado.this.config.getDispositivo();
                         if(d.getTiempoUso() >= d.getTiempoAsignado()){
-                            System.out.println("BLOQUEO POR TIEMPO ASIGNADO AL DISPOSITIVO");
                             //Superamos el tiempo de uso
-                            ServiceSubordinado.this.irAHome();
+                            ServiceSubordinado.this.irAHome("Su dispositivo ya no cuenta con tiempo de uso disponible. Parental Watcher");
                             //No hace falta chequear las app, el dispositivo esta bloqueado
                             chequeoDeBloqueoDeApps = false;
                         } else {
@@ -76,9 +75,8 @@ public class ServiceSubordinado extends Service implements InterfazDeComunicacio
                             Long horaActualEnMilisegundos = TimeUnit.HOURS.toMillis(horaActual) + TimeUnit.MINUTES.toMillis(minutoActual);
 
                             if(horaActualEnMilisegundos < horaInicio || horaActualEnMilisegundos > horaFin){
-                                System.out.println("BLOQUEO POR FUERA DE HORARIO DE USO");
                                 //Estamos fuera del rango horario de uso
-                                ServiceSubordinado.this.irAHome();
+                                ServiceSubordinado.this.irAHome("Su dispositivo se encuentra fuera del horario de uso permitido. Parental Watcher");
                                 //No hace falta chequear las app, el dispositivo esta bloqueado
                                 chequeoDeBloqueoDeApps = false;
                             }
@@ -86,9 +84,8 @@ public class ServiceSubordinado extends Service implements InterfazDeComunicacio
                     }
                     if(chequeoDeBloqueoDeApps){
                         if(aplicacionesBloqueadas.contains(packageName)){
-                            System.out.println("BLOQUEO DE APLICACION");
                             //Si la app esta en esta lista es por que se encuentra bloqueada
-                            ServiceSubordinado.this.irAHome();
+                            ServiceSubordinado.this.irAHome("Esta aplicacion se encuentra bloqueada. Parental Watcher");
                         }
                     }
                 }
@@ -120,7 +117,8 @@ public class ServiceSubordinado extends Service implements InterfazDeComunicacio
         return START_NOT_STICKY;
     }
 
-    public void irAHome(){
+    public void irAHome(String mensaje){
+        Toast.makeText(this,mensaje,Toast.LENGTH_LONG).show();
         Intent startMain = new Intent(Intent.ACTION_MAIN);
         startMain.addCategory(Intent.CATEGORY_HOME);
         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
