@@ -1,11 +1,8 @@
 package com.example.pa2_tpintegrador_grupo3.conexion;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Locale;
 
 public class DatabaseManager {
     private static Connection conexion;
