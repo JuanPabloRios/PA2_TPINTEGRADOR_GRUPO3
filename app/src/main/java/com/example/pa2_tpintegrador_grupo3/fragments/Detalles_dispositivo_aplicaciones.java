@@ -2,9 +2,7 @@ package com.example.pa2_tpintegrador_grupo3.fragments;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.text.style.BackgroundColorSpan;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,19 +21,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
-import com.example.pa2_tpintegrador_grupo3.DetallesDispositivo;
 import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.Servicios.InputFilterMinMax;
-import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Restricciones;
-import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 import com.example.pa2_tpintegrador_grupo3.viewModels.Detalles_dispositivoViewModel;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Timer;
