@@ -16,7 +16,7 @@ import com.example.pa2_tpintegrador_grupo3.DAO.AplicacionDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.NotificacionDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
-import com.example.pa2_tpintegrador_grupo3.DAO.UsuarioDAO;
+
 import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.Servicios.ServiceSubordinado;
 import com.example.pa2_tpintegrador_grupo3.Utilidad;
@@ -94,7 +94,6 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
             }
         });
         //---------------------------------------------------------------
-
         //CALCULAMOS EL TIEMPO TOTAL DE USO DEL DISPOSITIVO
         Long milis = ut.obtenerStadisticasDeUso(this).get(0).tiempoTotal;
         Long horas = TimeUnit.MILLISECONDS.toHours(milis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(milis));
@@ -208,7 +207,6 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
     @Override
     public void guardarSolicitudDispositivo(Integer idDispositivo, Long tiempo) {
         //GUARDAR EN LA DB tabla Notificaciones.
-
         Dispositivo dispositivo = new Dispositivo();
         dispositivo.setId(idDispositivo);
         TipoNotificacion tNoti = new TipoNotificacion(1);
