@@ -7,26 +7,15 @@ import com.example.pa2_tpintegrador_grupo3.Utilidad;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.TipoUsuario;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
-import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion; 
-import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion; 
-import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
-import com.google.gson.Gson; 
+import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 
 public class RegistrarUsuarioControlador extends AppCompatActivity implements InterfazDeComunicacion {
 
@@ -63,7 +52,6 @@ public class RegistrarUsuarioControlador extends AppCompatActivity implements In
             Toast.makeText(this,"Formato de datos incorrecto",Toast.LENGTH_SHORT).show();
         }
     }
-
 
     public boolean validarCampos(){
         Utilidad ut = new Utilidad();
