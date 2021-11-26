@@ -15,7 +15,6 @@ import com.example.pa2_tpintegrador_grupo3.DAO.RestriccionesDAO;
 import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Notificacion;
-import com.example.pa2_tpintegrador_grupo3.entidades.Restricciones;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 import java.util.concurrent.TimeUnit;
 
@@ -43,12 +42,16 @@ public class AdministracionSolicitudControlador extends AppCompatActivity implem
 
         TextView nombreDispositivo = findViewById(R.id.nombreDispSolicitud);
         nombreDispositivo.setText(this.notificacion.getDispositivoEmisor().getNombre());
+
         TextView minutosSolicitud = findViewById(R.id.minutosDispSolicitud);
+
         long minutos = TimeUnit.MILLISECONDS.toMinutes(this.notificacion.getTiempo_Solicitado());
         minutosSolicitud.setText(minutos + " minutos");
+
         TextView nombreAplicacion = findViewById(R.id.nobmreAplicacionSolicitud);
         LinearLayout nombreApp = findViewById(R.id.layoutNombreApp);
         TextView tituloSolicitud = findViewById(R.id.tituloSolicitud);
+
         if(this.notificacion.getTipoNotificacion().getId() == 2){
             nombreApp.setVisibility(View.VISIBLE);
             tituloSolicitud.setText("Solicitud extension de uso de aplicacion");
@@ -65,7 +68,6 @@ public class AdministracionSolicitudControlador extends AppCompatActivity implem
         switch (res.getIdentificador()){
             case "rechazarNotificacion":
                 Integer a = NotificacionDAO.rechazarNotificacionHandler(res.getData());
-                //ACA DETENER SPINNER
                 if(a != null){
                     String ns = Context.NOTIFICATION_SERVICE;
                     NotificationManager nMgr = (NotificationManager) this.getSystemService(ns);
@@ -76,7 +78,6 @@ public class AdministracionSolicitudControlador extends AppCompatActivity implem
                 break;
             case "aceptarNotificacion":
                 Integer b = NotificacionDAO.aceptarNotificacionHandler(res.getData());
-                //ACA DETENER SPINNER
                 if(b != null){
                     String ns = Context.NOTIFICATION_SERVICE;
                     NotificationManager nMgr = (NotificationManager) this.getSystemService(ns);
@@ -97,7 +98,6 @@ public class AdministracionSolicitudControlador extends AppCompatActivity implem
 
     public void rechazar(View view){
         notificacionDAO.rechazarNotificacion(notificacion);
-
     }
 
     public void aceptar(View view){
