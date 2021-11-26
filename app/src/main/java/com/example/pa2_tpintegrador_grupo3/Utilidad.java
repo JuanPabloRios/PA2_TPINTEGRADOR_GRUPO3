@@ -47,8 +47,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Utilidad extends AppCompatActivity {
     private static final String NOMBRE_ARCHIVO = "parentalWatcher.txt";
-    private String tipoUsuario;
-
     public boolean validateString(String cadena){
 
         for (int i = 0; i < cadena.length(); i++)
