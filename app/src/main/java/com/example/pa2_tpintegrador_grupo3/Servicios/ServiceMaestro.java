@@ -3,29 +3,22 @@ import static com.example.pa2_tpintegrador_grupo3.AppNotificacion.CHANNEL_ID;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.pa2_tpintegrador_grupo3.Controladores.AdministracionSolicitudControlador;
-import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DAO.NotificacionDAO;
 import com.example.pa2_tpintegrador_grupo3.MainActivity;
 import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.Utilidad;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
-import com.example.pa2_tpintegrador_grupo3.entidades.Configuracion;
-import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Notificacion;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
