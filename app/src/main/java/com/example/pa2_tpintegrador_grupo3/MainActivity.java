@@ -68,7 +68,8 @@ public class MainActivity extends AppCompatActivity implements InterfazDeComunic
                 Toast.makeText(this,"Error obteniendo tipo de usuario",Toast.LENGTH_SHORT);
             }
         }
-        //SI NO EXISTE EL ARCHIVO QUEDAMOS EN LA PANTALLA DE SELECCION INICIAL QUE DARA PASO A LA CREACION DEL ARCHIVO DE CONFIGURACION
+        //SI NO EXISTE EL ARCHIVO QUEDAMOS EN LA PANTALLA DE SELECCION INICIAL
+        // QUE DARA PASO A LA CREACION DEL ARCHIVO DE CONFIGURACION
     }
 
     void mostrarSpinner(){
