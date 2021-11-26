@@ -16,13 +16,12 @@ import com.example.pa2_tpintegrador_grupo3.DAO.DispositivoDAO;
 import com.example.pa2_tpintegrador_grupo3.DetallesDispositivo;
 import com.example.pa2_tpintegrador_grupo3.R;
 import com.example.pa2_tpintegrador_grupo3.Servicios.ServiceMaestro;
-import com.example.pa2_tpintegrador_grupo3.Servicios.ServiceSubordinado;
+
 import com.example.pa2_tpintegrador_grupo3.Utilidad;
 import com.example.pa2_tpintegrador_grupo3.conexion.ResultadoDeConsulta;
 import com.example.pa2_tpintegrador_grupo3.entidades.Dispositivo;
 import com.example.pa2_tpintegrador_grupo3.entidades.Usuario;
 import com.example.pa2_tpintegrador_grupo3.fragments.eliminar_subordinado;
-import com.example.pa2_tpintegrador_grupo3.fragments.solicitar_extension_uso_dispositivo;
 import com.example.pa2_tpintegrador_grupo3.interfaces.InterfazDeComunicacion;
 
 import java.util.ArrayList;
