@@ -16,10 +16,11 @@ public class EstadisticaDAO {
         this.com = ic;
     }
 
+    //GUARDAMOS LAS ESTADISTICAS DE LOS DISPOSITIVOS
     public void insertarEstadisticas(ArrayList<Estadistica> estadisticas) {
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("insertarEstadisticas");
-        //EN ESTA TABLA EL PRIMARY KEY ESTA FORMADO POR Id_Dispositivo y Id_Aplicacion POR ESTO USAMOS EL REPLACE
+        //EN ESTA TABLA EL PRIMARY KEY ESTA FORMADO POR "Id_Dispositivo" y "Id_Aplicacion" POR ESTO USAMOS EL REPLACE
         //PARA QUE EN CASO DE EXISTIR MODIFIQUE EL REGISTRO Y SI NO EXISTE, LO INSERTA COMO NUEVO
         String query = "REPLACE INTO Estadisticas_x_dispositivo(Id_Dispositivo, Id_Aplicacion, Tiempo_Uso) VALUES ";
         for(Estadistica stat : estadisticas) {
@@ -41,12 +42,11 @@ public class EstadisticaDAO {
         return null;
     }
 
-
+//TRAEMOS LAS ESTADISTICAS DE LA BASE PARA EL DISPOSITIVO
     public void obtenerEstadisticasDeDispositivo(Dispositivo d) {
         SelectManager manager = new SelectManager();
         manager.setIdentificador("obtenerEstadisticasDeDispositivo");
-        //EN ESTA TABLA EL PRIMARY KEY ESTA FORMADO POR Id_Dispositivo y Id_Aplicacion POR ESTO USAMOS EL REPLACE
-        //PARA QUE EN CASO DE EXISTIR MODIFIQUE EL REGISTRO Y SI NO EXISTE, LO INSERTA COMO NUEVO
+
         String query =
             "SELECT " +
                 "a.Descripcion AS appDescripcion," +

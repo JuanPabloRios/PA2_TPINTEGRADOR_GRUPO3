@@ -55,6 +55,7 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         if(user != null){
             idMaestro = user.getId();
         }
+
         Boolean primerInicio = (Boolean) getIntent().getSerializableExtra("primerInicio");
 
         ArrayList<Aplicacion> aplicacionesInstaladas = new ArrayList<Aplicacion>();
@@ -68,6 +69,8 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         Utilidad ut = new Utilidad();
         Configuracion c = ut.obtenerConfiguracion(this);
         this.idDispositivo = c.getDispositivo().getId();
+
+        //SETEAMOS LA INFORMACION DEL DISPOSITIVO
         marcaDispositivoTxtView.setText(c.getDispositivo().getMarca());
         modeloDispositivoTxtView.setText(c.getDispositivo().getModelo());
         nombreDispositivoTxtView.setText(c.getDispositivo().getNombre());
@@ -118,6 +121,7 @@ public class PrincipalSubordinadoControlador  extends AppCompatActivity implemen
         }
     }
 
+    //DEPENDIENDO DEL IDENTIFICADOR QUE PASEMOS SE VA A VARIALIZAR LAS DISTINTAS OPERACIONES CON LABASE DE DATOS
     @Override
     public void operacionConBaseDeDatosFinalizada(Object resultado) {
         ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;

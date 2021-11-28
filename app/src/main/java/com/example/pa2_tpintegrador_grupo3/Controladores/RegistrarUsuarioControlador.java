@@ -66,38 +66,40 @@ public class RegistrarUsuarioControlador extends AppCompatActivity implements In
 
 
     public boolean validarCampos(){
+
+        //VALIDACION PARA QUE EL NOMBRE DE USURIO NO ESTE VACIO
         Utilidad ut = new Utilidad();
         if(ut.validateEmpty(txtNombreUsuario.getText().toString())){
             txtNombreUsuario.setError("El campo Nombre no puede estar vacio.");
             return false;
         }
-
+        //VALIDACION PARA QUE EL NOMBRE DE USUARIO NO TENGO NUMEROS
         if(ut.validateString(txtNombreUsuario.getText().toString())){
             txtNombreUsuario.setError("No se permiten numeros en el campo Nombre.");
             return false;
         }
 
-
+        //VALIDACION PARA QUE EL MAIL NO LLEGA VACIO
         if(ut.validateEmpty(txtEmail.getText().toString())){
             txtEmail.setError("El campo Email no puede estar vacio.");
             return false;
         }
-
+        //VALIDACION PARA EL FORMATO DEL MAIL
         if(ut.emailInvalido(txtEmail.getText().toString())){
             txtEmail.setError("No es un Email valido.");
             return false;
         }
-
+        //VALIDACION PARA QUE LA PW NO LLEGUE VACIA
         if(ut.validateEmpty(txtPassword.getText().toString())){
             txtPassword.setError("El campo Contraseña no puede estar vacio.");
             return false;
         }
-
+        //VALIDACION PARA QUE SE REPITA LA PW Y NO QUEDE VACIO
         if(ut.validateEmpty(txtCopiaPassoword.getText().toString())){
             txtCopiaPassoword.setError("EL campo Repetir Contraseña no puede estar vacio.");
             return false;
         }
-
+        //VALIDACION PARA QUE LA PW Y LA COPIAPW SEAN IGUALES
         if(!txtPassword.getText().toString().equals(txtCopiaPassoword.getText().toString())){
             txtPassword.setError("Las contraseñas deben ser iguales");
             return false;
@@ -113,12 +115,13 @@ public class RegistrarUsuarioControlador extends AppCompatActivity implements In
         switch (res.getIdentificador()){
             case "OBTENERUSUARIOPORNOMBREUSUARIOOEMAIL":
                 Usuario user = UsuarioDAO.obtenerUsuarioPorNombreUsuarioOEmailHandler(res.getData());
-                //ACA DETENER SPINNER
+
+                //aca verificamos que los datos ingresados por el usuario no esten registrados anteriormente
                 usuarioExistenteHandler(user);
                 break;
             case "CREARUSUARIO":
                 Integer user2 = UsuarioDAO.crearUsuarioHandler(res.getData());
-                //ACA DETENER SPINNER
+
                 if(user2 != null && user2 > 0){
                     Toast.makeText(this,"Registrado correctamente",Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(this, MainActivity.class)); finish();

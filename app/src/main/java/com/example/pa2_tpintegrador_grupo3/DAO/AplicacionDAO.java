@@ -15,6 +15,7 @@ public class AplicacionDAO
 		this.com = ic;
 	}
 
+
 	public void crearAplicacion(Aplicacion us)
 	{
 		UpsertManager manager = new UpsertManager();
@@ -83,6 +84,7 @@ public class AplicacionDAO
 		return null;
 	}
 
+	//BUSCA MEDIANTE EL NOMBRE LA APP EN LA BASE
 
 	public void obtenerAplicacionesPorNombre(ArrayList<String> nombresLst) {
 		SelectManager manager = new SelectManager();
@@ -123,7 +125,7 @@ public class AplicacionDAO
 		return null;
 	}
 
-
+	//METODO PARA TRAER TODAS LAS APPS
 	public void obtenerTodasLasAplicaciones()
 	{
 		SelectManager manager = new SelectManager();
