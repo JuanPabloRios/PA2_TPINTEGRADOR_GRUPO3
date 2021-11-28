@@ -17,9 +17,12 @@ public class DispositivoDAO {
         this.com = ic;
     }
 
+    //CREAMOS UN DISPOSITIVO NUEVO
     public void crearDispositivo(Dispositivo dispo){
         UpsertManager manager = new UpsertManager();
         manager.setIdentificador("crearDispositivo");
+
+        //PASAMOS LA QUERY QUE NECESITAMOS JUSTO A LOS DATOS
         String query = "INSERT INTO Dispositivo (id_Tipo_Dispositivo, Imei, Marca, Modelo, Nombre) VALUES (";
         query+= dispo.getTipo_Dispositivo().getId()+" ,";
         query+= "\""+dispo.getImei()+"\",";
@@ -43,6 +46,7 @@ public class DispositivoDAO {
         }
         return null;
     }
+    //METODO PARA VINCULAR USUARIOS Y DISPOSITIVOS
 
     public void relacionarDispositivoConUsuario(Integer idDispositivo, Integer idUsuario){
         UpsertManager manager = new UpsertManager();

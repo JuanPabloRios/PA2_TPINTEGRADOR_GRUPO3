@@ -124,6 +124,7 @@ public class DispositivoXUsuarioDAO
 		return null;
 	}
 
+	//NOS DEJA OBTENER TODOS LOS DISPOSITIVOS POR USUARIO
 	public void obtenerTodosLosDispositivosXUsuarios()
 	{
 		SelectManager manager = new SelectManager();
@@ -165,6 +166,7 @@ public class DispositivoXUsuarioDAO
 		return null;
 	}
 
+	//GUARDAMOS LOS DISPOSITIVOS X USUUARIO
 	public void insertarDispositivosXUsuarios(ArrayList<DispositivoXUsuario> disXusu)
 	{
 		UpsertManager manager = new UpsertManager();

@@ -58,6 +58,8 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
         LinearLayout mainContainer = findViewById(R.id.mainDispositivosVinculados);
         mainContainer.setVisibility(View.VISIBLE);
     }
+
+    //DEPENDEDIENDO DEL IDENTIFICADOR QUE LE PASEMOS VAMOS A REALIZAR DISTINTAS OPERACIONES CON LA BASE
     @Override
     public void operacionConBaseDeDatosFinalizada(Object resultado) {
         ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
@@ -91,7 +93,7 @@ public class DispositivosVinculadosControlador extends AppCompatActivity impleme
         }
     }
 
-
+    //LISTA TODOS LOS DISPOSITIVO VINCULADOS AL USER MAESTRO
     public void cargarDispositivosVinculados(ArrayList<Dispositivo> dispositivos){
         eliminar_subordinado.eliminar_subordinadoListener list = this;
         LinearLayout tabla = findViewById(R.id.tablaVinculados);

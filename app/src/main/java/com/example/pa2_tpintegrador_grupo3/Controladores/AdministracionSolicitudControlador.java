@@ -59,6 +59,8 @@ public class AdministracionSolicitudControlador extends AppCompatActivity implem
         }
     }
 
+    //DEVUELVE AL INFORMACION DE LAS OPERACION CON LA SBASE DE DATOS SEGUN EL DIENTIFICADOR QUE LE PASEMOS
+
     @Override
     public void operacionConBaseDeDatosFinalizada(Object resultado) {
         ResultadoDeConsulta res = (ResultadoDeConsulta) resultado;
